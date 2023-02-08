@@ -1,5 +1,5 @@
 # DSBG-Encounters
-Code for calculating enemy strength and generating encounter alternatives for DSBG-Shuffle.
+Code for calculating enemy strength and generating encounter alternatives for https://github.com/DanDuhon/DSBG-Shuffle.
 
 This stuff is done separately from DSBG-Shuffle so it doesn't have to be done at runtime.
 
