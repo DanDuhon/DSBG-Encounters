@@ -1,9 +1,5 @@
-from itertools import product
 from json import load, dump
 from os import path, listdir
-from random import shuffle
-
-from attacks import attacks
 from enemies import enemies
 
 
@@ -41,36 +37,30 @@ for enemy in enemies:
             reachDiv += 1
 meanReachMod = reachSum / reachDiv
 
-# Because we're attacking enemies with every possible result of
-# a weapon's damage rolls, I want to make sure each weapon gets
-# equal representation.  Find a number that can be divided by
-# all weapon results evenly.  That's how many results we want
-# to apply for each weapon.
-attackResults = sorted(list(set([len([d for d in product(*attack.damage)]) for attack in attacks])), reverse=True)
-rounds = attackResults[0]
-for a in attackResults[1:]:
-    if a != 0 and rounds % a != 0:
-        rounds = rounds * a
-
-allAttacks = []
-# A weapon's attack
-for attack in attacks:
-    # Each roll inside that attack (multiple for repeats)
-    for i, roll in enumerate(attack.damage):
-        attackResults = [max([0, sum(a) + attack.damageMod]) for a in product(*attack.damage[i])]
-        totalResults = attackResults * int(rounds / len(attackResults))
-        shuffle(totalResults)
-        # Each possible result of the roll
-        for result in totalResults:
-            allAttacks.append((result, attack.damageBonus, attack.magic, attack.ignoreArmor, attack.poison, attack.bleed))
-
-# Randomize the order of the attacks.
-shuffle(allAttacks)
-
-# Calculate enemy deaths.
 for enemy in enemies:
     enemy.reset()
     currentHealth = enemy.health
+    
+with open(baseFolder + "\\attacks.json") as att:
+    allAttacks = load(att)
+
+# Calculate enemy deaths.
+for enemy in enemies:
+    # If this enemy is functionally the same as an enemy we already processed,
+    # apply the same number of deaths and move on.
+    if enemy in set([e for e in enemies if (
+        e.health == enemy.health
+        and e.armor == enemy.armor
+        and e.resist == enemy.resist
+        and "Hollow" in e.name == "Hollow" in enemy.name
+        and e.deaths > 0)]):
+        enemy.deaths = [e.deaths for e in enemies if (
+            e.health == enemy.health
+            and e.armor == enemy.armor
+            and e.resist == enemy.resist
+            and "Hollow" in e.name == "Hollow" in enemy.name
+            and e.deaths > 0)][0]
+        continue
 
     for attack in allAttacks:
         damage = attack[0]
@@ -119,16 +109,36 @@ for loadoutFile in listdir(baseFolder + "\\loadouts"):
     loadoutsLen = len(loadouts)
 
     for enemy in enemies:
-        totalAttacks = enemy.totalAttacks
-        damagingAttacks = enemy.damagingAttacks
-        bleedDamage = enemy.bleedDamage
+        # If this enemy is functionally the same as an enemy we already processed,
+        # apply the same damage value and move on.
+        if enemy in set([e for e in enemies if (
+            e.attacks == enemy.attacks
+            and e.attackType == enemy.attackType
+            and e.dodge == enemy.dodge
+            and e.move == enemy.move
+            and e.attackRange == enemy.attackRange
+            and e.attackEffect == enemy.attackEffect
+            and e != enemy
+            and e.damageDone > 0)]):
+            copyEnemy = [e for e in enemies if (
+                e.health == enemy.health
+                and e.armor == enemy.armor
+                and e.resist == enemy.resist
+                and "Hollow" in e.name == "Hollow" in enemy.name
+                and e != enemy
+                and e.damageDone > 0)][0]
+            enemy.damageDone = copyEnemy.damageDone
+            enemy.bleedDamage = copyEnemy.bleedDamage
+            enemy.damagingAttacks = copyEnemy.damagingAttacks
+            enemy.totalAttacks = copyEnemy.totalAttacks
+            continue
+
         for l, loadoutKey in enumerate(loadouts, 1):
             block = loadouts[loadoutKey]["expected damage block"]
             resist = loadouts[loadoutKey]["expected damage resist"]
             dodge = loadouts[loadoutKey]["dodge mod"]
             immunities = loadouts[loadoutKey]["immunities"]
 
-            damageDone = []
             # If we've already seen a loadout that has the same defensive
             # stats as this one, go get the results from that loadout
             # rather than calculating it over again.
@@ -138,6 +148,11 @@ for loadoutFile in listdir(baseFolder + "\\loadouts"):
                 damageDone = [d for d in enemy.loadoutDamage[str([block, resist, dodge, immunities])][2]]
                 bleedDamage = enemy.loadoutDamage[str([block, resist, dodge, immunities])][3]
             else:
+                totalAttacks = 0
+                damagingAttacks = 0
+                bleedDamage = 0
+                damageDone = []
+                
                 # For each enemy attack, calculate the expected
                 # damage the enemy would do to this loadout.
                 # Everything gets multiplied by two decimals.
@@ -148,11 +163,11 @@ for loadoutFile in listdir(baseFolder + "\\loadouts"):
                 for i in range(len(enemy.attacks)):
                     totalAttacks += 1
 
-                    poison = (1 if enemy.attackEffect and "poison" in enemy.attackEffect[i] and "poison" not in loadouts[loadoutKey]["immunities"] else 0
+                    poison = ((1 if enemy.attackEffect and "poison" in enemy.attackEffect[i] and "poison" not in loadouts[loadoutKey]["immunities"] else 0)
                         * reachMod[enemy.move[i] + enemy.attackRange[i]]
                         * dodge[str(enemy.dodge)])
 
-                    bleedDamage += (2 if enemy.attackEffect and "bleed" in enemy.attackEffect[i] and "bleed" not in loadouts[loadoutKey]["immunities"] else 0
+                    bleedDamage += ((2 if enemy.attackEffect and "bleed" in enemy.attackEffect[i] and "bleed" not in loadouts[loadoutKey]["immunities"] else 0)
                         * reachMod[enemy.move[i] + enemy.attackRange[i]]
                         * dodge[str(enemy.dodge)])
                     
@@ -177,15 +192,17 @@ for loadoutFile in listdir(baseFolder + "\\loadouts"):
         with open(baseFolder + "\\enemies\\" + enemy.name + ".json", "w") as enemyFile:
             dump({"deaths": enemy.deaths, "totalAttacks": enemy.totalAttacks, "damagingAttacks": enemy.damagingAttacks, "damageDone": enemy.damageDone, "bleedDamage": enemy.bleedDamage, "loadoutDamage": enemy.loadoutDamage}, enemyFile)
             
-    # (Damaging attacks / total attacks) * average enemy reach
-    # This is the % that bleed will be procced.  The attack has
-    # to be made (reach), and then do damage.
-    bleedProc = (sum([enemy.damagingAttacks * enemy.numberOfModels for enemy in enemies]) / sum([enemy.totalAttacks * enemy.numberOfModels for enemy in enemies])) * meanReachMod
-
-    for enemy in enemies:
-        enemy.damageDone += enemy.bleedDamage * bleedProc
-        with open(baseFolder + "\\enemies\\" + enemy.name + ".json", "w") as enemyFile:
-            dump({"deaths": enemy.deaths, "totalAttacks": enemy.totalAttacks, "damagingAttacks": enemy.damagingAttacks, "damageDone": enemy.damageDone, "bleedDamage": enemy.bleedDamage, "loadoutDamage": enemy.loadoutDamage}, enemyFile)
+# (Damaging attacks / total attacks) * average enemy reach
+# This is the % that bleed will be procced.  The attack has
+# to be made (reach), and then do damage.
+bleedProc = (sum([enemy.damagingAttacks * enemy.numberOfModels for enemy in enemies]) / sum([enemy.totalAttacks * enemy.numberOfModels for enemy in enemies])) * meanReachMod
 
 for enemy in enemies:
-    print(enemy.name + "_" + str(enemy.deaths) + "_" + str(enemy.damageDone))
+    enemy.damageDone += enemy.bleedDamage * bleedProc
+    with open(baseFolder + "\\enemies\\" + enemy.name + ".json", "w") as enemyFile:
+        dump({"deaths": enemy.deaths, "totalAttacks": enemy.totalAttacks, "damagingAttacks": enemy.damagingAttacks, "damageDone": enemy.damageDone, "bleedDamage": enemy.bleedDamage, "loadoutDamage": enemy.loadoutDamage}, enemyFile)
+
+for enemyFile in listdir(baseFolder + "\\enemies"):
+    with open(path.join(baseFolder + "\\enemies", enemyFile)) as ef:
+        enemy = load(ef)
+    print(enemyFile[:-5] + "_" + str(enemy["damageDone"]) + "_" + str(enemy["deaths"]))

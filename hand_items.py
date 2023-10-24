@@ -29,16 +29,16 @@ class HandItem:
         self.canDodge = canDodge
         self.immunities = immunities
         self.expectedDamageBlock = dict()
-        for x in range(1, 3):
+        for x in range(5):
             dodgeMod = 1 - (sum([1 for do in product(*dodge) if sum(do) >= x]) / len(list(product(*dodge))))
             self.expectedDamageBlock[x] = dict()
-            for y in range(2, 7):
+            for y in range(2, 10):
                 self.expectedDamageBlock[x][y] = (y if not block else max([0, (y - mean(chain.from_iterable(block)))])) * dodgeMod
         self.expectedDamageResist = dict()
-        for x in range(1, 3):
+        for x in range(5):
             dodgeMod = 1 - (sum([1 for do in product(*dodge) if sum(do) >= x]) / len(list(product(*dodge))))
             self.expectedDamageResist[x] = dict()
-            for y in range(2, 7):
+            for y in range(2, 10):
                 self.expectedDamageResist[x][y] = (y if not resist else max([0, (y - mean(chain.from_iterable(resist)))])) * dodgeMod
 
 
