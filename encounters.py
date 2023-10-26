@@ -135,7 +135,7 @@ encountersWithTrial = set([
 
 # skip = True
 for e in enc:
-    if e != "The First Bastion":#not in ["Corvian Host", "Trophy Room", "Frozen Revolutions", "Deathly Tolls", "Twilight Falls", "Depths of the Cathedral"]:
+    if e != "Trecherous Tower":#not in ["Corvian Host", "Trophy Room", "Frozen Revolutions", "Deathly Tolls", "Twilight Falls", "Depths of the Cathedral"]:
         continue
 #         skip = False
 #     if skip:
@@ -201,9 +201,9 @@ for e in enc:
             # Black Hollow Mages need to be with at least one "skeleton" enemy
             and (blackHollowMage not in combo or [enemy in skeletons for enemy in combo].count(True) > 0)
             # Enemies must be different
-            and (e not in set(["Abandoned and Forgotten", "The First Bastion"]) or len([enemyIds[enemy].difficulty for enemy in combo]) == len(set([enemyIds[enemy].difficulty for enemy in combo])))
-            # No more than 3 of the weakest enemy, other enemies must be different
-            and (e != "Trecherous Tower" or len([enemyIds[enemy].difficulty for enemy in combo]) - combo.count(sorted(combo, key=lambda x: enemyIds[x].difficulty)[-1]) - 1 == len(set([enemyIds[enemy].difficulty for enemy in combo])))
+            and (e not in set(["Abandoned and Forgotten", "The First Bastion"]) or len(combo) == len(set(combo)))
+            # No more than one of the two strongest enemies
+            and (e != "Trecherous Tower" or (combo.count(sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 1 and combo.count(sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[1]) == 1))
             # One of the strongest enemy
             and (e != "Cold Snap" or combo.count(sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 1)
             # A pair of enemies
