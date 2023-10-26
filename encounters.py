@@ -201,7 +201,7 @@ for e in enc:
             # Black Hollow Mages need to be with at least one "skeleton" enemy
             and (blackHollowMage not in combo or [enemy in skeletons for enemy in combo].count(True) > 0)
             # Enemies must be different
-            and (e != "Abandoned and Forgotten" or len([enemyIds[enemy].difficulty for enemy in combo]) == len(set([enemyIds[enemy].difficulty for enemy in combo])))
+            and (e not in set(["Abandoned and Forgotten", "The First Bastion"]) or len([enemyIds[enemy].difficulty for enemy in combo]) == len(set([enemyIds[enemy].difficulty for enemy in combo])))
             # No more than 3 of the weakest enemy, other enemies must be different
             and (e != "Trecherous Tower" or len([enemyIds[enemy].difficulty for enemy in combo]) - combo.count(sorted(combo, key=lambda x: enemyIds[x].difficulty)[-1]) - 1 == len(set([enemyIds[enemy].difficulty for enemy in combo])))
             # One of the strongest enemy
