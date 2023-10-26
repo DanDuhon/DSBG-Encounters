@@ -2,41 +2,73 @@ from os import path
 from json import load, dump
 from itertools import combinations, islice
 from random import shuffle
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 from enemies import enemyIds, enemiesDict
 
 baseFolder = path.dirname(__file__)
 allEnemies = []
-stdInvader = enemiesDict["Standard Invader/Hungry Mimic"].id
-advInvader = enemiesDict["Advanced Invader/Voracious Mimic"].id
-phalanx = enemiesDict["Phalanx"].id
-phalanxHollow = enemiesDict["Phalanx Hollow"].id
-crowDemon = enemiesDict["Crow Demon"].id
-giantSkeletonArcher = enemiesDict["Giant Skeleton Archer"].id
-giantSkeletonSoldier = enemiesDict["Giant Skeleton Soldier"].id
+alonneBowKnight = enemiesDict["Alonne Bow Knight"].id
+alonneKnightCaptain = enemiesDict["Alonne Knight Captain"].id
+alonneSwordKnight = enemiesDict["Alonne Sword Knight"].id
 blackHollowMage = enemiesDict["Black Hollow Mage"].id
 crossbowHollow = enemiesDict["Crossbow Hollow"].id
-hollowSoldier = enemiesDict["Hollow Soldier"].id
-sentinel = enemiesDict["Sentinel"].id
-silverKnightSwordsman = enemiesDict["Silver Knight Swordsman"].id
-silverKnightGreatbowman = enemiesDict["Silver Knight Greatbowman"].id
 crossbowHollowTsc = enemiesDict["Crossbow Hollow (TSC)"].id
+crowDemon = enemiesDict["Crow Demon"].id
+falchionSkeleton = enemiesDict["Falchion Skeleton"].id
+giantSkeletonArcher = enemiesDict["Giant Skeleton Archer"].id
+giantSkeletonSoldier = enemiesDict["Giant Skeleton Soldier"].id
+hollowSoldier = enemiesDict["Hollow Soldier"].id
 hollowSoldierTsc = enemiesDict["Hollow Soldier (TSC)"].id
+phalanx = enemiesDict["Phalanx"].id
+phalanxHollow = enemiesDict["Phalanx Hollow"].id
+plowScarecrow = enemiesDict["Plow Scarecrow"].id
+sentinel = enemiesDict["Sentinel"].id
 sentinelTsc = enemiesDict["Sentinel (TSC)"].id
+silverKnightSwordsman = enemiesDict["Silver Knight Swordsman"].id
 silverKnightSwordsmanTsc = enemiesDict["Silver Knight Swordsman (TSC)"].id
+silverKnightGreatbowman = enemiesDict["Silver Knight Greatbowman"].id
 silverKnightGreatbowmanTsc = enemiesDict["Silver Knight Greatbowman (TSC)"].id
+skeletonArcher = enemiesDict["Skeleton Archer"].id
+skeletonSoldier = enemiesDict["Skeleton Soldier"].id
+shearsScarecrow = enemiesDict["Shears Scarecrow"].id
+stoneGuardian = enemiesDict["Stone Guardian"].id
+stoneKnight = enemiesDict["Stone Knight"].id
+
 skeletons = set([enemiesDict[e].id for e in enemiesDict if "Skeleton" in enemiesDict[e].name])
+stdInvader = enemiesDict["Standard Invader/Hungry Mimic"].id
+advInvader = enemiesDict["Advanced Invader/Voracious Mimic"].id
 invaders = {stdInvader, advInvader}
 
 # Some encounters have enemies (via initial placement or with spawns)
 # that violate the limits of the number of models available.
 # This will make sure that the app can actually produce the original
 # encounter, as unlikely as that may be.
+# For Depths of the Cathedral specifically, provide enough gang
+# enemies so that the gang can be made up of enemies from other sets.
 extraEnemies = {
-    "Depths of the Cathedral": [hollowSoldierTsc, hollowSoldierTsc, hollowSoldierTsc],
+    "Depths of the Cathedral": [
+        hollowSoldierTsc,
+        hollowSoldierTsc,
+        hollowSoldierTsc,
+        skeletonSoldier,
+        skeletonSoldier,
+        skeletonSoldier,
+        falchionSkeleton,
+        falchionSkeleton,
+        falchionSkeleton,
+        plowScarecrow,
+        plowScarecrow,
+        plowScarecrow,
+        shearsScarecrow,
+        shearsScarecrow,
+        shearsScarecrow],
     "The Grand Hall": [sentinelTsc],
-    "Corvian Host": [crowDemon, crowDemon],
+    "Corvian Host": [
+        crowDemon,
+        sentinel,
+        stoneGuardian,
+        stoneKnight],
     "Giant's Coffin": [giantSkeletonArcher, giantSkeletonSoldier]
 }
 
@@ -64,6 +96,13 @@ onslaughtEncounters = {
     "Hanging Rafters"
 }
 
+gangs = set([
+    "Hollow",
+    "Alonne",
+    "Skeleton",
+    "Silver Knight"
+    ])
+
 deathlyFreezeEnemyBlacklist = {
     enemiesDict["Bonewheel Skeleton"].id,
     enemiesDict["Crow Demon"].id,
@@ -73,6 +112,7 @@ deathlyFreezeEnemyBlacklist = {
     enemiesDict["Mushroom Parent"].id,
     enemiesDict["Phalanx"].id,
     enemiesDict["Sentinel"].id,
+    enemiesDict["Sentinel (TSC)"].id,
     enemiesDict["Skeleton Beast"].id,
     enemiesDict["Skeleton Soldier"].id,
     enemiesDict["Stone Guardian"].id
@@ -95,8 +135,8 @@ encountersWithTrial = set([
 
 # skip = True
 for e in enc:
-#     if e == "Depths of the Cathedral":
-# #     #     continue
+    if e != "Frozen Revolutions":#not in ["Corvian Host", "Trophy Room", "Frozen Revolutions", "Deathly Tolls", "Twilight Falls", "Depths of the Cathedral"]:
+        continue
 #         skip = False
 #     if skip:
 #         continue
@@ -140,9 +180,6 @@ for e in enc:
         # Create a dictionary of alternatives, put into keys that are the
         # sets in which those enemies are found.
         # Encounters with Crystal Lizards always require Iron Keep.
-        # Encounters with the Eerie rule always require The Painted World of Ariamis
-        # (since the enemies for that are calculated on the fly, I can't guarantee
-        # the mix of enabled sets will work).
         # Black Hollow Mage increases the difficulty of skeleton enemies since
         # they resurrect defeated skeletons.
         combosDict = defaultdict(set)
@@ -163,23 +200,110 @@ for e in enc:
                     and enemies.count(silverKnightSwordsman) + enemies.count(silverKnightSwordsmanTsc) <= 3))
             # Black Hollow Mages need to be with at least one "skeleton" enemy
             and (blackHollowMage not in combo or [enemy in skeletons for enemy in combo].count(True) > 0)
+            # Enemies must be different
+            and (e != "Abandoned and Forgotten" or len([enemyIds[enemy].difficulty for enemy in combo]) == len(set([enemyIds[enemy].difficulty for enemy in combo])))
+            # No more than 3 of the weakest enemy, other enemies must be different
+            and (e != "Trecherous Tower" or len([enemyIds[enemy].difficulty for enemy in combo]) - combo.count(sorted(combo, key=lambda x: enemyIds[x].difficulty)[-1]) - 1 == len(set([enemyIds[enemy].difficulty for enemy in combo])))
             # One of the strongest enemy
             and (e != "Cold Snap" or combo.count(sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 1)
             # A pair of enemies
             and (e != "Corrupted Hovel" or any([combo.count(enemy) == 2 for enemy in combo]))
-            # Two of the strongest 5 health enemy
-            and (e != "Corvian Host" or ([enemy for enemy in combo if enemyIds[enemy].health >= 5] and combo.count(sorted([enemy for enemy in combo if enemyIds[enemy].health >= 5], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 2))
+            # Two pairs of enemies and one of the strongest enemy
+            and (e != "Eye of the Storm" or (
+                (len(set([enemy for enemy in combo if combo.count(enemy) == 2])) == 2
+                    or [enemy for enemy in combo if combo.count(enemy) == 4])
+                and combo.count(sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 1))
             # Two pairs of enemies
-            and (e != "Eye of the Storm" or len(set([enemy for enemy in combo if combo.count(enemy) == 2])) == 2 or [enemy for enemy in combo if combo.count(enemy) == 4])
-            # Two of the strongest 1 health enemy
-            and (e != "Frozen Revolutions" or combo.count(sorted([enemy for enemy in combo if enemyIds[enemy].health == 1], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 2)
+            and (e != "Gleaming Silver" or len(set([enemy for enemy in combo if combo.count(enemy) == 2])) == 2 or [enemy for enemy in combo if combo.count(enemy) == 4])
             # Two of the weakest 1 health enemy
-            and (e != "Skeletal Spokes" or combo.count(sorted([enemy for enemy in combo if enemyIds[enemy].health == 1], key=lambda x: enemyIds[x].difficulty)[0]) == 2)
+            and (e not in set(["Skeletal Spokes", "The Shine of Gold"]) or ([enemy for enemy in combo if enemyIds[enemy].health == 1] and combo.count(sorted([enemy for enemy in combo if enemyIds[enemy].health == 1], key=lambda x: enemyIds[x].difficulty)[0]) == 2))
+            # Three of the weakest 1 health enemy
+            and (e != "Shattered Keep" or combo.count(sorted([enemy for enemy in combo if enemyIds[enemy].health == 1], key=lambda x: enemyIds[x].difficulty)[0]) == 3)
+            # Four of the same gang
+            and (e != "Flooded Fortress" or (Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1) and Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1)[0][1] == 4))
+            # Five of the same gang
+            and (e not in set(["Undead Sanctum", "The Fountainhead"]) or (Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1) and Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1)[0][1] == 5))
         )]
+    # Depths of the Cathedral is a beast to generate because of the 9 gang members,
+    # so I spun it off into a more controlled setting.
+    # Here we define the gang up front, and then fill in the rest.
+    elif e == "Depths of the Cathedral":
+        gangs = [
+            [alonneSwordKnight, alonneSwordKnight, alonneSwordKnight, alonneSwordKnight, alonneSwordKnight, alonneSwordKnight, alonneBowKnight, alonneBowKnight, alonneBowKnight],
+            [hollowSoldier, hollowSoldier, hollowSoldier, hollowSoldier, hollowSoldier, hollowSoldier, crossbowHollow, crossbowHollow, crossbowHollow],
+            [hollowSoldierTsc, hollowSoldierTsc, hollowSoldierTsc, hollowSoldierTsc, hollowSoldierTsc, hollowSoldierTsc, crossbowHollowTsc, crossbowHollowTsc, crossbowHollowTsc],
+            [skeletonSoldier, skeletonSoldier, skeletonSoldier, skeletonSoldier, skeletonSoldier, skeletonSoldier, skeletonArcher, skeletonArcher, skeletonArcher]
+        ]
+
+        nonGangs = [
+            enemiesDict["Demonic Foliage"].id,
+            enemiesDict["Demonic Foliage"].id,
+            enemiesDict["Engorged Zombie"].id,
+            enemiesDict["Engorged Zombie"].id,
+            enemiesDict["Plow Scarecrow"].id,
+            enemiesDict["Plow Scarecrow"].id,
+            enemiesDict["Plow Scarecrow"].id,
+            enemiesDict["Shears Scarecrow"].id,
+            enemiesDict["Shears Scarecrow"].id,
+            enemiesDict["Shears Scarecrow"].id,
+            enemiesDict["Silver Knight Greatbowman"].id,
+            enemiesDict["Silver Knight Greatbowman"].id,
+            enemiesDict["Silver Knight Greatbowman"].id,
+            enemiesDict["Silver Knight Greatbowman (TSC)"].id,
+            enemiesDict["Silver Knight Greatbowman (TSC)"].id,
+            enemiesDict["Silver Knight Spearman"].id,
+            enemiesDict["Silver Knight Spearman"].id,
+            enemiesDict["Silver Knight Spearman"].id,
+            enemiesDict["Silver Knight Swordsman"].id,
+            enemiesDict["Silver Knight Swordsman"].id,
+            enemiesDict["Silver Knight Swordsman"].id,
+            enemiesDict["Silver Knight Swordsman (TSC)"].id,
+            enemiesDict["Silver Knight Swordsman (TSC)"].id,
+            enemiesDict["Snow Rat"].id,
+            enemiesDict["Snow Rat"].id
+        ]
+
+        higherHealthEnemies = [
+            enemiesDict["Alonne Knight Captain"].id,
+            enemiesDict["Crow Demon"].id,
+            enemiesDict["Giant Skeleton Archer"].id,
+            enemiesDict["Giant Skeleton Soldier"].id,
+            enemiesDict["Ironclad Soldier"].id,
+            enemiesDict["Large Hollow Soldier"].id,
+            enemiesDict["Mimic"].id,
+            enemiesDict["Mushroom Child"].id,
+            enemiesDict["Mushroom Parent"].id,
+            enemiesDict["Phalanx"].id,
+            enemiesDict["Sentinel"].id,
+            enemiesDict["Sentinel (TSC)"].id,
+            enemiesDict["Stone Guardian"].id,
+            enemiesDict["Stone Knight"].id
+        ]
+
+        for gang in gangs:
+            for hh in higherHealthEnemies:
+                nonGangCombos = set(combinations([enemyIds[en].id for en in nonGangs], 3))
+                allCombos = []
+                for combo in nonGangCombos:
+                    allCombos.append(tuple(gang) + (hh,) + tuple(combo))
+                
+                combosDict = defaultdict(set)
+                [combosDict[frozenset([enemyIds[enemyId].set for enemyId in combo])].add(combo) for combo in allCombos if (
+                    difficulty * (1 - diffMod) <= sum([enemyIds[enemy].difficulty for enemy in combo]) <= difficulty * (1 + diffMod)
+                    and (sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1]) == rangedCount
+                        or sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3]) == rangedCount)
+                    and (3 if phalanx in enemies else 0) + enemies.count(phalanxHollow) < 6
+                    # Nine of the same gang
+                    and Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1)[0][1] == 9)]
     else:
         combosDict = defaultdict(set)
         comboCount = []
-        shuffledEnemies = allEnemies + extraEnemies.get(e, [])
+        # Including 5 health enemies in Frozen Revolutions really seems to throw it off,
+        # such that it doesn't generate any alternatives.
+        if e == "Frozen Revolutions":
+            shuffledEnemies = [enemy for enemy in allEnemies + extraEnemies.get(e, []) if enemyIds[enemy].health == 1]
+        else:
+            shuffledEnemies = allEnemies + extraEnemies.get(e, [])
 
         # These are the encounters that would take too long to generate all the combinations because we need
         # too many enemies (more than 6).
@@ -196,7 +320,7 @@ for e in enc:
             [combosDict[frozenset([enemyIds[enemyId].set for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set())].add(combo) for combo in allCombos if (
                 difficulty * (1 - diffMod) <= sum([enemyIds[enemy].difficulty* (1.5 if enemy in skeletons and blackHollowMage in enemies else 1) for enemy in combo]) <= difficulty * (1 + diffMod)
                 and sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3]) == rangedCount
-                and ((3 if phalanx in enemies else 0) + enemies.count(phalanxHollow) < 6 or e == "Eye of the Storm")
+                and (3 if phalanx in enemies else 0) + enemies.count(phalanxHollow) < 6
                 # Account for duplicate models from the new core sets.
                 # I assume anyone who had the original core set wouldn't buy The Sunless City
                 # (especially not if they're using this app), so limit the total number of
@@ -209,10 +333,23 @@ for e in enc:
                         and enemies.count(silverKnightSwordsman) + enemies.count(silverKnightSwordsmanTsc) <= 3))
                 # Black Hollow Mages need to be with at least one "skeleton" enemy
                 and (blackHollowMage not in combo or [enemy in skeletons for enemy in combo].count(True) > 0)
+                # Three of the strongest 5 health enemy
+                and (e != "Corvian Host" or ([enemy for enemy in combo if enemyIds[enemy].health >= 5] and combo.count(sorted([enemy for enemy in combo if enemyIds[enemy].health >= 5], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 3))
                 # If there are 2 of the strongest enemy and that enemy isn't in the blacklist
                 and (e != "Deathly Freeze" or (
                     combo.count(sorted(combo, key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 2
-                    and sorted(combo, key=lambda x: enemyIds[x].difficulty, reverse=True)[0] not in deathlyFreezeEnemyBlacklist))
+                    and sorted(combo, key=lambda x: enemyIds[x].difficulty, reverse=True)[0] not in deathlyFreezeEnemyBlacklist
+                    # This will make sure that there isn't a situation in which a duplicate
+                    # enemy from another set screws things up.
+                    and Counter([enemyIds[enemy].difficulty for enemy in combo])[sorted(combo, key=lambda x: enemyIds[x].difficulty, reverse=True)[0]] == 2))
+                # Two of the strongest 1 health enemy
+                and (e != "Frozen Revolutions" or combo.count(sorted([enemy for enemy in combo if enemyIds[enemy].health == 1], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 2)
+                # Two of the second strongest enemy
+                and (e != "Trophy Room" or combo.count(sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[1]) == 2)
+                # Three of the same gang
+                and (e != "Deathly Tolls" or (Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1) and Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1)[0][1] == 3))
+                # Five of the same gang
+                and (e != "Twilight Falls" or (Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1) and Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1)[0][1] == 5))
             )]
 
             # Keep track of the number of combinations we have.
@@ -220,7 +357,7 @@ for e in enc:
 
             # If we didn't find any new combos in the last 100 loops, be done.
             # This prevents an infinite loop if there will never be 1 million alternatives.
-            # Deathly Freeze is an example of this.
+            # Corvian Host is an example of this.
             if len(comboCount) >= 100 and len(set(comboCount[-100:])) == 1:
                 break
 
@@ -332,7 +469,7 @@ for e in enc:
     if e not in encMain:
         encMain[e] = {
             "name": enc[e]["name"],
-            "expansion": enc[e]["set"],
+            "set": enc[e]["set"],
             "level": enc[e]["level"],
             "setCombos": [k.split(",") for k in alternatives["alternatives"].keys()]
             }

@@ -26,6 +26,30 @@ class Enemy:
         self.attackRange = attackRange
         self.attackEffect = attackEffect
         self.difficulty = difficulty
+        
+        if "Hollow" in self.name and self.health == 1:
+            self.gang = "Hollow"
+        elif "Alonne" in self.name and self.health == 1:
+            self.gang = "Alonne"
+        elif "Skeleton" in self.name and self.health == 1:
+            self.gang = "Skeleton"
+        elif "Scarecrow" in self.name:
+            self.gang = "Scarecrow"
+        else:
+            self.gang = None
+        
+        if "Hollow" in self.name:
+            self.group = "Hollow"
+        elif "Alonne" in self.name:
+            self.group = "Alonne"
+        elif "Skeleton" in self.name:
+            self.group = "Skeleton"
+        elif "Scarecrow" in self.name:
+            self.group = "Scarecrow"
+        elif "Silver Knight" in self.name:
+            self.group = "Silver Knight"
+        else:
+            self.group = None
 
         self.bleeding = False
         self.deaths = 0
