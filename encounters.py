@@ -96,13 +96,6 @@ onslaughtEncounters = {
     "Hanging Rafters"
 }
 
-gangs = set([
-    "Hollow",
-    "Alonne",
-    "Skeleton",
-    "Silver Knight"
-    ])
-
 deathlyFreezeEnemyBlacklist = {
     enemiesDict["Bonewheel Skeleton"].id,
     enemiesDict["Crow Demon"].id,
@@ -128,11 +121,6 @@ with open(path.join(baseFolder + "\\encounters", "all_encounters.json")) as aef:
 with open(path.join(baseFolder, "encounters.json")) as ef:
     encMain = load(ef)
 
-encountersWithTrial = set([
-    "Corvian Host",
-    "Distant Tower"
-])
-
 # skip = True
 for e in enc:
     if e != "Trecherous Tower":#not in ["Corvian Host", "Trophy Room", "Frozen Revolutions", "Deathly Tolls", "Twilight Falls", "Depths of the Cathedral"]:
@@ -147,8 +135,6 @@ for e in enc:
     combosDict = dict()
     enemies = []
     diffMod = 0.1
-
-    trialEnemies = set()
 
     for tile in encounter["tiles"]:
         for enemy in encounter["tiles"][str(tile)]:
@@ -361,14 +347,6 @@ for e in enc:
             if len(comboCount) >= 100 and len(set(comboCount[-100:])) == 1:
                 break
 
-    if e in encountersWithTrial:
-        for combo in combosDict:
-            for alternative in combosDict[combo]:
-                if e == "Corvian Host":
-                    trialEnemies.add(sorted([enemy for enemy in list(alternative) if enemyIds[enemy].health >= 5], key=lambda x: enemyIds[x].difficulty, reverse=True)[0])
-                if e == "Distant Tower":
-                    trialEnemies.add(sorted(list(alternative), key=lambda x: enemyIds[x].difficulty, reverse=True)[0])
-
     # If there's a standard invader or Hungry Mimic, add that to each combo.
     if stdInvader in enemies:
         for combos in combosDict:
@@ -471,7 +449,3 @@ for e in enc:
 
     with open(baseFolder + "\\encounters.json", "w") as ef:
         dump(encMain, ef)
-
-    if trialEnemies:
-        with open(baseFolder + "\\encounters\\" + e + " Trial Enemies.json", "w") as trial:
-            dump(list(trialEnemies), trial)
