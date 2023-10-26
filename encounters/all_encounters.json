@@ -1711,6 +1711,7 @@
         "tiles": {
             "1": [30]
         },
+		"spawns": [30, 20, 8],
         "difficultyOrder": [0]
     },
     "The Forgotten": {

@@ -135,7 +135,7 @@ encountersWithTrial = set([
 
 # skip = True
 for e in enc:
-    if e != "Frozen Revolutions":#not in ["Corvian Host", "Trophy Room", "Frozen Revolutions", "Deathly Tolls", "Twilight Falls", "Depths of the Cathedral"]:
+    if e != "The First Bastion":#not in ["Corvian Host", "Trophy Room", "Frozen Revolutions", "Deathly Tolls", "Twilight Falls", "Depths of the Cathedral"]:
         continue
 #         skip = False
 #     if skip:
