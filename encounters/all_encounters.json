@@ -1712,7 +1712,7 @@
             "1": [30]
         },
 		"spawns": [30, 20, 8],
-        "difficultyOrder": [0]
+        "difficultyOrder": [0, 1, 2, 3]
     },
     "The Forgotten": {
         "name": "The Forgotten",

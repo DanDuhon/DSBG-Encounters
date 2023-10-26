@@ -389,16 +389,6 @@ for e in enc:
     # original enemies. This way I can just iterate through the list
     # when we load the encounter and take the enemies in order.
 
-    # Original enemy order by difficulty
-    enemyOrder = enc[e]["tiles"].get("1", []) + enc[e]["tiles"].get("2", []) + enc[e]["tiles"].get("3", []) + enc[e].get("spawns", [])
-    enemyDifficulty = sorted([enemy for enemy in enemyOrder], key=lambda x: enemyIds[x].difficulty)
-    originalDifficultyOrder = []
-    for i, a in enumerate(enemyOrder):
-        idx = enemyDifficulty.index(a)
-        while idx in originalDifficultyOrder:
-            idx += 1
-        originalDifficultyOrder.append(idx)
-
     # Alternative enemy order by difficulty matching original enemy order.
     alternatives["alternatives"] = {",".join([k for k in key]): list(value) for key, value in combosDict.items()}
     for setCombo in alternatives["alternatives"]:
@@ -406,14 +396,14 @@ for e in enc:
         for alt in alternatives["alternatives"][setCombo]:
             newAlt = []
             altDifficulty = sorted(alt, key=lambda x: enemyIds[x].difficulty)
-            for ord in originalDifficultyOrder:
+            for ord in enc[e]["difficultyOrder"]:
                 newAlt.append(altDifficulty[ord])
             if newAlt not in newAlts:
                 newAlts.append(newAlt)
         alternatives["alternatives"][setCombo] = newAlts
 
     # This is manually set for each encounter in the JSON file.
-    # It is the number of enemies in each row following this pattern:
+    # enemySlots is the number of enemies in each row following this pattern:
     # [Tile 1 Row 1, Tile 1 Row 2, Tile 1 Row 3 (level 3 only), Tile 1 Row 4 (level 3 only), Tile 2 Row 1, Tile 2 Row 2, Tile 3 Row 3]
     with open(path.join(baseFolder + "\\encounters", e + ".json")) as ef:
         thisEnc = load(ef)
