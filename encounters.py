@@ -16,6 +16,7 @@ crossbowHollow = enemiesDict["Crossbow Hollow"].id
 crossbowHollowTsc = enemiesDict["Crossbow Hollow (TSC)"].id
 crowDemon = enemiesDict["Crow Demon"].id
 falchionSkeleton = enemiesDict["Falchion Skeleton"].id
+firebombHollow = enemiesDict["Firebomb Hollow"].id
 giantSkeletonArcher = enemiesDict["Giant Skeleton Archer"].id
 giantSkeletonSoldier = enemiesDict["Giant Skeleton Soldier"].id
 hollowSoldier = enemiesDict["Hollow Soldier"].id
@@ -47,22 +48,6 @@ invaders = {stdInvader, advInvader}
 # For Depths of the Cathedral specifically, provide enough gang
 # enemies so that the gang can be made up of enemies from other sets.
 extraEnemies = {
-    "Depths of the Cathedral": [
-        hollowSoldierTsc,
-        hollowSoldierTsc,
-        hollowSoldierTsc,
-        skeletonSoldier,
-        skeletonSoldier,
-        skeletonSoldier,
-        falchionSkeleton,
-        falchionSkeleton,
-        falchionSkeleton,
-        plowScarecrow,
-        plowScarecrow,
-        plowScarecrow,
-        shearsScarecrow,
-        shearsScarecrow,
-        shearsScarecrow],
     "The Grand Hall": [sentinelTsc],
     "Corvian Host": [
         crowDemon,
@@ -123,7 +108,7 @@ with open(path.join(baseFolder, "encounters.json")) as ef:
 
 # skip = True
 for e in enc:
-    if e != "Trecherous Tower":#not in ["Corvian Host", "Trophy Room", "Frozen Revolutions", "Deathly Tolls", "Twilight Falls", "Depths of the Cathedral"]:
+    if e not in ["Depths of the Cathedral"]:
         continue
 #         skip = False
 #     if skip:
@@ -217,7 +202,11 @@ for e in enc:
         gangs = [
             [alonneSwordKnight, alonneSwordKnight, alonneSwordKnight, alonneSwordKnight, alonneSwordKnight, alonneSwordKnight, alonneBowKnight, alonneBowKnight, alonneBowKnight],
             [hollowSoldier, hollowSoldier, hollowSoldier, hollowSoldier, hollowSoldier, hollowSoldier, crossbowHollow, crossbowHollow, crossbowHollow],
+            [hollowSoldier, hollowSoldier, hollowSoldier, hollowSoldier, hollowSoldier, hollowSoldier, firebombHollow, firebombHollow, firebombHollow],
             [hollowSoldierTsc, hollowSoldierTsc, hollowSoldierTsc, hollowSoldierTsc, hollowSoldierTsc, hollowSoldierTsc, crossbowHollowTsc, crossbowHollowTsc, crossbowHollowTsc],
+            [hollowSoldierTsc, hollowSoldierTsc, hollowSoldierTsc, hollowSoldierTsc, hollowSoldierTsc, hollowSoldierTsc, firebombHollow, firebombHollow, firebombHollow],
+            [phalanxHollow, phalanxHollow, phalanxHollow, phalanxHollow, phalanxHollow, phalanxHollow, crossbowHollow, crossbowHollow, crossbowHollow],
+            [phalanxHollow, phalanxHollow, phalanxHollow, phalanxHollow, phalanxHollow, phalanxHollow, firebombHollow, firebombHollow, firebombHollow],
             [skeletonSoldier, skeletonSoldier, skeletonSoldier, skeletonSoldier, skeletonSoldier, skeletonSoldier, skeletonArcher, skeletonArcher, skeletonArcher]
         ]
 
@@ -266,21 +255,19 @@ for e in enc:
             enemiesDict["Stone Knight"].id
         ]
 
+        allCombos = []
         for gang in gangs:
             for hh in higherHealthEnemies:
                 nonGangCombos = set(combinations([enemyIds[en].id for en in nonGangs], 3))
-                allCombos = []
                 for combo in nonGangCombos:
-                    allCombos.append(tuple(gang) + (hh,) + tuple(combo))
+                    allCombos.append(tuple(gang) + (hh,) + tuple(combo) + (enemiesDict["Mimic"].id,))
                 
-                combosDict = defaultdict(set)
-                [combosDict[frozenset([enemyIds[enemyId].set for enemyId in combo])].add(combo) for combo in allCombos if (
-                    difficulty * (1 - diffMod) <= sum([enemyIds[enemy].difficulty for enemy in combo]) <= difficulty * (1 + diffMod)
-                    and (sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1]) == rangedCount
-                        or sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3]) == rangedCount)
-                    and (3 if phalanx in enemies else 0) + enemies.count(phalanxHollow) < 6
-                    # Nine of the same gang
-                    and Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1)[0][1] == 9)]
+        combosDict = defaultdict(set)
+        [combosDict[frozenset([enemyIds[enemyId].set for enemyId in combo])].add(combo) for combo in allCombos if (
+            difficulty * (1 - diffMod) <= sum([enemyIds[enemy].difficulty for enemy in combo]) <= difficulty * (1 + diffMod)
+            and (sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1]) == rangedCount
+                or sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3]) == rangedCount)
+            and (3 if phalanx in enemies else 0) + enemies.count(phalanxHollow) < 6)]
     else:
         combosDict = defaultdict(set)
         comboCount = []
@@ -388,7 +375,7 @@ for e in enc:
     alternatives["enemySlots"] = thisEnc.get("enemySlots")
 
     # Remove alternatives that break model limits on a tile level.
-    # Only applies to The Sunless City encounters without Onslaught.
+    # Only applies to certain encounters.
     alternativesToRemove = {}
     if e in extraEnemies and e not in onslaughtEncounters:
         slots = alternatives["enemySlots"]

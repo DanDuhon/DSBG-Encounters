@@ -475,6 +475,7 @@
             "2": [39, 37, 37, 39, 36],
             "3": []
         },
+		"spawns": [35],
         "difficultyOrder": [5, 6, 3, 0, 1, 4, 2]
     },
     "Demon Ruins": {
@@ -504,7 +505,8 @@
             "2": [40, 37, 39, 37],
             "3": [36, 36, 38, 36, 37]
         },
-        "difficultyOrder": [10, 0, 1, 2, 11, 3, 9, 4, 6, 7, 12, 8, 5]
+		"spawns": [35],
+        "difficultyOrder": [10, 0, 1, 2, 11, 3, 9, 4, 5, 6, 13, 7, 8, 12]
     },
     "Desecrated Church": {
         "name": "Desecrated Church",
@@ -770,6 +772,7 @@
             "1": [40, 39],
             "2": [37, 40, 39]
         },
+		"spawns": [35],
         "difficultyOrder": [3, 1, 0, 4, 2]
     },
     "Gnashing Beaks": {
@@ -1223,6 +1226,7 @@
             "2": [40, 39, 37],
             "3": [36, 36, 36, 40]
         },
+		"spawns": [35],
         "difficultyOrder": [0, 1, 6, 8, 7, 2, 3, 4, 5, 9]
     },
     "Parish Gates": {
@@ -1741,6 +1745,7 @@
             "2": [40, 38, 39, 40],
             "3": [38, 39, 39]
         },
+		"spawns": [35],
         "difficultyOrder": [0, 1, 5, 6, 8, 2, 7, 9, 3, 4]
     },
     "The Hellkite Bridge": {
@@ -1890,6 +1895,7 @@
             "1": [37, 36, 36],
             "2": [37, 37, 40]
         },
+		"spawns": [35],
         "difficultyOrder": [0, 3, 4, 1, 2, 5]
     },
     "Unhallowed Caves": {
