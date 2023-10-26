@@ -108,7 +108,7 @@ with open(path.join(baseFolder, "encounters.json")) as ef:
 
 # skip = True
 for e in enc:
-    if e not in ["Depths of the Cathedral"]:
+    if e not in ["Deathly Tolls", "Gleaming Silver", "Parish Church", "The Grand Hall", "Undead Sanctum"]:
         continue
 #         skip = False
 #     if skip:

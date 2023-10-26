@@ -476,7 +476,7 @@
             "3": []
         },
 		"spawns": [35],
-        "difficultyOrder": [5, 6, 3, 0, 1, 4, 2]
+        "difficultyOrder": [5, 6, 3, 0, 1, 4, 2, 7]
     },
     "Demon Ruins": {
         "name": "Demon Ruins",
@@ -773,7 +773,7 @@
             "2": [37, 40, 39]
         },
 		"spawns": [35],
-        "difficultyOrder": [3, 1, 0, 4, 2]
+        "difficultyOrder": [3, 1, 0, 4, 2, 5]
     },
     "Gnashing Beaks": {
         "name": "Gnashing Beaks",
@@ -1227,7 +1227,7 @@
             "3": [36, 36, 36, 40]
         },
 		"spawns": [35],
-        "difficultyOrder": [0, 1, 6, 8, 7, 2, 3, 4, 5, 9]
+        "difficultyOrder": [0, 1, 6, 8, 7, 2, 3, 4, 5, 9, 10]
     },
     "Parish Gates": {
         "name": "Parish Gates",
@@ -1746,7 +1746,7 @@
             "3": [38, 39, 39]
         },
 		"spawns": [35],
-        "difficultyOrder": [0, 1, 5, 6, 8, 2, 7, 9, 3, 4]
+        "difficultyOrder": [0, 1, 5, 6, 9, 2, 7, 10, 3, 4, 8]
     },
     "The Hellkite Bridge": {
         "name": "The Hellkite Bridge",
@@ -1896,7 +1896,7 @@
             "2": [37, 37, 40]
         },
 		"spawns": [35],
-        "difficultyOrder": [0, 3, 4, 1, 2, 5]
+        "difficultyOrder": [0, 3, 4, 1, 2, 5, 6]
     },
     "Unhallowed Caves": {
         "name": "Unhallowed Caves",
