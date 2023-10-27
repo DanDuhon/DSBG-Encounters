@@ -108,7 +108,7 @@ with open(path.join(baseFolder, "encounters.json")) as ef:
 
 # skip = True
 for e in enc:
-    if e not in ["Deathly Tolls", "Gleaming Silver", "Parish Church", "The Grand Hall", "Undead Sanctum"]:
+    if e not in ["Gleaming Silver"]:
         continue
 #         skip = False
 #     if skip:
@@ -147,6 +147,33 @@ for e in enc:
                     5 if enemyIds[enemies[0]].health == 10 else enemyIds[enemies[0]].health
                 } if enemyCount == 1 else enemyIds[en].health
             )], enemyCount))
+        
+        # for combo in allCombos:
+        #     if (
+        #     difficulty * (1 - diffMod) <= sum([enemyIds[enemy].difficulty * (1.5 if enemy in skeletons and blackHollowMage in enemies else 1) for enemy in combo]) <= difficulty * (1 + diffMod)
+        #     and (sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1]) == rangedCount
+        #         or sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3]) == rangedCount)
+        #     and ((3 if phalanx in enemies else 0) + enemies.count(phalanxHollow) < 6 or e == "Eye of the Storm")
+        #     # Account for duplicate models from the new core sets.
+        #     # I assume anyone who had the original core set wouldn't buy The Sunless City
+        #     # (especially not if they're using this app), so limit the total number of
+        #     # those models.
+        #     and ((enc[e]["set"] == "The Sunless City" and e not in onslaughtEncounters)
+        #         or (enemies.count(crossbowHollow) + enemies.count(crossbowHollowTsc) <= 3
+        #             and enemies.count(hollowSoldier) + enemies.count(hollowSoldierTsc) <= 3
+        #             and enemies.count(sentinel) + enemies.count(sentinelTsc) <= 2
+        #             and enemies.count(silverKnightGreatbowman) + enemies.count(silverKnightGreatbowmanTsc) <= 3
+        #             and enemies.count(silverKnightSwordsman) + enemies.count(silverKnightSwordsmanTsc) <= 3))
+        #     # Black Hollow Mages need to be with at least one "skeleton" enemy
+        #     and (blackHollowMage not in combo or [enemy in skeletons for enemy in combo].count(True) > 0)):
+        #         if len(set([enemy for enemy in combo if combo.count(enemy) == 2])) == 2 or combo.count(sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 1:
+        #             print(combo)
+        #             if len(set([enemy for enemy in combo if combo.count(enemy) == 2])) == 2:
+        #                 print("\tTwo pairs")
+        #             if combo.count(sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 1:
+        #                 print("\tOne of the strongest")
+        #             if len(set([enemy for enemy in combo if combo.count(enemy) == 2])) == 2 and combo.count(sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 1:
+        #                 pass
 
         # Create a dictionary of alternatives, put into keys that are the
         # sets in which those enemies are found.
@@ -184,8 +211,8 @@ for e in enc:
                 (len(set([enemy for enemy in combo if combo.count(enemy) == 2])) == 2
                     or [enemy for enemy in combo if combo.count(enemy) == 4])
                 and combo.count(sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 1))
-            # Two pairs of enemies
-            and (e != "Gleaming Silver" or len(set([enemy for enemy in combo if combo.count(enemy) == 2])) == 2 or [enemy for enemy in combo if combo.count(enemy) == 4])
+            # Two pairs of enemies and the pairs can't contain the strongest enemy
+            and (e != "Gleaming Silver" or (len(set([enemy for enemy in combo if combo.count(enemy) == 2])) == 2 and combo.count(sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 1))
             # Two of the weakest 1 health enemy
             and (e not in set(["Skeletal Spokes", "The Shine of Gold"]) or ([enemy for enemy in combo if enemyIds[enemy].health == 1] and combo.count(sorted([enemy for enemy in combo if enemyIds[enemy].health == 1], key=lambda x: enemyIds[x].difficulty)[0]) == 2))
             # Three of the weakest 1 health enemy
