@@ -281,44 +281,7 @@ for e in enc:
         # These are the encounters that would take too long to generate all the combinations because we need
         # too many enemies (more than 6).
         # In total, we're looking for up to 1 million combinations but we'll trim that down later.
-        a10 = False
-        a20 = False
-        a30 = False
-        a40 = False
-        a50 = False
-        a60 = False
-        a70 = False
-        a80 = False
-        a90 = False
         while sum((len(combosDict[sets]) for sets in combosDict)) < 1000000:
-            a = sum((len(combosDict[sets]) for sets in combosDict))
-            if a >= 100000 and not a10:
-                print("10%")
-                a10 = True
-            elif a >= 200000 and not a20:
-                print("20%")
-                a20 = True
-            elif a >= 300000 and not a30:
-                print("30%")
-                a30 = True
-            elif a >= 400000 and not a40:
-                print("40%")
-                a40 = True
-            elif a >= 500000 and not a50:
-                print("50%")
-                a50 = True
-            elif a >= 600000 and not a60:
-                print("60%")
-                a60 = True
-            elif a >= 700000 and not a70:
-                print("70%")
-                a70 = True
-            elif a >= 800000 and not a80:
-                print("80%")
-                a80 = True
-            elif a >= 900000 and not a90:
-                print("90%")
-                a90 = True
             # Combinations go by the order of the iterable it's reading from,
             # so shuffling the order of the enemies will give us different
             # combinations.
