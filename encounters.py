@@ -108,7 +108,7 @@ with open(path.join(baseFolder, "encounters.json")) as ef:
 
 # skip = True
 for e in enc:
-    if e not in ["Gleaming Silver"]:
+    if e not in ["Trophy Room"]:
         continue
 #         skip = False
 #     if skip:
@@ -147,33 +147,6 @@ for e in enc:
                     5 if enemyIds[enemies[0]].health == 10 else enemyIds[enemies[0]].health
                 } if enemyCount == 1 else enemyIds[en].health
             )], enemyCount))
-        
-        # for combo in allCombos:
-        #     if (
-        #     difficulty * (1 - diffMod) <= sum([enemyIds[enemy].difficulty * (1.5 if enemy in skeletons and blackHollowMage in enemies else 1) for enemy in combo]) <= difficulty * (1 + diffMod)
-        #     and (sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1]) == rangedCount
-        #         or sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3]) == rangedCount)
-        #     and ((3 if phalanx in enemies else 0) + enemies.count(phalanxHollow) < 6 or e == "Eye of the Storm")
-        #     # Account for duplicate models from the new core sets.
-        #     # I assume anyone who had the original core set wouldn't buy The Sunless City
-        #     # (especially not if they're using this app), so limit the total number of
-        #     # those models.
-        #     and ((enc[e]["set"] == "The Sunless City" and e not in onslaughtEncounters)
-        #         or (enemies.count(crossbowHollow) + enemies.count(crossbowHollowTsc) <= 3
-        #             and enemies.count(hollowSoldier) + enemies.count(hollowSoldierTsc) <= 3
-        #             and enemies.count(sentinel) + enemies.count(sentinelTsc) <= 2
-        #             and enemies.count(silverKnightGreatbowman) + enemies.count(silverKnightGreatbowmanTsc) <= 3
-        #             and enemies.count(silverKnightSwordsman) + enemies.count(silverKnightSwordsmanTsc) <= 3))
-        #     # Black Hollow Mages need to be with at least one "skeleton" enemy
-        #     and (blackHollowMage not in combo or [enemy in skeletons for enemy in combo].count(True) > 0)):
-        #         if len(set([enemy for enemy in combo if combo.count(enemy) == 2])) == 2 or combo.count(sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 1:
-        #             print(combo)
-        #             if len(set([enemy for enemy in combo if combo.count(enemy) == 2])) == 2:
-        #                 print("\tTwo pairs")
-        #             if combo.count(sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 1:
-        #                 print("\tOne of the strongest")
-        #             if len(set([enemy for enemy in combo if combo.count(enemy) == 2])) == 2 and combo.count(sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 1:
-        #                 pass
 
         # Create a dictionary of alternatives, put into keys that are the
         # sets in which those enemies are found.
@@ -308,7 +281,44 @@ for e in enc:
         # These are the encounters that would take too long to generate all the combinations because we need
         # too many enemies (more than 6).
         # In total, we're looking for up to 1 million combinations but we'll trim that down later.
+        a10 = False
+        a20 = False
+        a30 = False
+        a40 = False
+        a50 = False
+        a60 = False
+        a70 = False
+        a80 = False
+        a90 = False
         while sum((len(combosDict[sets]) for sets in combosDict)) < 1000000:
+            a = sum((len(combosDict[sets]) for sets in combosDict))
+            if a >= 100000 and not a10:
+                print("10%")
+                a10 = True
+            elif a >= 200000 and not a20:
+                print("20%")
+                a20 = True
+            elif a >= 300000 and not a30:
+                print("30%")
+                a30 = True
+            elif a >= 400000 and not a40:
+                print("40%")
+                a40 = True
+            elif a >= 500000 and not a50:
+                print("50%")
+                a50 = True
+            elif a >= 600000 and not a60:
+                print("60%")
+                a60 = True
+            elif a >= 700000 and not a70:
+                print("70%")
+                a70 = True
+            elif a >= 800000 and not a80:
+                print("80%")
+                a80 = True
+            elif a >= 900000 and not a90:
+                print("90%")
+                a90 = True
             # Combinations go by the order of the iterable it's reading from,
             # so shuffling the order of the enemies will give us different
             # combinations.
@@ -344,8 +354,9 @@ for e in enc:
                     and Counter([enemyIds[enemy].difficulty for enemy in combo])[sorted(combo, key=lambda x: enemyIds[x].difficulty, reverse=True)[0]] == 2))
                 # Two of the strongest 1 health enemy
                 and (e != "Frozen Revolutions" or combo.count(sorted([enemy for enemy in combo if enemyIds[enemy].health == 1], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 2)
-                # Two of the second strongest enemy
-                and (e != "Trophy Room" or combo.count(sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[1]) == 2)
+                # Two of the second strongest enemy (second strongest cannot also be the first strongest)
+                and (e != "Trophy Room" or (combo.count(sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[1]) == 2
+                                            and sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[1] == sorted(list(set([enemy for enemy in combo])), key=lambda x: enemyIds[x].difficulty, reverse=True)[1]))
                 # Three of the same gang
                 and (e != "Deathly Tolls" or (Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1) and Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1)[0][1] == 3))
                 # Five of the same gang
