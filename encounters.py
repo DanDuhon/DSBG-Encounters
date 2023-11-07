@@ -154,7 +154,7 @@ for e in enc:
         # Black Hollow Mage increases the difficulty of skeleton enemies since
         # they resurrect defeated skeletons.
         combosDict = defaultdict(set)
-        [combosDict[frozenset([enemyIds[enemyId].set for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set())].add(combo) for combo in allCombos if (
+        [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set())].add(combo) for combo in allCombos if (
             difficulty * (1 - diffMod) <= sum([enemyIds[enemy].difficulty * (1.5 if enemy in skeletons and blackHollowMage in enemies else 1) for enemy in combo]) <= difficulty * (1 + diffMod)
             and (sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1]) == rangedCount
                 or sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3]) == rangedCount)
@@ -163,7 +163,7 @@ for e in enc:
             # I assume anyone who had the original core set wouldn't buy The Sunless City
             # (especially not if they're using this app), so limit the total number of
             # those models.
-            and ((enc[e]["set"] == "The Sunless City" and e not in onslaughtEncounters)
+            and ((enc[e]["expansion"] == "The Sunless City" and e not in onslaughtEncounters)
                 or (enemies.count(crossbowHollow) + enemies.count(crossbowHollowTsc) <= 3
                     and enemies.count(hollowSoldier) + enemies.count(hollowSoldierTsc) <= 3
                     and enemies.count(sentinel) + enemies.count(sentinelTsc) <= 2
@@ -267,7 +267,7 @@ for e in enc:
                     allCombos.append(tuple(gang) + (hh,) + tuple(combo) + (enemiesDict["Mimic"].id,))
                 
         combosDict = defaultdict(set)
-        [combosDict[frozenset([enemyIds[enemyId].set for enemyId in combo])].add(combo) for combo in allCombos if (
+        [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo])].add(combo) for combo in allCombos if (
             difficulty * (1 - diffMod) <= sum([enemyIds[enemy].difficulty for enemy in combo]) <= difficulty * (1 + diffMod)
             and (sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1]) == rangedCount
                 or sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3]) == rangedCount)
@@ -294,7 +294,7 @@ for e in enc:
             allCombos = list(islice(combinations([en for en in shuffledEnemies if en not in invaders], enemyCount), 100000))
 
             # Create the dictionary with the enemy sets as keys.
-            [combosDict[frozenset([enemyIds[enemyId].set for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set())].add(combo) for combo in allCombos if (
+            [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set())].add(combo) for combo in allCombos if (
                 difficulty * (1 - diffMod) <= sum([enemyIds[enemy].difficulty* (1.5 if enemy in skeletons and blackHollowMage in enemies else 1) for enemy in combo]) <= difficulty * (1 + diffMod)
                 and sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3]) == rangedCount
                 and (3 if phalanx in enemies else 0) + enemies.count(phalanxHollow) < 6
@@ -302,7 +302,7 @@ for e in enc:
                 # I assume anyone who had the original core set wouldn't buy The Sunless City
                 # (especially not if they're using this app), so limit the total number of
                 # those models.
-                and ((enc[e]["set"] == "The Sunless City" and e not in onslaughtEncounters)
+                and ((enc[e]["expansion"] == "The Sunless City" and e not in onslaughtEncounters)
                     or (enemies.count(crossbowHollow) + enemies.count(crossbowHollowTsc) <= 3
                         and enemies.count(hollowSoldier) + enemies.count(hollowSoldierTsc) <= 3
                         and enemies.count(sentinel) + enemies.count(sentinelTsc) <= 2
@@ -361,16 +361,16 @@ for e in enc:
 
     # Alternative enemy order by difficulty matching original enemy order.
     alternatives["alternatives"] = {",".join([k for k in key]): list(value) for key, value in combosDict.items()}
-    for setCombo in alternatives["alternatives"]:
+    for expansionCombo in alternatives["alternatives"]:
         newAlts = []
-        for alt in alternatives["alternatives"][setCombo]:
+        for alt in alternatives["alternatives"][expansionCombo]:
             newAlt = []
             altDifficulty = sorted(alt, key=lambda x: enemyIds[x].difficulty)
             for ord in enc[e]["difficultyOrder"]:
                 newAlt.append(altDifficulty[ord])
             if newAlt not in newAlts:
                 newAlts.append(newAlt)
-        alternatives["alternatives"][setCombo] = newAlts
+        alternatives["alternatives"][expansionCombo] = newAlts
 
     # This is manually set for each encounter in the JSON file.
     # enemySlots is the number of enemies in each row following this pattern:
@@ -386,55 +386,55 @@ for e in enc:
         slots = alternatives["enemySlots"]
         tile1Num = sum([s for s in slots[:5]])
         tile2Num = sum([s for s in slots[5:7]])
-        for setCombo in alternatives["alternatives"]:
-            for alt in alternatives["alternatives"][setCombo]:
+        for expansionCombo in alternatives["alternatives"]:
+            for alt in alternatives["alternatives"][expansionCombo]:
                 for enemy in alt:
                     if any([
                         [en for en in alt[:tile1Num + 1]].count(enemy) > enemyIds[enemy].numberOfModels,
                         [en for en in alt[tile1Num + 1:tile2Num + 1]].count(enemy) > enemyIds[enemy].numberOfModels,
                         [en for en in alt[tile2Num + 1:]].count(enemy) > enemyIds[enemy].numberOfModels
                         ]):
-                        if setCombo not in alternativesToRemove:
-                            alternativesToRemove[setCombo] = set()
-                        alternativesToRemove[setCombo].add(tuple(alt))
+                        if expansionCombo not in alternativesToRemove:
+                            alternativesToRemove[expansionCombo] = set()
+                        alternativesToRemove[expansionCombo].add(tuple(alt))
 
-        for setCombo in alternativesToRemove:
-            for alt in list(alternativesToRemove[setCombo]):
-                alternatives["alternatives"][setCombo].remove(list(alt))
+        for expansionCombo in alternativesToRemove:
+            for alt in list(alternativesToRemove[expansionCombo]):
+                alternatives["alternatives"][expansionCombo].remove(list(alt))
     elif e in extraEnemies and e in onslaughtEncounters:
-        for setCombo in alternatives["alternatives"]:
-            for alt in alternatives["alternatives"][setCombo]:
+        for expansionCombo in alternatives["alternatives"]:
+            for alt in alternatives["alternatives"][expansionCombo]:
                 for enemy in alt:
                     if alt.count(enemy) > enemyIds[enemy].numberOfModels:
-                        if setCombo not in alternativesToRemove:
-                            alternativesToRemove[setCombo] = set()
-                        alternativesToRemove[setCombo].add(tuple(alt))
+                        if expansionCombo not in alternativesToRemove:
+                            alternativesToRemove[expansionCombo] = set()
+                        alternativesToRemove[expansionCombo].add(tuple(alt))
 
     keysToDelete = []
 
-    for setCombo in alternatives["alternatives"]:
-        if not alternatives["alternatives"][setCombo]:
-            keysToDelete.append(setCombo)
+    for expansionCombo in alternatives["alternatives"]:
+        if not alternatives["alternatives"][expansionCombo]:
+            keysToDelete.append(expansionCombo)
 
     for key in keysToDelete:
         del alternatives["alternatives"][key]
 
     # For each key in the dictionary, shuffle the enemy combos,
     # then trim it down so we keep at most 1000 values per key.
-    for setCombo in alternatives["alternatives"]:
-        alternatives["alternatives"][setCombo] = list(alternatives["alternatives"][setCombo])
-        shuffle(alternatives["alternatives"][setCombo])
-        alternatives["alternatives"][setCombo] = alternatives["alternatives"][setCombo][:min([len(alternatives["alternatives"][setCombo]), 1000])]
+    for expansionCombo in alternatives["alternatives"]:
+        alternatives["alternatives"][expansionCombo] = list(alternatives["alternatives"][expansionCombo])
+        shuffle(alternatives["alternatives"][expansionCombo])
+        alternatives["alternatives"][expansionCombo] = alternatives["alternatives"][expansionCombo][:min([len(alternatives["alternatives"][expansionCombo]), 1000])]
 
     if e not in encMain:
         encMain[e] = {
             "name": enc[e]["name"],
-            "set": enc[e]["set"],
+            "expansion": enc[e]["expansion"],
             "level": enc[e]["level"],
-            "setCombos": [k.split(",") for k in alternatives["alternatives"].keys()]
+            "expansionCombos": [k.split(",") for k in alternatives["alternatives"].keys()]
             }
     else:
-        encMain[e]["setCombos"] = [k.split(",") for k in alternatives["alternatives"].keys()]
+        encMain[e]["expansionCombos"] = [k.split(",") for k in alternatives["alternatives"].keys()]
             
     with open(baseFolder + "\\encounters\\" + e + ".json", "w") as encountersFile:
         dump(alternatives, encountersFile)
