@@ -108,7 +108,7 @@ with open(path.join(baseFolder, "encounters.json")) as ef:
 
 # skip = True
 for e in enc:
-    if e not in ["Rain of Filth"]:
+    if e not in ["Shattered Keep"]:
         continue
 #         skip = False
 #     if skip:
@@ -188,8 +188,10 @@ for e in enc:
             and (e != "Gleaming Silver" or (len(set([enemy for enemy in combo if combo.count(enemy) == 2])) == 2 and combo.count(sorted([enemy for enemy in combo], key=lambda x: enemyIds[x].difficulty, reverse=True)[0]) == 1))
             # Two of the weakest 1 health enemy
             and (e not in set(["Skeletal Spokes", "The Shine of Gold"]) or ([enemy for enemy in combo if enemyIds[enemy].health == 1] and combo.count(sorted([enemy for enemy in combo if enemyIds[enemy].health == 1], key=lambda x: enemyIds[x].difficulty)[0]) == 2))
-            # Three of the weakest 1 health enemy
-            and (e != "Shattered Keep" or combo.count(sorted([enemy for enemy in combo if enemyIds[enemy].health == 1], key=lambda x: enemyIds[x].difficulty)[0]) == 3)
+            # Three of the weakest 1 health enemy, also no poison causing enemies
+            and (e != "Shattered Keep" or (
+                combo.count(sorted([enemy for enemy in combo if enemyIds[enemy].health == 1], key=lambda x: enemyIds[x].difficulty)[0]) == 3
+                and all(["poison" not in enemyIds[enemy].attackEffect for enemy in combo])))
             # Four of the same gang
             and (e != "Flooded Fortress" or (Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1) and Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1)[0][1] == 4))
             # Five of the same gang
