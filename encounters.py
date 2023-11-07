@@ -108,7 +108,7 @@ with open(path.join(baseFolder, "encounters.json")) as ef:
 
 # skip = True
 for e in enc:
-    if e not in ["Trophy Room"]:
+    if e not in ["Rain of Filth"]:
         continue
 #         skip = False
 #     if skip:
@@ -194,6 +194,8 @@ for e in enc:
             and (e != "Flooded Fortress" or (Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1) and Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1)[0][1] == 4))
             # Five of the same gang
             and (e not in set(["Undead Sanctum", "The Fountainhead"]) or (Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1) and Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1)[0][1] == 5))
+            # No poison causing enemies
+            and (e != "Rain of Filth" or all(["poison" not in enemyIds[enemy].attackEffect for enemy in combo]))
         )]
     # Depths of the Cathedral is a beast to generate because of the 9 gang members,
     # so I spun it off into a more controlled setting.
