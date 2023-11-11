@@ -108,7 +108,7 @@ with open(path.join(baseFolder, "encounters.json")) as ef:
 
 # skip = True
 for e in enc:
-    if e not in ["Shattered Keep"]:
+    if e not in ["Undead Sanctum"]:
         continue
 #         skip = False
 #     if skip:
@@ -131,10 +131,46 @@ for e in enc:
     rangedCount = sum([1 for enemy in enemies if max(enemyIds[enemy].attackRange) > 1])
     difficulty = sum([enemyIds[enemy].difficulty * enemies.count(enemy) for enemy in enemyIds if enemy in enemies])
 
+    if e == "Undead Sanctum":
+        allCombos = set(combinations([enemyIds[en].id for en in allEnemies + extraEnemies.get(e, []) if (
+            en not in invaders
+            and enemyIds[en].health in {
+                    enemyIds[enemies[0]].health,
+                    5 if enemyIds[enemies[0]].health == 10 else enemyIds[enemies[0]].health
+                } if enemyCount == 1 else enemyIds[en].health
+            )], enemyCount))
+        
+        goodCombos = []
+        
+        for combo in allCombos:
+            # Undead Sanctum - I don't know why this works here and not below, but whatever. I'll leave this for now.
+            if (
+                difficulty * (1 - diffMod) <= sum([enemyIds[enemy].difficulty * (1.5 if enemy in skeletons and blackHollowMage in enemies else 1) for enemy in combo]) <= difficulty * (1 + diffMod)
+                and (sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1]) == rangedCount
+                    or sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3]) == rangedCount)
+                and ((3 if phalanx in enemies else 0) + enemies.count(phalanxHollow) < 6 or e == "Eye of the Storm")
+                # Account for duplicate models from the new core sets.
+                # I assume anyone who had the original core set wouldn't buy The Sunless City
+                # (especially not if they're using this app), so limit the total number of
+                # those models.
+                and ((enc[e]["expansion"] == "The Sunless City" and e not in onslaughtEncounters)
+                    or (enemies.count(crossbowHollow) + enemies.count(crossbowHollowTsc) <= 3
+                        and enemies.count(hollowSoldier) + enemies.count(hollowSoldierTsc) <= 3
+                        and enemies.count(sentinel) + enemies.count(sentinelTsc) <= 2
+                        and enemies.count(silverKnightGreatbowman) + enemies.count(silverKnightGreatbowmanTsc) <= 3
+                        and enemies.count(silverKnightSwordsman) + enemies.count(silverKnightSwordsmanTsc) <= 3))
+                # Black Hollow Mages need to be with at least one "skeleton" enemy
+                and (blackHollowMage not in combo or [enemy in skeletons for enemy in combo].count(True) > 0)
+                and sum([1 for enemy in combo if enemyIds[enemy].gang]) == 5
+                and Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1)[0][1] == 5):
+                goodCombos.append(combo)
+
+        combosDict = defaultdict(set)
+        [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set())].add(combo) for combo in goodCombos]
     # 6 enemies seems to be the limit for generating all combinations of enemies
     # in a reasonable amount of time.  For encounters with more than that, we're
     # going to take a sample instead.
-    if sum([1 for en in enemies if en not in invaders]) < 7:
+    elif sum([1 for en in enemies if en not in invaders]) < 7:
         # Generate all combinations of enemies, excluding invaders and old style mimics.
         # Also make sure we don't replace a single 5 health enemy with a 1 health enemy.
         # The Sunless City actually breaks the model limit for that set at the encounter
@@ -195,7 +231,7 @@ for e in enc:
             # Four of the same gang
             and (e != "Flooded Fortress" or (Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1) and Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1)[0][1] == 4))
             # Five of the same gang
-            and (e not in set(["Undead Sanctum", "The Fountainhead"]) or (Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1) and Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1)[0][1] == 5))
+            and (e not in set(["Undead Sanctum", "The Fountainhead"]) or (sum([1 for enemy in combo if enemyIds[enemy].gang]) == 5 and Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1)[0][1] == 5))
             # No poison causing enemies
             and (e != "Rain of Filth" or all(["poison" not in enemyIds[enemy].attackEffect for enemy in combo]))
         )]

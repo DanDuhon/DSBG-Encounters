@@ -37,19 +37,6 @@ class Enemy:
             self.gang = "Scarecrow"
         else:
             self.gang = None
-        
-        if "Hollow" in self.name:
-            self.group = "Hollow"
-        elif "Alonne" in self.name:
-            self.group = "Alonne"
-        elif "Skeleton" in self.name:
-            self.group = "Skeleton"
-        elif "Scarecrow" in self.name:
-            self.group = "Scarecrow"
-        elif "Silver Knight" in self.name:
-            self.group = "Silver Knight"
-        else:
-            self.group = None
 
         self.bleeding = False
         self.deaths = 0
