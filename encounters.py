@@ -134,6 +134,7 @@ for e in enc:
     if e == "Undead Sanctum":
         allCombos = set(combinations([enemyIds[en].id for en in allEnemies + extraEnemies.get(e, []) if (
             en not in invaders
+            and enemyIds[en].expansion == "Dark Souls The Board Game"
             and enemyIds[en].health in {
                     enemyIds[enemies[0]].health,
                     5 if enemyIds[enemies[0]].health == 10 else enemyIds[enemies[0]].health
@@ -164,6 +165,14 @@ for e in enc:
                 and sum([1 for enemy in combo if enemyIds[enemy].gang]) == 5
                 and Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1)[0][1] == 5):
                 goodCombos.append(combo)
+            elif (
+                difficulty * (1 - diffMod) <= sum([enemyIds[enemy].difficulty * (1.5 if enemy in skeletons and blackHollowMage in enemies else 1) for enemy in combo]) <= difficulty * (1 + diffMod)
+                and (sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1]) == rangedCount
+                    or sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3]) == rangedCount)
+                and sum([1 for enemy in combo if enemyIds[enemy].gang]) == 5
+                and Counter([enemyIds[enemy].gang for enemy in combo if enemyIds[enemy].gang]).most_common(1)[0][1] == 5):
+                print([enemyIds[enemy].name for enemy in combo])
+                pass
 
         combosDict = defaultdict(set)
         [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set())].add(combo) for combo in goodCombos]
