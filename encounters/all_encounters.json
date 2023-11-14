@@ -6,15 +6,14 @@
         "tiles": {
             "1": {
                 "enemies": [27, 29, 27, 12],
-                "spawns": [],
-                "difficultyOrder": [1, 0, 2, 3]
+                "spawns": []
             },
             "2": {
                 "enemies": [29, 29, 28],
-                "spawns": [],
-                "difficultyOrder": [0, 1, 2]
+                "spawns": []
             }
-        }
+        },
+        "difficultyOrder": [3, 0, 4, 5, 1, 2, 6]
     },
     "Abandoned and Forgotten": {
         "name": "Abandoned and Forgotten",
@@ -23,15 +22,14 @@
         "tiles": {
             "1": {
                 "enemies": [],
-                "spawns": [20, 8, 6],
-                "difficultyOrder": [0, 1, 2]
+                "spawns": [20, 8, 6]
             },
             "2": {
                 "enemies": [],
-                "spawns": [],
-                "difficultyOrder": []
+                "spawns": []
             }
-        }
+        },
+        "difficultyOrder": [0, 1, 2]
     },
     "Abandoned Storeroom": {
         "name": "Abandoned Storeroom",
@@ -40,17 +38,20 @@
         "tiles": {
             "1": {
                 "enemies": [12],
-                "spawns": [],
-                "difficultyOrder": [0]
+                "spawns": []
             }
-        }
+        },
+        "difficultyOrder": [0]
     },
     "Abandoned Tower": {
         "name": "Abandoned Tower",
         "expansion": "Darkroot",
         "level": 3,
         "tiles": {
-            "1": [7, 21, 21, 32, 21]
+            "1": {
+                "enemies": [7, 21, 21, 32, 21],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 0, 1, 4, 2]
     },
@@ -61,10 +62,10 @@
         "tiles": {
             "1": {
                 "enemies": [38],
-                "spawns": [],
-                "difficultyOrder": [0]
+                "spawns": []
             }
-        }
+        },
+        "difficultyOrder": [0]
     },
     "Altar of Bones": {
         "name": "Altar of Bones",
@@ -73,15 +74,14 @@
         "tiles": {
             "1": {
                 "enemies": [29, 11],
-                "spawns": [],
-                "difficultyOrder": [0, 1]
+                "spawns": []
             },
             "2": {
                 "enemies": [29, 27, 12],
-                "spawns": [],
-                "difficultyOrder": [0, 1, 2]
+                "spawns": []
             }
-        }
+        },
+        "difficultyOrder": [0, 4, 1, 2, 3]
     },
     "Archive Entrance": {
         "name": "Archive Entrance",
@@ -90,17 +90,20 @@
         "tiles": {
             "1": {
                 "enemies": [35, 39, 39, 38],
-                "spawns": [],
-                "difficultyOrder": [2, 0, 1, 3]
+                "spawns": []
             }
-        }
+        },
+        "difficultyOrder": [2, 0, 1, 3]
     },
     "Ash Gardens": {
         "name": "Ash Gardens",
         "expansion": "Dark Souls The Board Game",
         "level": 1,
         "tiles": {
-            "1": [24, 5]
+            "1": {
+                "enemies": [24, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 0]
     },
@@ -109,7 +112,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 1,
         "tiles": {
-            "1": [5, 13, 13]
+            "1": {
+                "enemies": [5, 13, 13],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1]
     },
@@ -118,7 +124,10 @@
         "expansion": "Asylum Demon",
         "level": 4,
         "tiles": {
-            "1": [32, 25, 21, 10, 21, 10, 32, 25]
+            "1": {
+                "enemies": [32, 25, 21, 10, 21, 10, 32, 25],
+                "spawns": []
+            }
         },
         "difficultyOrder": [6, 4, 2, 0, 3, 1, 7, 5]
     },
@@ -127,7 +136,10 @@
         "expansion": "The Last Giant",
         "level": 4,
         "tiles": {
-            "1": [25, 10, 25, 0, 0, 25, 0, 14, 10]
+            "1": {
+                "enemies": [25, 10, 25, 0, 0, 25, 0, 14, 10],
+                "spawns": []
+            }
         },
         "difficultyOrder": [5, 0, 6, 2, 3, 7, 4, 8, 1]
     },
@@ -136,7 +148,10 @@
         "expansion": "Darkroot",
         "level": 2,
         "tiles": {
-            "1": [7, 23, 7, 21]
+            "1": {
+                "enemies": [7, 23, 7, 21],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 3, 1]
     },
@@ -145,7 +160,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 2,
         "tiles": {
-            "1": [26, 26, 24, 26]
+            "1": {
+                "enemies": [26, 26, 24, 26],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 2, 0, 3]
     },
@@ -154,7 +172,10 @@
         "expansion": "Darkroot",
         "level": 1,
         "tiles": {
-            "1": [7, 21, 21]
+            "1": {
+                "enemies": [7, 21, 21],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1]
     },
@@ -163,7 +184,10 @@
         "expansion": "Old Iron King",
         "level": 4,
         "tiles": {
-            "1": [1, 2, 10, 10, 14, 33]
+            "1": {
+                "enemies": [1, 2, 10, 10, 14, 33],
+                "spawns": []
+            }
         },
         "difficultyOrder": [5, 3, 1, 2, 4, 0]
     },
@@ -172,7 +196,10 @@
         "expansion": "Iron Keep",
         "level": 1,
         "tiles": {
-            "1": [2, 5, 5]
+            "1": {
+                "enemies": [2, 5, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1]
     },
@@ -181,7 +208,10 @@
         "expansion": "Darkroot",
         "level": 2,
         "tiles": {
-            "1": [31, 16]
+            "1": {
+                "enemies": [31, 16],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 0]
     },
@@ -190,7 +220,10 @@
         "expansion": "Iron Keep",
         "level": 2,
         "tiles": {
-            "1": [1, 0, 0]
+            "1": {
+                "enemies": [1, 0, 0],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1]
     },
@@ -201,17 +234,20 @@
         "tiles": {
             "1": {
                 "enemies": [29, 27, 29],
-                "spawns": [],
-                "difficultyOrder": [0, 2, 1]
+                "spawns": []
             }
-        }
+        },
+        "difficultyOrder": [0, 2, 1]
     },
     "Bronze Spire": {
         "name": "Bronze Spire",
         "expansion": "Iron Keep",
         "level": 2,
         "tiles": {
-            "1": [0, 14]
+            "1": {
+                "enemies": [0, 14],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1]
     },
@@ -220,7 +256,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 1,
         "tiles": {
-            "1": [26, 13, 13]
+            "1": {
+                "enemies": [26, 13, 13],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1]
     },
@@ -231,17 +270,20 @@
         "tiles": {
             "1": {
                 "enemies": [37, 36],
-                "spawns": [],
-                "difficultyOrder": [0, 1]
+                "spawns": []
             }
-        }
+        },
+        "difficultyOrder": [0, 1]
     },
     "Brume Tower": {
         "name": "Brume Tower",
         "expansion": "Executioner Chariot",
         "level": 4,
         "tiles": {
-            "1": [9, 3, 33, 14]
+            "1": {
+                "enemies": [9, 3, 33, 14],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 3, 0, 2]
     },
@@ -250,7 +292,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 2,
         "tiles": {
-            "1": [15, 26, 26]
+            "1": {
+                "enemies": [15, 26, 26],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2]
     },
@@ -259,7 +304,10 @@
         "expansion": "Iron Keep",
         "level": 1,
         "tiles": {
-            "1": [0, 13, 5]
+            "1": {
+                "enemies": [0, 13, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1]
     },
@@ -268,7 +316,10 @@
         "expansion": "Iron Keep",
         "level": 1,
         "tiles": {
-            "1": [13, 5, 10]
+            "1": {
+                "enemies": [13, 5, 10],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2]
     },
@@ -277,7 +328,10 @@
         "expansion": "Iron Keep",
         "level": 3,
         "tiles": {
-            "1": [2, 14, 0, 1]
+            "1": {
+                "enemies": [2, 14, 0, 1],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 2, 0, 3]
     },
@@ -288,27 +342,27 @@
         "tiles": {
             "1": {
                 "enemies": [37, 37, 38],
-                "spawns": [],
-                "difficultyOrder": [0, 1, 2]
+                "spawns": []
             },
             "2": {
                 "enemies": [37, 36, 36],
-                "spawns": [],
-                "difficultyOrder": [0, 1, 2]
+                "spawns": []
             },
             "3": {
                 "enemies": [40, 39, 39],
-                "spawns": [],
-                "difficultyOrder": [2, 0, 1]
+                "spawns": []
             }
-        }
+        },
+        "difficultyOrder": [0, 1, 8, 2, 3, 4, 7, 5, 6]
     },
     "Cells of the Dead": {
         "name": "Cells of the Dead",
         "expansion": "Asylum Demon",
         "level": 4,
         "tiles": {
-            "1": [14, 26, 5, 26, 5, 5, 14]
+            "1": {
+                "enemies": [14, 26, 5, 26, 5, 5, 14]
+            }
         },
         "difficultyOrder": [5, 3, 0, 4, 1, 2, 6]
     },
@@ -317,7 +371,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 3,
         "tiles": {
-            "1": [15, 24, 24, 15, 26, 26]
+            "1": {
+                "enemies": [15, 24, 24, 15, 26, 26],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1, 3, 4, 5]
     },
@@ -326,7 +383,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 3,
         "tiles": {
-            "1": [15, 22, 15]
+            "1": {
+                "enemies": [15, 22, 15],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 2, 1]
     },
@@ -335,9 +395,18 @@
         "expansion": "Painted World of Ariamis",
         "level": 3,
         "tiles": {
-            "1": [20, 20, 20],
-            "2": [8, 8],
-            "3": [30, 30, 6]
+            "1": {
+                "enemies": [20, 20, 20],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [8, 8],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [30, 30, 6],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2, 5, 6, 3, 4, 7]
     },
@@ -346,7 +415,10 @@
         "expansion": "The Sunless City",
         "level": 3,
         "tiles": {
-            "1": [40, 40, 36, 36]
+            "1": {
+                "enemies": [40, 40, 36, 36],
+                "spawns": []
+            }
         },
         "spawns": [38],
         "difficultyOrder": [2, 3, 0, 1, 4]
@@ -356,7 +428,10 @@
         "expansion": "Iron Keep",
         "level": 1,
         "tiles": {
-            "1": [13, 5, 13, 0]
+            "1": {
+                "enemies": [13, 5, 13, 0],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 2, 1, 3]
     },
@@ -365,7 +440,10 @@
         "expansion": "Painted World of Ariamis",
         "level": 1,
         "tiles": {
-            "1": [6]
+            "1": {
+                "enemies": [6],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0]
     },
@@ -374,8 +452,14 @@
         "expansion": "Painted World of Ariamis",
         "level": 2,
         "tiles": {
-            "1": [30, 30],
-            "2": [20, 8, 20]
+            "1": {
+                "enemies": [30, 30],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [20, 8, 20],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 3, 0, 4, 1]
     },
@@ -384,7 +468,10 @@
         "expansion": "Darkroot",
         "level": 3,
         "tiles": {
-            "1": [32, 7, 31, 7]
+            "1": {
+                "enemies": [32, 7, 31, 7],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 0, 2, 1]
     },
@@ -393,7 +480,10 @@
         "expansion": "Executioner Chariot",
         "level": 3,
         "tiles": {
-            "1": [9, 3, 15, 5]
+            "1": {
+                "enemies": [9, 3, 15, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 3, 2, 0]
     },
@@ -402,7 +492,10 @@
         "expansion": "Painted World of Ariamis",
         "level": 2,
         "tiles": {
-            "1": [30, 8, 20, 8]
+            "1": {
+                "enemies": [30, 8, 20, 8],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 2, 0, 3]
     },
@@ -412,28 +505,28 @@
         "level": 3,
         "tiles": {
             "1": {
-                "enemies": [20, 20, 6, 6],
-                "spawns": [],
-                "difficultyOrder": [0, 1, 2, 3]
+                "enemies": [20, 20],
+                "spawns": [6]
             },
             "2": {
-                "enemies": [20, 20, 6, 6],
-                "spawns": [],
-                "difficultyOrder": [0, 1, 2, 3]
+                "enemies": [20, 20],
+                "spawns": [6]
             },
             "3": {
                 "enemies": [],
-                "spawns": [],
-                "difficultyOrder": []
+                "spawns": []
             }
-        }
+        },
+        "difficultyOrder": [0, 1, 4, 2, 3, 5, 6]
     },
     "Courtyard of Lothric": {
         "name": "Courtyard of Lothric",
         "expansion": "Vordt of the Boreal Valley",
         "level": 4,
         "tiles": {
-            "1": [15, 5, 10, 26, 25, 15, 5, 10, 34]
+            "1": {
+                "enemies": [15, 5, 10, 26, 25, 15, 5, 10, 34]
+            }
         },
         "difficultyOrder": [6, 1, 3, 8, 5, 7, 2, 4, 0]
     },
@@ -442,7 +535,9 @@
         "expansion": "The Four Kings",
         "level": 4,
         "tiles": {
-            "1": [15, 24, 15, 24, 22, 5, 22, 5]
+            "1": {
+                "enemies": [15, 24, 15, 24, 22, 5, 22, 5]
+            }
         },
         "difficultyOrder": [4, 2, 5, 3, 6, 0, 7, 1]
     },
@@ -451,7 +546,10 @@
         "expansion": "The Sunless City",
         "level": 1,
         "tiles": {
-            "1": [40, 37, 36]
+            "1": {
+                "enemies": [40, 37, 36],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1]
     },
@@ -460,7 +558,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 1,
         "tiles": {
-            "1": [15]
+            "1": {
+                "enemies": [15],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0]
     },
@@ -469,8 +570,14 @@
         "expansion": "Tomb of Giants",
         "level": 1,
         "tiles": {
-            "1": [29, 18],
-            "2": [29, 29, 18]
+            "1": {
+                "enemies": [29, 18],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [29, 29, 18],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 3, 1, 2, 4]
     },
@@ -479,7 +586,10 @@
         "expansion": "Darkroot",
         "level": 3,
         "tiles": {
-            "1": [31, 31, 32]
+            "1": {
+                "enemies": [31, 31, 32],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2]
     },
@@ -488,7 +598,9 @@
         "expansion": "Gaping Dragon",
         "level": 4,
         "tiles": {
-            "1": [32, 16, 7, 32, 17, 7]
+            "1": {
+                "enemies": [32, 16, 7, 32, 17, 7]
+            }
         },
         "difficultyOrder": [4, 2, 0, 5, 3, 1]
     },
@@ -497,9 +609,18 @@
         "expansion": "Tomb of Giants",
         "level": 3,
         "tiles": {
-            "1": [27, 29, 29],
-            "2": [11, 12],
-            "3": [11, 12, 28]
+            "1": {
+                "enemies": [27, 29, 29],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [11, 12],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [11, 12, 28],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1, 5, 3, 6, 4, 7]
     },
@@ -508,8 +629,14 @@
         "expansion": "Painted World of Ariamis",
         "level": 3,
         "tiles": {
-            "1": [30, 30, 8, 20],
-            "2": [4, 4, 8]
+            "1": {
+                "enemies": [30, 30, 8, 20],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [4, 4, 8],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 2, 5, 0, 3, 4, 6]
     },
@@ -518,7 +645,10 @@
         "expansion": "Tomb of Giants",
         "level": 1,
         "tiles": {
-            "1": [29, 29, 18]
+            "1": {
+                "enemies": [29, 29, 18],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2]
     },
@@ -527,9 +657,18 @@
         "expansion": "The Sunless City",
         "level": 2,
         "tiles": {
-            "1": [40, 40],
-            "2": [39, 37, 37, 39, 36],
-            "3": []
+            "1": {
+                "enemies": [40, 40],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [39, 37, 37, 39, 36],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [],
+                "spawns": []
+            }
         },
         "spawns": [35],
         "difficultyOrder": [5, 6, 3, 0, 1, 4, 2, 7]
@@ -539,7 +678,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 2,
         "tiles": {
-            "1": [24, 26, 15]
+            "1": {
+                "enemies": [24, 26, 15],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 2, 1]
     },
@@ -548,7 +690,10 @@
         "expansion": "Asylum Demon",
         "level": 4,
         "tiles": {
-            "1": [15, 13, 13, 24, 5, 5, 22, 5, 15, 13]
+            "1": {
+                "enemies": [15, 13, 13, 24, 5, 5, 22, 5, 15, 13],
+                "spawns": []
+            }
         },
         "difficultyOrder": [7, 0, 1, 6, 3, 4, 9, 5, 8, 2]
     },
@@ -559,27 +704,29 @@
         "tiles": {
             "1": {
                 "enemies": [40, 37, 37, 37],
-                "spawns": [],
-                "difficultyOrder": [3, 0, 1, 2]
+                "spawns": []
             },
             "2": {
                 "enemies": [40, 37, 39, 37],
-                "spawns": [],
-                "difficultyOrder": [3, 0, 2, 1]
+                "spawns": []
             },
             "3": {
                 "enemies": [36, 36, 38, 36, 37],
-                "spawns": [],
-                "difficultyOrder": [1, 2, 4, 3, 0]
+                "spawns": []
             }
-        }
+        },
+        "spawns": [35],
+        "difficultyOrder": [10, 0, 1, 2, 11, 3, 9, 4, 5, 6, 13, 7, 8, 12]
     },
     "Desecrated Church": {
         "name": "Desecrated Church",
         "expansion": "Dark Souls The Board Game",
         "level": 3,
         "tiles": {
-            "1": [26, 26, 24, 15, 26, 24]
+            "1": {
+                "enemies": [26, 26, 24, 15, 26, 24],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 4, 0, 2, 5, 1]
     },
@@ -588,7 +735,10 @@
         "expansion": "Executioner Chariot",
         "level": 3,
         "tiles": {
-            "1": [9, 26, 9, 3]
+            "1": {
+                "enemies": [9, 26, 9, 3],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 2, 1, 3]
     },
@@ -597,7 +747,10 @@
         "expansion": "Darkroot",
         "level": 3,
         "tiles": {
-            "1": [32, 17, 16]
+            "1": {
+                "enemies": [32, 17, 16],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 1, 0]
     },
@@ -606,7 +759,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 3,
         "tiles": {
-            "1": [15, 13, 5, 15, 13, 5]
+            "1": {
+                "enemies": [15, 13, 5, 15, 13, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [4, 0, 2, 5, 1, 3]
     },
@@ -615,9 +771,18 @@
         "expansion": "Painted World of Ariamis",
         "level": 2,
         "tiles": {
-            "1": [20, 20, 30],
-            "2": [4, 4],
-            "3": [6]
+            "1": {
+                "enemies": [20, 20, 30],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [4, 4],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [6],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2, 3, 4, 5]
     },
@@ -626,7 +791,9 @@
         "expansion": "Guardian Dragon",
         "level": 4,
         "tiles": {
-            "1": [22, 5, 13, 13, 13, 26, 26, 26, 5, 5]
+            "1": {
+                "enemies": [22, 5, 13, 13, 13, 26, 26, 26, 5, 5]
+            }
         },
         "difficultyOrder": [9, 3, 0, 1, 2, 6, 7, 8, 4, 5]
     },
@@ -635,9 +802,18 @@
         "expansion": "Painted World of Ariamis",
         "level": 3,
         "tiles": {
-            "1": [4],
-            "2": [4, 8],
-            "3": [6, 20, 20]
+            "1": {
+                "enemies": [4],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [4, 8],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [6, 20, 20],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 3, 4, 5, 0, 1]
     },
@@ -646,7 +822,9 @@
         "expansion": "The Four Kings",
         "level": 4,
         "tiles": {
-            "1": [22, 13, 15, 5, 5, 24, 24, 26, 26]
+            "1": {
+                "enemies": [22, 13, 15, 5, 5, 24, 24, 26, 26]
+            }
         },
         "difficultyOrder": [8, 0, 5, 1, 2, 3, 4, 6, 7]
     },
@@ -655,7 +833,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 3,
         "tiles": {
-            "1": [22, 22]
+            "1": {
+                "enemies": [22, 22],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1]
     },
@@ -664,7 +845,9 @@
         "expansion": "Manus, Father of the Abyss",
         "level": 4,
         "tiles": {
-            "1": [26, 24, 26, 24, 26, 24, 5, 15, 15]
+            "1": {
+                "enemies": [26, 24, 26, 24, 26, 24, 5, 15, 15]
+            }
         },
         "difficultyOrder": [6, 1, 7, 2, 8, 3, 0, 4, 5]
     },
@@ -673,9 +856,18 @@
         "expansion": "Painted World of Ariamis",
         "level": 3,
         "tiles": {
-            "1": [20, 20],
-            "2": [20, 20, 8],
-            "3": []
+            "1": {
+                "enemies": [20, 20],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [20, 20, 8],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [],
+                "spawns": []
+            }
         },
         "spawns": [19],
         "difficultyOrder": [0, 1, 2, 3, 4, 5]
@@ -685,8 +877,14 @@
         "expansion": "Tomb of Giants",
         "level": 2,
         "tiles": {
-            "1": [29, 12],
-            "2": [29, 18, 29]
+            "1": {
+                "enemies": [29, 12],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [29, 18, 29],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 4, 1, 3, 2]
     },
@@ -695,7 +893,10 @@
         "expansion": "Darkroot",
         "level": 1,
         "tiles": {
-            "1": [21, 23, 16]
+            "1": {
+                "enemies": [21, 23, 16],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 0, 2]
     },
@@ -704,7 +905,10 @@
         "expansion": "Iron Keep",
         "level": 1,
         "tiles": {
-            "1": [0, 2]
+            "1": {
+                "enemies": [0, 2],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1]
     },
@@ -713,8 +917,14 @@
         "expansion": "The Sunless City",
         "level": 2,
         "tiles": {
-            "1": [36, 37, 35],
-            "2": [36, 36]
+            "1": {
+                "enemies": [36, 37, 35],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [36, 36],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 0, 4, 2, 3]
     },
@@ -723,7 +933,9 @@
         "expansion": "The Last Giant",
         "level": 4,
         "tiles": {
-            "1": [26, 15, 5, 13, 5, 22, 26, 15]
+            "1": {
+                "enemies": [26, 15, 5, 13, 5, 22, 26, 15]
+            }
         },
         "difficultyOrder": [5, 3, 1, 0, 2, 7, 6, 4]
     },
@@ -732,7 +944,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 2,
         "tiles": {
-            "1": [13, 13, 24, 13, 24]
+            "1": {
+                "enemies": [13, 13, 24, 13, 24],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 3, 2, 4]
     },
@@ -741,7 +956,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 1,
         "tiles": {
-            "1": [13, 5, 13, 5]
+            "1": {
+                "enemies": [13, 5, 13, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 2, 1, 3]
     },
@@ -750,7 +968,10 @@
         "expansion": "Old Iron King",
         "level": 4,
         "tiles": {
-            "1": [33, 0, 2, 1, 14]
+            "1": {
+                "enemies": [33, 0, 2, 1, 14],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2, 4, 3]
     },
@@ -759,7 +980,10 @@
         "expansion": "Painted World of Ariamis",
         "level": 1,
         "tiles": {
-            "1": [20, 20]
+            "1": {
+                "enemies": [20, 20],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1]
     },
@@ -768,9 +992,18 @@
         "expansion": "Painted World of Ariamis",
         "level": 3,
         "tiles": {
-            "1": [30, 30, 20, 20],
-            "2": [20, 20],
-            "3": [4, 4]
+            "1": {
+                "enemies": [30, 30, 20, 20],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [20, 20],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [4, 4],
+                "spawns": []
+            }
         },
         "difficultyOrder": [4, 5, 0, 1, 2, 3, 6, 7]
     },
@@ -779,7 +1012,10 @@
         "expansion": "Iron Keep",
         "level": 1,
         "tiles": {
-            "1": [2, 5, 0]
+            "1": {
+                "enemies": [2, 5, 0],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1]
     },
@@ -788,7 +1024,10 @@
         "expansion": "Explorers",
         "level": 3,
         "tiles": {
-            "1": [25, 25, 24, 25, 24, 24]
+            "1": {
+                "enemies": [25, 25, 24, 25, 24, 24],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 4, 0, 5, 1, 2]
     },
@@ -797,7 +1036,9 @@
         "expansion": "Executioner Chariot",
         "level": 4,
         "tiles": {
-            "1": [3, 31, 9, 13, 9, 13, 7]
+            "1": {
+                "enemies": [3, 31, 9, 13, 9, 13, 7]
+            }
         },
         "difficultyOrder": [6, 5, 2, 0, 3, 1, 4]
     },
@@ -806,7 +1047,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 1,
         "tiles": {
-            "1": [13, 13, 5]
+            "1": {
+                "enemies": [13, 13, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2]
     },
@@ -815,8 +1059,14 @@
         "expansion": "Tomb of Giants",
         "level": 3,
         "tiles": {
-            "1": [12, 11],
-            "2": [11, 12]
+            "1": {
+                "enemies": [12, 11],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [11, 12],
+                "spawns": []
+            }
         },
         "spawns": [11, 12],
         "difficultyOrder": [0, 3, 4, 1, 5, 2]
@@ -826,7 +1076,10 @@
         "expansion": "Explorers",
         "level": 3,
         "tiles": {
-            "1": [25, 26, 24, 26, 25]
+            "1": {
+                "enemies": [25, 26, 24, 26, 25],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 3, 0, 4, 2]
     },
@@ -835,8 +1088,14 @@
         "expansion": "The Sunless City",
         "level": 2,
         "tiles": {
-            "1": [40, 39],
-            "2": [37, 40, 39]
+            "1": {
+                "enemies": [40, 39],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [37, 40, 39],
+                "spawns": []
+            }
         },
         "spawns": [35],
         "difficultyOrder": [3, 1, 0, 4, 2, 5]
@@ -846,8 +1105,14 @@
         "expansion": "Painted World of Ariamis",
         "level": 2,
         "tiles": {
-            "1": [30, 30],
-            "2": [6]
+            "1": {
+                "enemies": [30, 30],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [6],
+                "spawns": []
+            }
         },
         "spawns": [20, 6],
         "difficultyOrder": [1, 2, 3, 0, 4]
@@ -857,7 +1122,9 @@
         "expansion": "Black Dragon Kalameet",
         "level": 4,
         "tiles": {
-            "1": [15, 5, 32, 21, 32, 5, 15, 21]
+            "1": {
+                "enemies": [15, 5, 32, 21, 32, 5, 15, 21]
+            }
         },
         "difficultyOrder": [4, 0, 6, 2, 7, 1, 5, 3]
     },
@@ -866,7 +1133,10 @@
         "expansion": "Tomb of Giants",
         "level": 1,
         "tiles": {
-            "1": [29, 27, 29, 27]
+            "1": {
+                "enemies": [29, 27, 29, 27],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 2, 1, 3]
     },
@@ -875,7 +1145,9 @@
         "expansion": "Black Dragon Kalameet",
         "level": 4,
         "tiles": {
-            "1": [22, 26, 5, 26, 5, 22, 5]
+            "1": {
+                "enemies": [22, 26, 5, 26, 5, 22, 5]
+            }
         },
         "difficultyOrder": [5, 3, 0, 4, 1, 6, 2]
     },
@@ -884,9 +1156,18 @@
         "expansion": "The Sunless City",
         "level": 3,
         "tiles": {
-            "1": [37, 37, 36, 39],
-            "2": [38, 40],
-            "3": [39, 37, 40, 36]
+            "1": {
+                "enemies": [37, 37, 36, 39],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [38, 40],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [39, 37, 40, 36],
+                "spawns": []
+            }
         },
         "spawns": [35],
         "difficultyOrder": [0, 1, 3, 5, 10, 7, 6, 2, 8, 4, 9]
@@ -896,7 +1177,9 @@
         "expansion": "Vordt of the Boreal Valley",
         "level": 4,
         "tiles": {
-            "1": [22, 13, 13, 13, 22, 24, 5, 5]
+            "1": {
+                "enemies": [22, 13, 13, 13, 22, 24, 5, 5]
+            }
         },
         "difficultyOrder": [6, 0, 1, 2, 7, 5, 3, 4]
     },
@@ -905,7 +1188,9 @@
         "expansion": "The Four Kings",
         "level": 4,
         "tiles": {
-            "1": [32, 32, 10, 25, 17, 16]
+            "1": {
+                "enemies": [32, 32, 10, 25, 17, 16]
+            }
         },
         "difficultyOrder": [4, 5, 0, 1, 3, 2]
     },
@@ -914,7 +1199,10 @@
         "expansion": "Explorers",
         "level": 1,
         "tiles": {
-            "1": [15, 10, 13]
+            "1": {
+                "enemies": [15, 10, 13],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 1, 0]
     },
@@ -923,8 +1211,14 @@
         "expansion": "The Sunless City",
         "level": 3,
         "tiles": {
-            "1": [36, 40, 39],
-            "2": [39, 36, 37, 40]
+            "1": {
+                "enemies": [36, 40, 39],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [39, 36, 37, 40],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 5, 3, 4, 2, 0, 6]
     },
@@ -933,7 +1227,10 @@
         "expansion": "Darkroot",
         "level": 2,
         "tiles": {
-            "1": [32, 7]
+            "1": {
+                "enemies": [32, 7],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 0]
     },
@@ -942,7 +1239,10 @@
         "expansion": "Explorers",
         "level": 3,
         "tiles": {
-            "1": [22, 10, 10, 5, 15]
+            "1": {
+                "enemies": [22, 10, 10, 5, 15],
+                "spawns": []
+            }
         },
         "difficultyOrder": [4, 1, 2, 0, 3]
     },
@@ -951,7 +1251,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 2,
         "tiles": {
-            "1": [15, 13, 13, 5]
+            "1": {
+                "enemies": [15, 13, 13, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 0, 1, 2]
     },
@@ -960,7 +1263,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 1,
         "tiles": {
-            "1": [13, 13, 13]
+            "1": {
+                "enemies": [13, 13, 13],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2]
     },
@@ -969,7 +1275,10 @@
         "expansion": "Iron Keep",
         "level": 3,
         "tiles": {
-            "1": [0, 1, 0, 0, 1]
+            "1": {
+                "enemies": [0, 1, 0, 0, 1],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 3, 1, 2, 4]
     },
@@ -978,7 +1287,10 @@
         "expansion": "Tomb of Giants",
         "level": 3,
         "tiles": {
-            "1": [29, 27, 29, 29, 27]
+            "1": {
+                "enemies": [29, 27, 29, 29, 27],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 3, 1, 2, 4]
     },
@@ -987,7 +1299,10 @@
         "expansion": "Executioner Chariot",
         "level": 4,
         "tiles": {
-            "1": [3, 3, 5, 9, 13]
+            "1": {
+                "enemies": [3, 3, 5, 9, 13],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 4, 1, 2, 0]
     },
@@ -996,7 +1311,10 @@
         "expansion": "Darkroot",
         "level": 3,
         "tiles": {
-            "1": [17, 7, 16, 32]
+            "1": {
+                "enemies": [17, 7, 16, 32],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1, 3]
     },
@@ -1005,8 +1323,14 @@
         "expansion": "The Sunless City",
         "level": 1,
         "tiles": {
-            "1": [36, 40],
-            "2": [39, 37, 39]
+            "1": {
+                "enemies": [36, 40],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [39, 37, 39],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 4, 2, 0, 3]
     },
@@ -1015,7 +1339,10 @@
         "expansion": "Tomb of Giants",
         "level": 2,
         "tiles": {
-            "1": [11, 29, 29, 29]
+            "1": {
+                "enemies": [11, 29, 29, 29],
+                "spawns": []
+            }
         },
         "spawns": [27],
         "difficultyOrder": [4, 0, 1, 2, 3]
@@ -1025,8 +1352,14 @@
         "expansion": "Painted World of Ariamis",
         "level": 2,
         "tiles": {
-            "1": [30, 8],
-            "2": [19]
+            "1": {
+                "enemies": [30, 8],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [19],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2]
     },
@@ -1035,7 +1368,10 @@
         "expansion": "Iron Keep",
         "level": 2,
         "tiles": {
-            "1": [0, 0, 1]
+            "1": {
+                "enemies": [0, 0, 1],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2]
     },
@@ -1044,7 +1380,10 @@
         "expansion": "Old Iron King",
         "level": 4,
         "tiles": {
-            "1": [26, 22, 5, 5, 15, 13, 13, 15, 24, 24]
+            "1": {
+                "enemies": [26, 22, 5, 5, 15, 13, 13, 15, 24, 24],
+                "spawns": []
+            }
         },
         "difficultyOrder": [8, 9, 2, 3, 6, 0, 1, 7, 4, 5]
     },
@@ -1053,8 +1392,14 @@
         "expansion": "The Sunless City",
         "level": 1,
         "tiles": {
-            "1": [37, 40],
-            "2": [36, 36, 40]
+            "1": {
+                "enemies": [37, 40],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [36, 36, 40],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 3, 1, 2, 4]
     },
@@ -1063,9 +1408,18 @@
         "expansion": "Tomb of Giants",
         "level": 3,
         "tiles": {
-            "1": [18, 29, 29],
-            "2": [27, 27],
-            "3": [18, 11, 12]
+            "1": {
+                "enemies": [18, 29, 29],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [27, 27],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [18, 11, 12],
+                "spawns": []
+            }
         },
         "spawns": [28, 29],
         "difficultyOrder": [5, 0, 1, 3, 4, 6, 8, 7, 9, 2]
@@ -1075,7 +1429,10 @@
         "expansion": "Tomb of Giants",
         "level": 1,
         "tiles": {
-            "1": [29, 29]
+            "1": {
+                "enemies": [29, 29],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1]
     },
@@ -1084,8 +1441,14 @@
         "expansion": "Tomb of Giants",
         "level": 3,
         "tiles": {
-            "1": [28, 29, 27],
-            "2": [11]
+            "1": {
+                "enemies": [28, 29, 27],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [11],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 0, 1, 2]
     },
@@ -1094,7 +1457,10 @@
         "expansion": "Old Iron King",
         "level": 4,
         "tiles": {
-            "1": [26, 5, 26, 5, 5, 22, 22]
+            "1": {
+                "enemies": [26, 5, 26, 5, 5, 22, 22],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 0, 4, 1, 2, 5, 6]
     },
@@ -1103,7 +1469,10 @@
         "expansion": "Darkroot",
         "level": 1,
         "tiles": {
-            "1": [23, 21, 7]
+            "1": {
+                "enemies": [23, 21, 7],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2]
     },
@@ -1112,7 +1481,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 2,
         "tiles": {
-            "1": [15, 13, 13, 13]
+            "1": {
+                "enemies": [15, 13, 13, 13],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 0, 1, 2]
     },
@@ -1121,9 +1493,18 @@
         "expansion": "Tomb of Giants",
         "level": 2,
         "tiles": {
-            "1": [29, 29, 18],
-            "2": [27, 27, 18, 29],
-            "3": [28]
+            "1": {
+                "enemies": [29, 29, 18],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [27, 27, 18, 29],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [28],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 5, 3, 4, 6, 2, 7]
     },
@@ -1132,7 +1513,10 @@
         "expansion": "Explorers",
         "level": 2,
         "tiles": {
-            "1": [25, 24, 25]
+            "1": {
+                "enemies": [25, 24, 25],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 0, 2]
     },
@@ -1141,7 +1525,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 2,
         "tiles": {
-            "1": [15, 15]
+            "1": {
+                "enemies": [15, 15],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1]
     },
@@ -1150,7 +1537,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 3,
         "tiles": {
-            "1": [26, 26, 24, 26, 24, 24]
+            "1": {
+                "enemies": [26, 26, 24, 26, 24, 24],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 4, 0, 5, 1, 2]
     },
@@ -1159,7 +1549,10 @@
         "expansion": "Explorers",
         "level": 1,
         "tiles": {
-            "1": [13, 10, 10]
+            "1": {
+                "enemies": [13, 10, 10],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2]
     },
@@ -1168,7 +1561,10 @@
         "expansion": "Guardian Dragon",
         "level": 4,
         "tiles": {
-            "1": [32, 14, 7, 7, 32, 14]
+            "1": {
+                "enemies": [32, 14, 7, 7, 32, 14],
+                "spawns": []
+            }
         },
         "difficultyOrder": [4, 2, 0, 1, 5, 3]
     },
@@ -1177,9 +1573,18 @@
         "expansion": "Tomb of Giants",
         "level": 2,
         "tiles": {
-            "1": [29, 18],
-            "2": [28],
-            "3": [27, 29, 29]
+            "1": {
+                "enemies": [29, 18],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [28],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [27, 29, 29],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 4, 5, 3, 1, 2]
     },
@@ -1188,7 +1593,10 @@
         "expansion": "Executioner Chariot",
         "level": 2,
         "tiles": {
-            "1": [15, 9, 5, 5]
+            "1": {
+                "enemies": [15, 9, 5, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 2, 0, 1]
     },
@@ -1197,7 +1605,10 @@
         "expansion": "Iron Keep",
         "level": 3,
         "tiles": {
-            "1": [1, 1, 1]
+            "1": {
+                "enemies": [1, 1, 1],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2]
     },
@@ -1206,7 +1617,10 @@
         "expansion": "Executioner Chariot",
         "level": 2,
         "tiles": {
-            "1": [5, 26, 13, 9]
+            "1": {
+                "enemies": [5, 26, 13, 9],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 3, 0, 2]
     },
@@ -1215,7 +1629,10 @@
         "expansion": "Darkroot",
         "level": 1,
         "tiles": {
-            "1": [23, 23, 21]
+            "1": {
+                "enemies": [23, 23, 21],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2]
     },
@@ -1224,7 +1641,10 @@
         "expansion": "Painted World of Ariamis",
         "level": 2,
         "tiles": {
-            "1": [30]
+            "1": {
+                "enemies": [30],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0]
     },
@@ -1233,7 +1653,10 @@
         "expansion": "Darkroot",
         "level": 2,
         "tiles": {
-            "1": [17, 16]
+            "1": {
+                "enemies": [17, 16],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 0]
     },
@@ -1242,7 +1665,10 @@
         "expansion": "The Four Kings",
         "level": 4,
         "tiles": {
-            "1": [1, 5, 5, 14, 14, 2, 0]
+            "1": {
+                "enemies": [1, 5, 5, 14, 14, 2, 0],
+                "spawns": []
+            }
         },
         "difficultyOrder": [6, 0, 1, 4, 5, 3, 2]
     },
@@ -1251,8 +1677,14 @@
         "expansion": "Painted World of Ariamis",
         "level": 1,
         "tiles": {
-            "1": [30, 30],
-            "2": [8]
+            "1": {
+                "enemies": [30, 30],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [8],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2]
     },
@@ -1261,7 +1693,10 @@
         "expansion": "Gaping Dragon",
         "level": 4,
         "tiles": {
-            "1": [22, 24, 22, 24, 15, 5, 15, 5]
+            "1": {
+                "enemies": [22, 24, 22, 24, 15, 5, 15, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [6, 2, 7, 3, 4, 0, 5, 1]
     },
@@ -1270,7 +1705,10 @@
         "expansion": "Darkroot",
         "level": 1,
         "tiles": {
-            "1": [16, 7]
+            "1": {
+                "enemies": [16, 7],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 0]
     },
@@ -1279,7 +1717,10 @@
         "expansion": "Painted World of Ariamis",
         "level": 1,
         "tiles": {
-            "1": [30, 30, 20]
+            "1": {
+                "enemies": [30, 30, 20],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 2, 0]
     },
@@ -1288,9 +1729,18 @@
         "expansion": "The Sunless City",
         "level": 2,
         "tiles": {
-            "1": [37, 37, 39],
-            "2": [40, 39, 37],
-            "3": [36, 36, 36, 40]
+            "1": {
+                "enemies": [37, 37, 39],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [40, 39, 37],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [36, 36, 36, 40],
+                "spawns": []
+            }
         },
         "spawns": [35],
         "difficultyOrder": [0, 1, 6, 8, 7, 2, 3, 4, 5, 9, 10]
@@ -1300,8 +1750,14 @@
         "expansion": "The Sunless City",
         "level": 2,
         "tiles": {
-            "1": [36, 36, 36],
-            "2": []
+            "1": {
+                "enemies": [36, 36, 36],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [],
+                "spawns": []
+            }
         },
         "spawns": [37],
         "difficultyOrder": [1, 2, 3, 0]
@@ -1311,7 +1767,10 @@
         "expansion": "Black Dragon Kalameet",
         "level": 4,
         "tiles": {
-            "1": [15, 5, 26, 26, 24, 15, 5, 26, 24, 24]
+            "1": {
+                "enemies": [15, 5, 26, 26, 24, 15, 5, 26, 24, 24],
+                "spawns": []
+            }
         },
         "difficultyOrder": [5, 0, 7, 8, 2, 6, 1, 9, 3, 4]
     },
@@ -1320,7 +1779,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 3,
         "tiles": {
-            "1": [22, 13, 13, 5, 5]
+            "1": {
+                "enemies": [22, 13, 13, 5, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [4, 0, 1, 2, 3]
     },
@@ -1329,7 +1791,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 3,
         "tiles": {
-            "1": [22, 22, 24]
+            "1": {
+                "enemies": [22, 22, 24],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 2, 0]
     },
@@ -1338,8 +1803,14 @@
         "expansion": "Tomb of Giants",
         "level": 2,
         "tiles": {
-            "1": [27, 18, 29],
-            "2": [29, 29, 18]
+            "1": {
+                "enemies": [27, 18, 29],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [29, 29, 18],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 4, 0, 1, 2, 5]
     },
@@ -1348,7 +1819,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 2,
         "tiles": {
-            "1": [26, 24, 26]
+            "1": {
+                "enemies": [26, 24, 26],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 0, 2]
     },
@@ -1357,7 +1831,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 3,
         "tiles": {
-            "1": [26, 26, 26, 15, 13, 13]
+            "1": {
+                "enemies": [26, 26, 26, 15, 13, 13],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 4, 5, 2, 0, 1]
     },
@@ -1366,8 +1843,14 @@
         "expansion": "Painted World of Ariamis",
         "level": 1,
         "tiles": {
-            "1": [20, 30],
-            "2": [30, 8]
+            "1": {
+                "enemies": [20, 30],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [30, 8],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2, 3]
     },
@@ -1376,7 +1859,10 @@
         "expansion": "Tomb of Giants",
         "level": 1,
         "tiles": {
-            "1": [12, 18]
+            "1": {
+                "enemies": [12, 18],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 0]
     },
@@ -1385,7 +1871,10 @@
         "expansion": "Iron Keep",
         "level": 2,
         "tiles": {
-            "1": [14, 5]
+            "1": {
+                "enemies": [14, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 0]
     },
@@ -1394,7 +1883,10 @@
         "expansion": "Executioner Chariot",
         "level": 1,
         "tiles": {
-            "1": [9, 24, 13]
+            "1": {
+                "enemies": [9, 24, 13],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 2, 0]
     },
@@ -1403,7 +1895,10 @@
         "expansion": "Tomb of Giants",
         "level": 1,
         "tiles": {
-            "1": [27, 27]
+            "1": {
+                "enemies": [27, 27],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1]
     },
@@ -1412,7 +1907,10 @@
         "expansion": "Explorers",
         "level": 3,
         "tiles": {
-            "1": [15, 25, 10, 15, 25, 10]
+            "1": {
+                "enemies": [15, 25, 10, 15, 25, 10],
+                "spawns": []
+            }
         },
         "difficultyOrder": [4, 2, 0, 5, 3, 1]
     },
@@ -1421,7 +1919,10 @@
         "expansion": "Guardian Dragon",
         "level": 4,
         "tiles": {
-            "1": [26, 26, 10, 25, 5, 25, 5, 26, 24, 24]
+            "1": {
+                "enemies": [26, 26, 10, 25, 5, 25, 5, 26, 24, 24],
+                "spawns": []
+            }
         },
         "difficultyOrder": [7, 8, 2, 5, 0, 6, 1, 9, 3, 4]
     },
@@ -1430,7 +1931,10 @@
         "expansion": "Painted World of Ariamis",
         "level": 1,
         "tiles": {
-            "1": [4, 4]
+            "1": {
+                "enemies": [4, 4],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1]
     },
@@ -1439,7 +1943,10 @@
         "expansion": "Black Dragon Kalameet",
         "level": 4,
         "tiles": {
-            "1": [31, 21, 0, 1, 31, 21, 0, 21]
+            "1": {
+                "enemies": [31, 21, 0, 1, 31, 21, 0, 21],
+                "spawns": []
+            }
         },
         "difficultyOrder": [5, 0, 3, 7, 6, 1, 4, 2]
     },
@@ -1448,7 +1955,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 1,
         "tiles": {
-            "1": [5, 13, 5]
+            "1": {
+                "enemies": [5, 13, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 0, 2]
     },
@@ -1457,7 +1967,10 @@
         "expansion": "Manus, Father of the Abyss",
         "level": 4,
         "tiles": {
-            "1": [32, 32, 1, 0, 1]
+            "1": {
+                "enemies": [32, 32, 1, 0, 1],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 4, 1, 0, 2]
     },
@@ -1466,7 +1979,10 @@
         "expansion": "Explorers",
         "level": 3,
         "tiles": {
-            "1": [15, 10, 13, 15, 25, 10]
+            "1": {
+                "enemies": [15, 10, 13, 15, 25, 10],
+                "spawns": []
+            }
         },
         "difficultyOrder": [4, 1, 0, 5, 3, 2]
     },
@@ -1475,7 +1991,10 @@
         "expansion": "Guardian Dragon",
         "level": 4,
         "tiles": {
-            "1": [15, 5, 22, 13, 22, 13, 15, 5]
+            "1": {
+                "enemies": [15, 5, 22, 13, 22, 13, 15, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [4, 2, 6, 0, 7, 1, 5, 3]
     },
@@ -1484,7 +2003,10 @@
         "expansion": "Iron Keep",
         "level": 2,
         "tiles": {
-            "1": [14, 2]
+            "1": {
+                "enemies": [14, 2],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 0]
     },
@@ -1493,7 +2015,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 2,
         "tiles": {
-            "1": [22]
+            "1": {
+                "enemies": [22],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0]
     },
@@ -1502,7 +2027,10 @@
         "expansion": "Gaping Dragon",
         "level": 4,
         "tiles": {
-            "1": [15, 5, 5, 34, 15, 10, 10, 25, 24]
+            "1": {
+                "enemies": [15, 5, 5, 34, 15, 10, 10, 25, 24],
+                "spawns": []
+            }
         },
         "difficultyOrder": [7, 1, 2, 0, 8, 3, 4, 6, 5]
     },
@@ -1511,7 +2039,10 @@
         "expansion": "Manus, Father of the Abyss",
         "level": 4,
         "tiles": {
-            "1": [32, 15, 16, 15, 32, 31]
+            "1": {
+                "enemies": [32, 15, 16, 15, 32, 31],
+                "spawns": []
+            }
         },
         "difficultyOrder": [4, 0, 2, 1, 5, 3]
     },
@@ -1520,7 +2051,10 @@
         "expansion": "Asylum Demon",
         "level": 4,
         "tiles": {
-            "1": [15, 13, 26, 24, 5, 26, 24, 5, 15, 13, 13]
+            "1": {
+                "enemies": [15, 13, 26, 24, 5, 26, 24, 5, 15, 13, 13],
+                "spawns": []
+            }
         },
         "difficultyOrder": [7, 0, 9, 5, 3, 10, 6, 4, 8, 1, 2]
     },
@@ -1529,7 +2063,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 1,
         "tiles": {
-            "1": [13, 5, 5]
+            "1": {
+                "enemies": [13, 5, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2]
     },
@@ -1538,7 +2075,10 @@
         "expansion": "The Sunless City",
         "level": 1,
         "tiles": {
-            "1": [39, 36, 36, 36]
+            "1": {
+                "enemies": [39, 36, 36, 36],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 0, 1, 2]
     },
@@ -1547,7 +2087,10 @@
         "expansion": "Iron Keep",
         "level": 3,
         "tiles": {
-            "1": [2, 2, 1, 0, 0]
+            "1": {
+                "enemies": [2, 2, 1, 0, 0],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 3, 4, 0, 1]
     },
@@ -1556,7 +2099,10 @@
         "expansion": "Executioner Chariot",
         "level": 1,
         "tiles": {
-            "1": [9, 13, 5]
+            "1": {
+                "enemies": [9, 13, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1]
     },
@@ -1565,7 +2111,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 3,
         "tiles": {
-            "1": [15, 26, 26, 15, 24]
+            "1": {
+                "enemies": [15, 26, 26, 15, 24],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 3, 4, 2, 0]
     },
@@ -1574,8 +2123,14 @@
         "expansion": "Painted World of Ariamis",
         "level": 2,
         "tiles": {
-            "1": [8, 8],
-            "2": [4, 4]
+            "1": {
+                "enemies": [8, 8],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [4, 4],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 3, 0, 1]
     },
@@ -1584,7 +2139,10 @@
         "expansion": "Tomb of Giants",
         "level": 3,
         "tiles": {
-            "1": [12]
+            "1": {
+                "enemies": [12],
+                "spawns": []
+            }
         },
         "spawns": [29],
         "difficultyOrder": [1, 0]
@@ -1594,7 +2152,10 @@
         "expansion": "Painted World of Ariamis",
         "level": 1,
         "tiles": {
-            "1": [30, 30]
+            "1": {
+                "enemies": [30, 30],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1]
     },
@@ -1603,7 +2164,10 @@
         "expansion": "Iron Keep",
         "level": 3,
         "tiles": {
-            "1": [2, 2, 2, 0, 1]
+            "1": {
+                "enemies": [2, 2, 2, 0, 1],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 2, 3, 0, 4]
     },
@@ -1612,7 +2176,10 @@
         "expansion": "Iron Keep",
         "level": 2,
         "tiles": {
-            "1": [1, 0, 2]
+            "1": {
+                "enemies": [1, 0, 2],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1]
     },
@@ -1621,8 +2188,14 @@
         "expansion": "Painted World of Ariamis",
         "level": 2,
         "tiles": {
-            "1": [20, 4],
-            "2": [20, 6]
+            "1": {
+                "enemies": [20, 4],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [20, 6],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 2, 1, 3]
     },
@@ -1631,7 +2204,10 @@
         "expansion": "Darkroot",
         "level": 3,
         "tiles": {
-            "1": [7, 21, 7, 21, 22]
+            "1": {
+                "enemies": [7, 21, 7, 21, 22],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 3, 1, 4]
     },
@@ -1640,7 +2216,10 @@
         "expansion": "Explorers",
         "level": 2,
         "tiles": {
-            "1": [26, 25, 24]
+            "1": {
+                "enemies": [26, 25, 24],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 1, 0]
     },
@@ -1649,7 +2228,10 @@
         "expansion": "Darkroot",
         "level": 2,
         "tiles": {
-            "1": [21, 23, 31]
+            "1": {
+                "enemies": [21, 23, 31],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 0, 2]
     },
@@ -1658,7 +2240,10 @@
         "expansion": "Explorers",
         "level": 2,
         "tiles": {
-            "1": [24, 26, 25]
+            "1": {
+                "enemies": [24, 26, 25],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 2, 1]
     },
@@ -1667,7 +2252,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 2,
         "tiles": {
-            "1": [26, 26, 15]
+            "1": {
+                "enemies": [26, 26, 15],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 2, 0]
     },
@@ -1676,7 +2264,10 @@
         "expansion": "Iron Keep",
         "level": 3,
         "tiles": {
-            "1": [14, 14, 0]
+            "1": {
+                "enemies": [14, 14, 0],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 2, 0]
     },
@@ -1685,7 +2276,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 2,
         "tiles": {
-            "1": [13, 13, 5, 13, 5]
+            "1": {
+                "enemies": [13, 13, 5, 13, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 3, 2, 4]
     },
@@ -1694,7 +2288,10 @@
         "expansion": "The Sunless City",
         "level": 1,
         "tiles": {
-            "1": [39, 37, 37, 36]
+            "1": {
+                "enemies": [39, 37, 37, 36],
+                "spawns": []
+            }
         },
         "spawns": [35],
         "difficultyOrder": [3, 0, 1, 2, 4]
@@ -1704,8 +2301,14 @@
         "expansion": "Tomb of Giants",
         "level": 2,
         "tiles": {
-            "1": [29, 29],
-            "2": [27, 18]
+            "1": {
+                "enemies": [29, 29],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [27, 18],
+                "spawns": []
+            }
         },
         "spawns": [11, 12],
         "difficultyOrder": [0, 1, 2, 3, 5, 4]
@@ -1715,7 +2318,10 @@
         "expansion": "Tomb of Giants",
         "level": 1,
         "tiles": {
-            "1": [28]
+            "1": {
+                "enemies": [28],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0]
     },
@@ -1724,7 +2330,10 @@
         "expansion": "The Sunless City",
         "level": 1,
         "tiles": {
-            "1": [36, 36]
+            "1": {
+                "enemies": [36, 36],
+                "spawns": []
+            }
         },
         "spawns": [37],
         "difficultyOrder": [1, 2, 0]
@@ -1734,7 +2343,10 @@
         "expansion": "Vordt of the Boreal Valley",
         "level": 4,
         "tiles": {
-            "1": [1, 2, 1, 2, 1, 2, 0, 0]
+            "1": {
+                "enemies": [1, 2, 1, 2, 1, 2, 0, 0],
+                "spawns": []
+            }
         },
         "difficultyOrder": [5, 2, 6, 3, 7, 4, 0, 1]
     },
@@ -1743,7 +2355,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 1,
         "tiles": {
-            "1": [26, 13, 5]
+            "1": {
+                "enemies": [26, 13, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1]
     },
@@ -1752,7 +2367,10 @@
         "expansion": "Gaping Dragon",
         "level": 4,
         "tiles": {
-            "1": [26, 5, 5, 15, 24, 26, 26, 5, 15, 24]
+            "1": {
+                "enemies": [26, 5, 5, 15, 24, 26, 26, 5, 15, 24],
+                "spawns": []
+            }
         },
         "difficultyOrder": [7, 0, 1, 5, 3, 8, 9, 2, 6, 4]
     },
@@ -1761,7 +2379,10 @@
         "expansion": "Manus, Father of the Abyss",
         "level": 4,
         "tiles": {
-            "1": [15, 15, 5, 5, 22, 22]
+            "1": {
+                "enemies": [15, 15, 5, 5, 22, 22],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 3, 0, 1, 4, 5]
     },
@@ -1770,7 +2391,10 @@
         "expansion": "Vordt of the Boreal Valley",
         "level": 4,
         "tiles": {
-            "1": [15, 26, 24, 15, 26, 22, 5, 5]
+            "1": {
+                "enemies": [15, 26, 24, 15, 26, 22, 5, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 5, 2, 4, 6, 7, 0, 1]
     },
@@ -1779,7 +2403,10 @@
         "expansion": "Painted World of Ariamis",
         "level": 1,
         "tiles": {
-            "1": [30]
+            "1": {
+                "enemies": [30],
+                "spawns": []
+            }
         },
         "spawns": [30, 20, 8],
         "difficultyOrder": [0, 1, 2, 3]
@@ -1789,7 +2416,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 1,
         "tiles": {
-            "1": [13, 13, 24]
+            "1": {
+                "enemies": [13, 13, 24],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2]
     },
@@ -1798,7 +2428,10 @@
         "expansion": "The Sunless City",
         "level": 2,
         "tiles": {
-            "1": [36, 37, 37, 36, 37]
+            "1": {
+                "enemies": [36, 37, 37, 36, 37],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 0, 1, 4, 2]
     },
@@ -1807,9 +2440,18 @@
         "expansion": "The Sunless City",
         "level": 3,
         "tiles": {
-            "1": [36, 36, 40],
-            "2": [40, 38, 39, 40],
-            "3": [38, 39, 39]
+            "1": {
+                "enemies": [36, 36, 40],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [40, 38, 39, 40],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [38, 39, 39],
+                "spawns": []
+            }
         },
         "spawns": [35],
         "difficultyOrder": [0, 1, 5, 6, 9, 2, 7, 10, 3, 4, 8]
@@ -1819,8 +2461,14 @@
         "expansion": "The Sunless City",
         "level": 2,
         "tiles": {
-            "1": [40, 36, 36],
-            "2": [37, 37, 40]
+            "1": {
+                "enemies": [40, 36, 36],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [37, 37, 40],
+                "spawns": []
+            }
         },
         "difficultyOrder": [4, 2, 3, 0, 1, 5]
     },
@@ -1829,7 +2477,10 @@
         "expansion": "The Sunless City",
         "level": 2,
         "tiles": {
-            "1": [38]
+            "1": {
+                "enemies": [38],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0]
     },
@@ -1838,7 +2489,10 @@
         "expansion": "Painted World of Ariamis",
         "level": 3,
         "tiles": {
-            "1": [19, 6]
+            "1": {
+                "enemies": [19, 6],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1]
     },
@@ -1847,9 +2501,18 @@
         "expansion": "Tomb of Giants",
         "level": 3,
         "tiles": {
-            "1": [11, 29],
-            "2": [12, 18],
-            "3": [11, 27, 27]
+            "1": {
+                "enemies": [11, 29],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [12, 18],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [11, 27, 27],
+                "spawns": []
+            }
         },
         "spawns": [28],
         "difficultyOrder": [5, 0, 4, 3, 6, 1, 2, 7]
@@ -1859,8 +2522,14 @@
         "expansion": "Tomb of Giants",
         "level": 2,
         "tiles": {
-            "1": [12],
-            "2": [29, 29, 12]
+            "1": {
+                "enemies": [12],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [29, 29, 12],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1, 3]
     },
@@ -1869,7 +2538,10 @@
         "expansion": "The Last Giant",
         "level": 4,
         "tiles": {
-            "1": [31, 21, 17, 16, 7, 31, 21]
+            "1": {
+                "enemies": [31, 21, 17, 16, 7, 31, 21],
+                "spawns": []
+            }
         },
         "difficultyOrder": [5, 0, 4, 3, 2, 6, 1]
     },
@@ -1878,7 +2550,10 @@
         "expansion": "The Sunless City",
         "level": 2,
         "tiles": {
-            "1": [37, 37, 35]
+            "1": {
+                "enemies": [37, 37, 35],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2]
     },
@@ -1887,9 +2562,18 @@
         "expansion": "Tomb of Giants",
         "level": 3,
         "tiles": {
-            "1": [18, 11],
-            "2": [27, 12],
-            "3": [11, 18, 29, 29]
+            "1": {
+                "enemies": [18, 11],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [27, 12],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [11, 18, 29, 29],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 6, 2, 5, 7, 4, 0, 1]
     },
@@ -1898,7 +2582,10 @@
         "expansion": "Explorers",
         "level": 2,
         "tiles": {
-            "1": [10, 10, 15, 10]
+            "1": {
+                "enemies": [10, 10, 15, 10],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 3, 2]
     },
@@ -1907,7 +2594,10 @@
         "expansion": "Iron Keep",
         "level": 1,
         "tiles": {
-            "1": [0, 13, 5]
+            "1": {
+                "enemies": [0, 13, 5],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1]
     },
@@ -1916,9 +2606,18 @@
         "expansion": "Painted World of Ariamis",
         "level": 3,
         "tiles": {
-            "1": [20, 20],
-            "2": [],
-            "3": []
+            "1": {
+                "enemies": [20, 20],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [],
+                "spawns": []
+            }
         },
         "spawns": [20, 8, 6],
         "difficultyOrder": [0, 1, 2, 3, 4]
@@ -1928,8 +2627,14 @@
         "expansion": "The Sunless City",
         "level": 3,
         "tiles": {
-            "1": [37, 35, 37, 37],
-            "2": [40, 36, 40, 36]
+            "1": {
+                "enemies": [37, 35, 37, 37],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [40, 36, 40, 36],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 7, 1, 2, 5, 3, 6, 4]
     },
@@ -1938,9 +2643,18 @@
         "expansion": "The Sunless City",
         "level": 3,
         "tiles": {
-            "1": [40, 40, 39, 39],
-            "2": [36, 37, 35],
-            "3": [38, 37, 36, 36, 40]
+            "1": {
+                "enemies": [40, 40, 39, 39],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [36, 37, 35],
+                "spawns": []
+            },
+            "3": {
+                "enemies": [38, 37, 36, 36, 40],
+                "spawns": []
+            }
         },
         "difficultyOrder": [6, 7, 2, 3, 1, 0, 8, 9, 4, 5]
     },
@@ -1949,7 +2663,10 @@
         "expansion": "Executioner Chariot",
         "level": 4,
         "tiles": {
-            "1": [9, 5, 3, 22, 26]
+            "1": {
+                "enemies": [9, 5, 3, 22, 26],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 0, 3, 4, 2]
     },
@@ -1958,17 +2675,27 @@
         "expansion": "The Sunless City",
         "level": 1,
         "tiles": {
-            "1": [37, 36, 36],
-            "2": [37, 37, 40]
+            "1": {
+                "enemies": [37, 36, 36],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [37, 37, 40],
+                "spawns": []
+            }
         },
-        "difficultyOrder": [0, 3, 4, 1, 2, 5]
+        "spawns": [35],
+        "difficultyOrder": [0, 3, 4, 1, 2, 5, 6]
     },
     "Unhallowed Caves": {
         "name": "Unhallowed Caves",
         "expansion": "Explorers",
         "level": 2,
         "tiles": {
-            "1": [25, 25, 10]
+            "1": {
+                "enemies": [25, 25, 10],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 2, 0]
     },
@@ -1977,7 +2704,10 @@
         "expansion": "Explorers",
         "level": 1,
         "tiles": {
-            "1": [25, 13, 10]
+            "1": {
+                "enemies": [25, 13, 10],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1]
     },
@@ -1986,7 +2716,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 1,
         "tiles": {
-            "1": [13, 5, 26]
+            "1": {
+                "enemies": [13, 5, 26],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 2]
     },
@@ -1995,7 +2728,10 @@
         "expansion": "Painted World of Ariamis",
         "level": 1,
         "tiles": {
-            "1": [30, 30]
+            "1": {
+                "enemies": [30, 30],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1]
     },
@@ -2004,7 +2740,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 3,
         "tiles": {
-            "1": [24, 24, 22, 26]
+            "1": {
+                "enemies": [24, 24, 22, 26],
+                "spawns": []
+            }
         },
         "difficultyOrder": [0, 1, 3, 2]
     },
@@ -2013,8 +2752,14 @@
         "expansion": "Tomb of Giants",
         "level": 2,
         "tiles": {
-            "1": [27, 29, 29],
-            "2": [27, 29]
+            "1": {
+                "enemies": [27, 29, 29],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [27, 29],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 0, 1, 4, 2]
     },
@@ -2023,8 +2768,14 @@
         "expansion": "Painted World of Ariamis",
         "level": 3,
         "tiles": {
-            "1": [8, 8],
-            "2": [6, 30, 30]
+            "1": {
+                "enemies": [8, 8],
+                "spawns": []
+            },
+            "2": {
+                "enemies": [6, 30, 30],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 3, 4, 0, 1]
     },
@@ -2033,7 +2784,10 @@
         "expansion": "The Last Giant",
         "level": 4,
         "tiles": {
-            "1": [22, 5, 5, 13, 5, 13, 13, 22]
+            "1": {
+                "enemies": [22, 5, 5, 13, 5, 13, 13, 22],
+                "spawns": []
+            }
         },
         "difficultyOrder": [6, 3, 4, 0, 5, 1, 2, 7]
     },
@@ -2042,7 +2796,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 2,
         "tiles": {
-            "1": [26, 26, 5, 24, 13]
+            "1": {
+                "enemies": [26, 26, 5, 24, 13],
+                "spawns": []
+            }
         },
         "difficultyOrder": [3, 4, 1, 2, 0]
     },
@@ -2051,7 +2808,10 @@
         "expansion": "Explorers",
         "level": 1,
         "tiles": {
-            "1": [25, 10]
+            "1": {
+                "enemies": [25, 10],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 0]
     },
@@ -2060,7 +2820,10 @@
         "expansion": "Darkroot",
         "level": 1,
         "tiles": {
-            "1": [21, 23, 21]
+            "1": {
+                "enemies": [21, 23, 21],
+                "spawns": []
+            }
         },
         "difficultyOrder": [1, 0, 2]
     },
@@ -2069,7 +2832,10 @@
         "expansion": "Darkroot",
         "level": 2,
         "tiles": {
-            "1": [17, 16, 21]
+            "1": {
+                "enemies": [17, 16, 21],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 1, 0]
     },
@@ -2078,7 +2844,10 @@
         "expansion": "Dark Souls The Board Game",
         "level": 3,
         "tiles": {
-            "1": [22, 24, 15]
+            "1": {
+                "enemies": [22, 24, 15],
+                "spawns": []
+            }
         },
         "difficultyOrder": [2, 0, 1]
     }
