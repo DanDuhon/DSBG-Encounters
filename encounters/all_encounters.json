@@ -4,30 +4,46 @@
         "expansion": "Tomb of Giants",
         "level": 3,
         "tiles": {
-            "1": [27, 29, 27, 12],
-            "2": [29, 29, 28]
-        },
-        "difficultyOrder": [3, 0, 4, 5, 1, 2, 6]
+            "1": {
+                "enemies": [27, 29, 27, 12],
+                "spawns": [],
+                "difficultyOrder": [1, 0, 2, 3]
+            },
+            "2": {
+                "enemies": [29, 29, 28],
+                "spawns": [],
+                "difficultyOrder": [0, 1, 2]
+            }
+        }
     },
     "Abandoned and Forgotten": {
         "name": "Abandoned and Forgotten",
         "expansion": "Painted World of Ariamis",
         "level": 2,
         "tiles": {
-            "1": [],
-            "2": []
-        },
-        "spawns": [20, 8, 6],
-        "difficultyOrder": [0, 1, 2]
+            "1": {
+                "enemies": [],
+                "spawns": [20, 8, 6],
+                "difficultyOrder": [0, 1, 2]
+            },
+            "2": {
+                "enemies": [],
+                "spawns": [],
+                "difficultyOrder": []
+            }
+        }
     },
     "Abandoned Storeroom": {
         "name": "Abandoned Storeroom",
         "expansion": "Tomb of Giants",
         "level": 1,
         "tiles": {
-            "1": [12]
-        },
-        "difficultyOrder": [0]
+            "1": {
+                "enemies": [12],
+                "spawns": [],
+                "difficultyOrder": [0]
+            }
+        }
     },
     "Abandoned Tower": {
         "name": "Abandoned Tower",
@@ -43,28 +59,41 @@
         "expansion": "The Sunless City",
         "level": 1,
         "tiles": {
-            "1": [38]
-        },
-        "difficultyOrder": [0]
+            "1": {
+                "enemies": [38],
+                "spawns": [],
+                "difficultyOrder": [0]
+            }
+        }
     },
     "Altar of Bones": {
         "name": "Altar of Bones",
         "expansion": "Tomb of Giants",
         "level": 2,
         "tiles": {
-            "1": [29, 11],
-            "2": [29, 27, 12]
-        },
-        "difficultyOrder": [0, 4, 1, 2, 3]
+            "1": {
+                "enemies": [29, 11],
+                "spawns": [],
+                "difficultyOrder": [0, 1]
+            },
+            "2": {
+                "enemies": [29, 27, 12],
+                "spawns": [],
+                "difficultyOrder": [0, 1, 2]
+            }
+        }
     },
     "Archive Entrance": {
         "name": "Archive Entrance",
         "expansion": "The Sunless City",
         "level": 3,
         "tiles": {
-            "1": [35, 39, 39, 38]
-        },
-        "difficultyOrder": [2, 0, 1, 3]
+            "1": {
+                "enemies": [35, 39, 39, 38],
+                "spawns": [],
+                "difficultyOrder": [2, 0, 1, 3]
+            }
+        }
     },
     "Ash Gardens": {
         "name": "Ash Gardens",
@@ -170,9 +199,12 @@
         "expansion": "Tomb of Giants",
         "level": 1,
         "tiles": {
-            "1": [29, 27, 29]
-        },
-        "difficultyOrder": [0, 2, 1]
+            "1": {
+                "enemies": [29, 27, 29],
+                "spawns": [],
+                "difficultyOrder": [0, 2, 1]
+            }
+        }
     },
     "Bronze Spire": {
         "name": "Bronze Spire",
@@ -197,9 +229,12 @@
         "expansion": "The Sunless City",
         "level": 1,
         "tiles": {
-            "1": [37, 36]
-        },
-        "difficultyOrder": [0, 1]
+            "1": {
+                "enemies": [37, 36],
+                "spawns": [],
+                "difficultyOrder": [0, 1]
+            }
+        }
     },
     "Brume Tower": {
         "name": "Brume Tower",
@@ -251,11 +286,22 @@
         "expansion": "The Sunless City",
         "level": 3,
         "tiles": {
-            "1": [37, 37, 38],
-            "2": [37, 36, 36],
-            "3": [40, 39, 39]
-        },
-        "difficultyOrder": [0, 1, 8, 2, 3, 4, 7, 5, 6]
+            "1": {
+                "enemies": [37, 37, 38],
+                "spawns": [],
+                "difficultyOrder": [0, 1, 2]
+            },
+            "2": {
+                "enemies": [37, 36, 36],
+                "spawns": [],
+                "difficultyOrder": [0, 1, 2]
+            },
+            "3": {
+                "enemies": [40, 39, 39],
+                "spawns": [],
+                "difficultyOrder": [2, 0, 1]
+            }
+        }
     },
     "Cells of the Dead": {
         "name": "Cells of the Dead",
@@ -365,12 +411,22 @@
         "expansion": "Painted World of Ariamis",
         "level": 3,
         "tiles": {
-            "1": [20, 20, 6],
-            "2": [20, 20, 6],
-            "3": []
-        },
-        "spawns": [6],
-        "difficultyOrder": [0, 1, 4, 2, 3, 5, 6]
+            "1": {
+                "enemies": [20, 20, 6, 6],
+                "spawns": [],
+                "difficultyOrder": [0, 1, 2, 3]
+            },
+            "2": {
+                "enemies": [20, 20, 6, 6],
+                "spawns": [],
+                "difficultyOrder": [0, 1, 2, 3]
+            },
+            "3": {
+                "enemies": [],
+                "spawns": [],
+                "difficultyOrder": []
+            }
+        }
     },
     "Courtyard of Lothric": {
         "name": "Courtyard of Lothric",
@@ -475,7 +531,7 @@
             "2": [39, 37, 37, 39, 36],
             "3": []
         },
-		"spawns": [35],
+        "spawns": [35],
         "difficultyOrder": [5, 6, 3, 0, 1, 4, 2, 7]
     },
     "Demon Ruins": {
@@ -501,12 +557,22 @@
         "expansion": "The Sunless City",
         "level": 3,
         "tiles": {
-            "1": [40, 37, 37, 37],
-            "2": [40, 37, 39, 37],
-            "3": [36, 36, 38, 36, 37]
-        },
-		"spawns": [35],
-        "difficultyOrder": [10, 0, 1, 2, 11, 3, 9, 4, 5, 6, 13, 7, 8, 12]
+            "1": {
+                "enemies": [40, 37, 37, 37],
+                "spawns": [],
+                "difficultyOrder": [3, 0, 1, 2]
+            },
+            "2": {
+                "enemies": [40, 37, 39, 37],
+                "spawns": [],
+                "difficultyOrder": [3, 0, 2, 1]
+            },
+            "3": {
+                "enemies": [36, 36, 38, 36, 37],
+                "spawns": [],
+                "difficultyOrder": [1, 2, 4, 3, 0]
+            }
+        }
     },
     "Desecrated Church": {
         "name": "Desecrated Church",
@@ -772,7 +838,7 @@
             "1": [40, 39],
             "2": [37, 40, 39]
         },
-		"spawns": [35],
+        "spawns": [35],
         "difficultyOrder": [3, 1, 0, 4, 2, 5]
     },
     "Gnashing Beaks": {
@@ -1226,7 +1292,7 @@
             "2": [40, 39, 37],
             "3": [36, 36, 36, 40]
         },
-		"spawns": [35],
+        "spawns": [35],
         "difficultyOrder": [0, 1, 6, 8, 7, 2, 3, 4, 5, 9, 10]
     },
     "Parish Gates": {
@@ -1715,7 +1781,7 @@
         "tiles": {
             "1": [30]
         },
-		"spawns": [30, 20, 8],
+        "spawns": [30, 20, 8],
         "difficultyOrder": [0, 1, 2, 3]
     },
     "The Forgotten": {
@@ -1745,7 +1811,7 @@
             "2": [40, 38, 39, 40],
             "3": [38, 39, 39]
         },
-		"spawns": [35],
+        "spawns": [35],
         "difficultyOrder": [0, 1, 5, 6, 9, 2, 7, 10, 3, 4, 8]
     },
     "The Hellkite Bridge": {
@@ -1895,8 +1961,7 @@
             "1": [37, 36, 36],
             "2": [37, 37, 40]
         },
-		"spawns": [35],
-        "difficultyOrder": [0, 3, 4, 1, 2, 5, 6]
+        "difficultyOrder": [0, 3, 4, 1, 2, 5]
     },
     "Unhallowed Caves": {
         "name": "Unhallowed Caves",
