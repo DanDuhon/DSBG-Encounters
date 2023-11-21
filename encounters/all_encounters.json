@@ -61,7 +61,7 @@
         "level": 1,
         "tiles": {
             "1": {
-                "enemies": [38],
+                "enemies": [22],
                 "spawns": []
             }
         },
@@ -89,7 +89,7 @@
         "level": 3,
         "tiles": {
             "1": {
-                "enemies": [35, 39, 39, 38],
+                "enemies": [35, 24, 24, 22],
                 "spawns": []
             }
         },
@@ -269,7 +269,7 @@
         "level": 1,
         "tiles": {
             "1": {
-                "enemies": [37, 36],
+                "enemies": [13, 5],
                 "spawns": []
             }
         },
@@ -341,15 +341,15 @@
         "level": 3,
         "tiles": {
             "1": {
-                "enemies": [37, 37, 38],
+                "enemies": [13, 13, 22],
                 "spawns": []
             },
             "2": {
-                "enemies": [37, 36, 36],
+                "enemies": [13, 5, 5],
                 "spawns": []
             },
             "3": {
-                "enemies": [40, 39, 39],
+                "enemies": [26, 24, 24],
                 "spawns": []
             }
         },
@@ -361,7 +361,8 @@
         "level": 4,
         "tiles": {
             "1": {
-                "enemies": [14, 26, 5, 26, 5, 5, 14]
+                "enemies": [14, 26, 5, 26, 5, 5, 14],
+				"spawns": []
             }
         },
         "difficultyOrder": [5, 3, 0, 4, 1, 2, 6]
@@ -408,7 +409,11 @@
                 "spawns": []
             }
         },
-        "difficultyOrder": [0, 1, 2, 5, 6, 3, 4, 7]
+        "difficultyOrder": {
+			"1": [0, 1, 2],
+			"2": [0, 1],
+			"3": [0, 1, 2]
+		}
     },
     "Central Plaza (TSC)": {
         "name": "Central Plaza",
@@ -416,11 +421,10 @@
         "level": 3,
         "tiles": {
             "1": {
-                "enemies": [40, 40, 36, 36],
-                "spawns": []
+                "enemies": [26, 26, 5, 5],
+                "spawns": [22]
             }
         },
-        "spawns": [38],
         "difficultyOrder": [2, 3, 0, 1, 4]
     },
     "Charred Keep": {
@@ -505,19 +509,19 @@
         "level": 3,
         "tiles": {
             "1": {
-                "enemies": [20, 20],
-                "spawns": [6]
+                "enemies": [20, 20, 6],
+                "spawns": []
             },
             "2": {
-                "enemies": [20, 20],
-                "spawns": [6]
+                "enemies": [20, 20, 6],
+                "spawns": []
             },
             "3": {
                 "enemies": [],
-                "spawns": []
+                "spawns": [6, 6]
             }
         },
-        "difficultyOrder": [0, 1, 4, 2, 3, 5, 6]
+        "difficultyOrder": [0, 1, 4, 2, 3, 5, 6, 7]
     },
     "Courtyard of Lothric": {
         "name": "Courtyard of Lothric",
@@ -525,7 +529,7 @@
         "level": 4,
         "tiles": {
             "1": {
-                "enemies": [15, 5, 10, 26, 25, 15, 5, 10, 34]
+                "enemies": [15, 5, 10, 26, 25, 15, 5, 10, 34],"spawns": []
             }
         },
         "difficultyOrder": [6, 1, 3, 8, 5, 7, 2, 4, 0]
@@ -536,7 +540,7 @@
         "level": 4,
         "tiles": {
             "1": {
-                "enemies": [15, 24, 15, 24, 22, 5, 22, 5]
+                "enemies": [15, 24, 15, 24, 22, 5, 22, 5],"spawns": []
             }
         },
         "difficultyOrder": [4, 2, 5, 3, 6, 0, 7, 1]
@@ -547,7 +551,7 @@
         "level": 1,
         "tiles": {
             "1": {
-                "enemies": [40, 37, 36],
+                "enemies": [26, 13, 5],
                 "spawns": []
             }
         },
@@ -599,7 +603,7 @@
         "level": 4,
         "tiles": {
             "1": {
-                "enemies": [32, 16, 7, 32, 17, 7]
+                "enemies": [32, 16, 7, 32, 17, 7],"spawns": []
             }
         },
         "difficultyOrder": [4, 2, 0, 5, 3, 1]
@@ -622,7 +626,11 @@
                 "spawns": []
             }
         },
-        "difficultyOrder": [2, 0, 1, 5, 3, 6, 4, 7]
+        "difficultyOrder": {
+			"1": [2, 0, 1],
+			"2": [1, 0],
+			"3": [1, 0, 2]
+		}
     },
     "Deathly Freeze": {
         "name": "Deathly Freeze",
@@ -658,19 +666,18 @@
         "level": 2,
         "tiles": {
             "1": {
-                "enemies": [40, 40],
+                "enemies": [26, 26],
                 "spawns": []
             },
             "2": {
-                "enemies": [39, 37, 37, 39, 36],
-                "spawns": []
+                "enemies": [24, 13, 13, 24, 5],
+                "spawns": [35]
             },
             "3": {
                 "enemies": [],
                 "spawns": []
             }
         },
-        "spawns": [35],
         "difficultyOrder": [5, 6, 3, 0, 1, 4, 2, 7]
     },
     "Demon Ruins": {
@@ -703,19 +710,18 @@
         "level": 3,
         "tiles": {
             "1": {
-                "enemies": [40, 37, 37, 37],
+                "enemies": [26, 13, 13, 13],
                 "spawns": []
             },
             "2": {
-                "enemies": [40, 37, 39, 37],
-                "spawns": []
+                "enemies": [26, 13, 24, 13],
+                "spawns": [35]
             },
             "3": {
-                "enemies": [36, 36, 38, 36, 37],
+                "enemies": [5, 5, 22, 5, 13],
                 "spawns": []
             }
         },
-        "spawns": [35],
         "difficultyOrder": [10, 0, 1, 2, 11, 3, 9, 4, 5, 6, 13, 7, 8, 12]
     },
     "Desecrated Church": {
@@ -792,7 +798,7 @@
         "level": 4,
         "tiles": {
             "1": {
-                "enemies": [22, 5, 13, 13, 13, 26, 26, 26, 5, 5]
+                "enemies": [22, 5, 13, 13, 13, 26, 26, 26, 5, 5],"spawns": []
             }
         },
         "difficultyOrder": [9, 3, 0, 1, 2, 6, 7, 8, 4, 5]
@@ -823,7 +829,7 @@
         "level": 4,
         "tiles": {
             "1": {
-                "enemies": [22, 13, 15, 5, 5, 24, 24, 26, 26]
+                "enemies": [22, 13, 15, 5, 5, 24, 24, 26, 26],"spawns": []
             }
         },
         "difficultyOrder": [8, 0, 5, 1, 2, 3, 4, 6, 7]
@@ -846,7 +852,7 @@
         "level": 4,
         "tiles": {
             "1": {
-                "enemies": [26, 24, 26, 24, 26, 24, 5, 15, 15]
+                "enemies": [26, 24, 26, 24, 26, 24, 5, 15, 15],"spawns": []
             }
         },
         "difficultyOrder": [6, 1, 7, 2, 8, 3, 0, 4, 5]
@@ -866,10 +872,9 @@
             },
             "3": {
                 "enemies": [],
-                "spawns": []
+                "spawns": [19]
             }
         },
-        "spawns": [19],
         "difficultyOrder": [0, 1, 2, 3, 4, 5]
     },
     "Far From the Sun": {
@@ -918,11 +923,11 @@
         "level": 2,
         "tiles": {
             "1": {
-                "enemies": [36, 37, 35],
+                "enemies": [5, 13, 35],
                 "spawns": []
             },
             "2": {
-                "enemies": [36, 36],
+                "enemies": [5, 5],
                 "spawns": []
             }
         },
@@ -934,7 +939,7 @@
         "level": 4,
         "tiles": {
             "1": {
-                "enemies": [26, 15, 5, 13, 5, 22, 26, 15]
+                "enemies": [26, 15, 5, 13, 5, 22, 26, 15],"spawns": []
             }
         },
         "difficultyOrder": [5, 3, 1, 0, 2, 7, 6, 4]
@@ -1037,7 +1042,7 @@
         "level": 4,
         "tiles": {
             "1": {
-                "enemies": [3, 31, 9, 13, 9, 13, 7]
+                "enemies": [3, 31, 9, 13, 9, 13, 7],"spawns": []
             }
         },
         "difficultyOrder": [6, 5, 2, 0, 3, 1, 4]
@@ -1065,10 +1070,9 @@
             },
             "2": {
                 "enemies": [11, 12],
-                "spawns": []
+                "spawns": [11, 12]
             }
         },
-        "spawns": [11, 12],
         "difficultyOrder": [0, 3, 4, 1, 5, 2]
     },
     "Giant's Keep": {
@@ -1089,15 +1093,14 @@
         "level": 2,
         "tiles": {
             "1": {
-                "enemies": [40, 39],
+                "enemies": [26, 24],
                 "spawns": []
             },
             "2": {
-                "enemies": [37, 40, 39],
-                "spawns": []
+                "enemies": [13, 26, 24],
+                "spawns": [35]
             }
         },
-        "spawns": [35],
         "difficultyOrder": [3, 1, 0, 4, 2, 5]
     },
     "Gnashing Beaks": {
@@ -1107,14 +1110,13 @@
         "tiles": {
             "1": {
                 "enemies": [30, 30],
-                "spawns": []
+                "spawns": [20,20,6]
             },
             "2": {
                 "enemies": [6],
                 "spawns": []
             }
         },
-        "spawns": [20, 6],
         "difficultyOrder": [1, 2, 3, 0, 4]
     },
     "Gough's Perch": {
@@ -1123,7 +1125,7 @@
         "level": 4,
         "tiles": {
             "1": {
-                "enemies": [15, 5, 32, 21, 32, 5, 15, 21]
+                "enemies": [15, 5, 32, 21, 32, 5, 15, 21],"spawns": []
             }
         },
         "difficultyOrder": [4, 0, 6, 2, 7, 1, 5, 3]
@@ -1146,7 +1148,7 @@
         "level": 4,
         "tiles": {
             "1": {
-                "enemies": [22, 26, 5, 26, 5, 22, 5]
+                "enemies": [22, 26, 5, 26, 5, 22, 5],"spawns": []
             }
         },
         "difficultyOrder": [5, 3, 0, 4, 1, 6, 2]
@@ -1157,19 +1159,18 @@
         "level": 3,
         "tiles": {
             "1": {
-                "enemies": [37, 37, 36, 39],
+                "enemies": [13, 13, 5, 24],
                 "spawns": []
             },
             "2": {
-                "enemies": [38, 40],
+                "enemies": [22, 26],
                 "spawns": []
             },
             "3": {
-                "enemies": [39, 37, 40, 36],
-                "spawns": []
+                "enemies": [24, 13, 26, 5],
+                "spawns": [35]
             }
         },
-        "spawns": [35],
         "difficultyOrder": [0, 1, 3, 5, 10, 7, 6, 2, 8, 4, 9]
     },
     "Guarded Path": {
@@ -1178,7 +1179,7 @@
         "level": 4,
         "tiles": {
             "1": {
-                "enemies": [22, 13, 13, 13, 22, 24, 5, 5]
+                "enemies": [22, 13, 13, 13, 22, 24, 5, 5],"spawns": []
             }
         },
         "difficultyOrder": [6, 0, 1, 2, 7, 5, 3, 4]
@@ -1189,7 +1190,7 @@
         "level": 4,
         "tiles": {
             "1": {
-                "enemies": [32, 32, 10, 25, 17, 16]
+                "enemies": [32, 32, 10, 25, 17, 16],"spawns": []
             }
         },
         "difficultyOrder": [4, 5, 0, 1, 3, 2]
@@ -1212,11 +1213,11 @@
         "level": 3,
         "tiles": {
             "1": {
-                "enemies": [36, 40, 39],
+                "enemies": [5, 26, 24],
                 "spawns": []
             },
             "2": {
-                "enemies": [39, 36, 37, 40],
+                "enemies": [24, 5, 13, 26],
                 "spawns": []
             }
         },
@@ -1324,11 +1325,11 @@
         "level": 1,
         "tiles": {
             "1": {
-                "enemies": [36, 40],
+                "enemies": [5, 26],
                 "spawns": []
             },
             "2": {
-                "enemies": [39, 37, 39],
+                "enemies": [24, 13, 24],
                 "spawns": []
             }
         },
@@ -1341,10 +1342,9 @@
         "tiles": {
             "1": {
                 "enemies": [11, 29, 29, 29],
-                "spawns": []
+                "spawns": [27]
             }
         },
-        "spawns": [27],
         "difficultyOrder": [4, 0, 1, 2, 3]
     },
     "Inhospitable Ground": {
@@ -1393,11 +1393,11 @@
         "level": 1,
         "tiles": {
             "1": {
-                "enemies": [37, 40],
+                "enemies": [13, 26],
                 "spawns": []
             },
             "2": {
-                "enemies": [36, 36, 40],
+                "enemies": [5, 5, 26],
                 "spawns": []
             }
         },
@@ -1414,14 +1414,13 @@
             },
             "2": {
                 "enemies": [27, 27],
-                "spawns": []
+                "spawns": [29]
             },
             "3": {
                 "enemies": [18, 11, 12],
-                "spawns": []
+                "spawns": [28]
             }
         },
-        "spawns": [28, 29],
         "difficultyOrder": [5, 0, 1, 3, 4, 6, 8, 7, 9, 2]
     },
     "Last Rites": {
@@ -1499,14 +1498,13 @@
             },
             "2": {
                 "enemies": [27, 27, 18, 29],
-                "spawns": []
-            },
-            "3": {
-                "enemies": [28],
-                "spawns": []
+                "spawns": [28]
             }
         },
-        "difficultyOrder": [0, 1, 5, 3, 4, 6, 2, 7]
+        "difficultyOrder": {
+			"1": [0, 1, 2],
+			"2": [1, 2, 3, 0, 4]
+		}
     },
     "Lost Grotto": {
         "name": "Lost Grotto",
@@ -1730,19 +1728,18 @@
         "level": 2,
         "tiles": {
             "1": {
-                "enemies": [37, 37, 39],
+                "enemies": [13, 13, 24],
                 "spawns": []
             },
             "2": {
-                "enemies": [40, 39, 37],
+                "enemies": [26, 24, 13],
                 "spawns": []
             },
             "3": {
-                "enemies": [36, 36, 36, 40],
-                "spawns": []
+                "enemies": [5, 5, 5, 26],
+                "spawns": [35]
             }
         },
-        "spawns": [35],
         "difficultyOrder": [0, 1, 6, 8, 7, 2, 3, 4, 5, 9, 10]
     },
     "Parish Gates": {
@@ -1751,15 +1748,14 @@
         "level": 2,
         "tiles": {
             "1": {
-                "enemies": [36, 36, 36],
+                "enemies": [5, 5, 5],
                 "spawns": []
             },
             "2": {
                 "enemies": [],
-                "spawns": []
+                "spawns": [13]
             }
         },
-        "spawns": [37],
         "difficultyOrder": [1, 2, 3, 0]
     },
     "Perilous Crossing": {
@@ -2076,7 +2072,7 @@
         "level": 1,
         "tiles": {
             "1": {
-                "enemies": [39, 36, 36, 36],
+                "enemies": [24, 5, 5, 5],
                 "spawns": []
             }
         },
@@ -2141,10 +2137,9 @@
         "tiles": {
             "1": {
                 "enemies": [12],
-                "spawns": []
+                "spawns": [29]
             }
         },
-        "spawns": [29],
         "difficultyOrder": [1, 0]
     },
     "Skittering Frenzy": {
@@ -2289,11 +2284,10 @@
         "level": 1,
         "tiles": {
             "1": {
-                "enemies": [39, 37, 37, 36],
-                "spawns": []
+                "enemies": [24, 13, 13, 5],
+                "spawns": [35]
             }
         },
-        "spawns": [35],
         "difficultyOrder": [3, 0, 1, 2, 4]
     },
     "The Abandoned Chest": {
@@ -2307,10 +2301,9 @@
             },
             "2": {
                 "enemies": [27, 18],
-                "spawns": []
+                "spawns": [11,12]
             }
         },
-        "spawns": [11, 12],
         "difficultyOrder": [0, 1, 2, 3, 5, 4]
     },
     "The Beast From the Depths": {
@@ -2331,11 +2324,10 @@
         "level": 1,
         "tiles": {
             "1": {
-                "enemies": [36, 36],
-                "spawns": []
+                "enemies": [5, 5],
+                "spawns": [13]
             }
         },
-        "spawns": [37],
         "difficultyOrder": [1, 2, 0]
     },
     "The Castle Grounds": {
@@ -2405,10 +2397,9 @@
         "tiles": {
             "1": {
                 "enemies": [30],
-                "spawns": []
+                "spawns": [30,20,8]
             }
         },
-        "spawns": [30, 20, 8],
         "difficultyOrder": [0, 1, 2, 3]
     },
     "The Forgotten": {
@@ -2429,7 +2420,7 @@
         "level": 2,
         "tiles": {
             "1": {
-                "enemies": [36, 37, 37, 36, 37],
+                "enemies": [5, 13, 13, 5, 13],
                 "spawns": []
             }
         },
@@ -2441,20 +2432,23 @@
         "level": 3,
         "tiles": {
             "1": {
-                "enemies": [36, 36, 40],
+                "enemies": [5, 5, 26],
                 "spawns": []
             },
             "2": {
-                "enemies": [40, 38, 39, 40],
-                "spawns": []
+                "enemies": [26, 22, 24, 26],
+                "spawns": [35]
             },
             "3": {
-                "enemies": [38, 39, 39],
+                "enemies": [22, 24, 24],
                 "spawns": []
             }
         },
-        "spawns": [35],
-        "difficultyOrder": [0, 1, 5, 6, 9, 2, 7, 10, 3, 4, 8]
+        "difficultyOrder": {
+			"1": [0, 1, 2],
+			"2": [1, 3, 0, 2, 4],
+			"3": [0, 1, 2]
+		}
     },
     "The Hellkite Bridge": {
         "name": "The Hellkite Bridge",
@@ -2462,11 +2456,11 @@
         "level": 2,
         "tiles": {
             "1": {
-                "enemies": [40, 36, 36],
+                "enemies": [26, 5, 5],
                 "spawns": []
             },
             "2": {
-                "enemies": [37, 37, 40],
+                "enemies": [13, 13, 26],
                 "spawns": []
             }
         },
@@ -2478,7 +2472,7 @@
         "level": 2,
         "tiles": {
             "1": {
-                "enemies": [38],
+                "enemies": [22],
                 "spawns": []
             }
         },
@@ -2507,14 +2501,13 @@
             },
             "2": {
                 "enemies": [12, 18],
-                "spawns": []
+                "spawns": [28]
             },
             "3": {
                 "enemies": [11, 27, 27],
                 "spawns": []
             }
         },
-        "spawns": [28],
         "difficultyOrder": [5, 0, 4, 3, 6, 1, 2, 7]
     },
     "The Mass Grave": {
@@ -2551,7 +2544,7 @@
         "level": 2,
         "tiles": {
             "1": {
-                "enemies": [37, 37, 35],
+                "enemies": [13, 13, 35],
                 "spawns": []
             }
         },
@@ -2608,7 +2601,7 @@
         "tiles": {
             "1": {
                 "enemies": [20, 20],
-                "spawns": []
+                "spawns": [20,8,6]
             },
             "2": {
                 "enemies": [],
@@ -2619,7 +2612,6 @@
                 "spawns": []
             }
         },
-        "spawns": [20, 8, 6],
         "difficultyOrder": [0, 1, 2, 3, 4]
     },
     "Trophy Room": {
@@ -2628,11 +2620,11 @@
         "level": 3,
         "tiles": {
             "1": {
-                "enemies": [37, 35, 37, 37],
+                "enemies": [13, 35, 13, 13],
                 "spawns": []
             },
             "2": {
-                "enemies": [40, 36, 40, 36],
+                "enemies": [26, 5, 26, 5],
                 "spawns": []
             }
         },
@@ -2644,19 +2636,19 @@
         "level": 3,
         "tiles": {
             "1": {
-                "enemies": [40, 40, 39, 39],
+                "enemies": [26, 26, 24, 24],
                 "spawns": []
             },
             "2": {
-                "enemies": [36, 37, 35],
+                "enemies": [5, 13, 35],
                 "spawns": []
             },
             "3": {
-                "enemies": [38, 37, 36, 36, 40],
+                "enemies": [22, 13, 5, 5, 26],
                 "spawns": []
             }
         },
-        "difficultyOrder": [6, 7, 2, 3, 1, 0, 8, 9, 4, 5]
+        "difficultyOrder": [7, 8, 5, 6, 2, 0, 10, 11, 1, 3, 4, 9]
     },
     "Undead Purgatory": {
         "name": "Undead Purgatory",
@@ -2676,16 +2668,15 @@
         "level": 1,
         "tiles": {
             "1": {
-                "enemies": [37, 36, 36],
+                "enemies": [13, 5, 5],
                 "spawns": []
             },
             "2": {
-                "enemies": [37, 37, 40],
+                "enemies": [13, 13, 26],
                 "spawns": []
             }
         },
-        "spawns": [35],
-        "difficultyOrder": [0, 3, 4, 1, 2, 5, 6]
+        "difficultyOrder": [0, 3, 4, 1, 2, 5]
     },
     "Unhallowed Caves": {
         "name": "Unhallowed Caves",
