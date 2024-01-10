@@ -1,6 +1,10 @@
 from json import load, dump
 from os import path, listdir
 from enemies import enemies
+from attacks import attacks, bleedTrigger, blackKnight
+from loadouts import loadouts, dodgeMod, expectedBlock3Plus
+from itertools import product
+from math import ceil
 
 
 baseFolder = path.dirname(__file__)
@@ -24,6 +28,30 @@ reachMod = {
     4: 1
 }
 
+# Node attacks get a damage multiplier based on how likely
+# it is that it'll hit multiple characters based on all
+# possible configurations on an otherwise empty tile.
+# The keys are the number of characters (1 character would be 1 mod).
+# Chance of another character being on the target's node: 1/13.
+# For 3 players, it's 2 * (1/13) + the chance both are there: (1/13) * (1/13).
+# For 4 players, it's 3 * (1/13) + the different ways two could be there: 3 * ((1/13) * (1/13))
+nodeAttackMod = {
+    2: 1.07692307692307693,
+    3: 1.1538461538461538,
+    4: 1.2485207100591715
+}
+
+
+def arc_damage_mod(nodesAttacked, megaBoss):
+    nodes = 28 if megaBoss else 16
+    return {
+        1: 1,
+        2: 1 + (nodesAttacked / nodes),
+        3: 1 + (((nodesAttacked / nodes) * 2) + ((nodesAttacked / nodes) * (nodesAttacked / nodes))),
+        4: 1 + (((nodesAttacked / nodes) * 3) + (((nodesAttacked / nodes) * (nodesAttacked / nodes)) * 3))
+        }
+
+
 # This will be used to help calculate expected bleed damage from
 # potential bleed damage.  Since any enemy can proc bleed once it
 # has been applied, one piece of the puzzle we need is how often
@@ -31,178 +59,212 @@ reachMod = {
 reachSum = 0
 reachDiv = 0
 for enemy in enemies:
+    if enemy.expansion == "Phantoms":
+        continue
     for _ in range(enemy.numberOfModels):
         for i in range(len(enemy.attacks)):
-            reachSum += reachMod[enemy.move[i] + enemy.attackRange[i]]
+            reachSum += reachMod[min([4, sum(enemy.move[:i+1]) + sum(enemy.attackRange[:i+1])])]
             reachDiv += 1
 meanReachMod = reachSum / reachDiv
 
 for enemy in enemies:
     enemy.reset()
-    currentHealth = enemy.health
-    
-with open(baseFolder + "\\attacks.json") as att:
-    allAttacks = load(att)
 
-# Calculate enemy deaths.
+maxAttacksTaken = 0
+maxStaminaSpent = 0
+
+# Calculate enemy defense.
+# First pass to get how many times to apply each attack.
 for enemy in enemies:
-    # If this enemy is functionally the same as an enemy we already processed,
-    # apply the same number of deaths and move on.
-    if enemy in set([e for e in enemies if (
-        e.health == enemy.health
-        and e.armor == enemy.armor
-        and e.resist == enemy.resist
-        and "Hollow" in e.name == "Hollow" in enemy.name
-        and e.deaths > 0)]):
-        enemy.deaths = [e.deaths for e in enemies if (
-            e.health == enemy.health
-            and e.armor == enemy.armor
-            and e.resist == enemy.resist
-            and "Hollow" in e.name == "Hollow" in enemy.name
-            and e.deaths > 0)][0]
-        continue
+    for attack in attacks:
+        damage = attack.expectedDamage[enemy.resist if attack.magic else enemy.armor]
 
-    for attack in allAttacks:
-        damage = attack[0]
-        
-        # Bonus damage against hollows.
-        if "Hollow" in enemy.name and attack[1] == "hollow":
+        if attack.bleed:
+            damage += bleedTrigger[enemy.resist if attack.magic else enemy.armor]
+
+        if attack.poison:
             damage += 1
 
-        if not attack[2] and not attack[3]:
-            damage = max([0, damage - enemy.armor])
-        elif attack[2]:
-            damage = max([0, damage - enemy.resist])
-
-        # Poison
-        if attack[4]:
+        if set(enemy.name.lower().split(" ")) & attack.damageBonus:
             damage += 1
 
-        # If the enemy was bleeding and they took damage,
-        # add two damage and remove bleed.
-        if enemy.bleeding and damage > 0:
-            damage += 2
-            enemy.bleeding = False
+        attack.totalDamage[enemy] = damage
 
-        if attack[5]:
-            enemy.bleeding = True
+        if damage > 0 and enemy.expansion != "Phantoms" and enemy.health / damage > maxAttacksTaken:
+            maxAttacksTaken = ceil(enemy.health / damage)
 
-        currentHealth -= damage
-        # If the enemy was reduced to 0 or fewer health,
-        # add a death, reset their health, and remove bleed
-        # if they had it.
-        if currentHealth <= 0:
-            enemy.deaths += 1
-            currentHealth = enemy.health
-            enemy.bleeding = False
+        if damage > 0 and enemy.expansion != "Phantoms" and (enemy.health / damage) * attack.staminaCost > maxStaminaSpent:
+            maxStaminaSpent = ceil((enemy.health / damage) * attack.staminaCost)
 
-    with open(baseFolder + "\\enemies\\" + enemy.name + ".json", "w") as enemyFile:
-        dump({"deaths": enemy.deaths, "totalAttacks": enemy.totalAttacks, "damagingAttacks": enemy.damagingAttacks, "damageDone": enemy.damageDone, "bleedDamage": enemy.bleedDamage, "loadoutDamage": enemy.loadoutDamage}, enemyFile)
+# Second pass to get the number of deaths the attacks cause.
+for enemy in enemies:
+    for attack in attacks:
+        damage = attack.totalDamage[enemy]
+        currentHealth = enemy.health
 
-# Calculate enemy damage.
-for loadoutFile in listdir(baseFolder + "\\loadouts"):
-    print(loadoutFile)
-    
-    with open(path.join(baseFolder + "\\loadouts", loadoutFile)) as lf:
-        loadouts = load(lf)
-    
-    loadoutsLen = len(loadouts)
+        if attack.staminaCost > 0:
+            staminaSpent = 0
+            while staminaSpent < maxStaminaSpent:
+                if enemy.name == "Titanite Demon":
+                    if damage >= 3:
+                        damage -= 1
 
-    for enemy in enemies:
-        # If this enemy is functionally the same as an enemy we already processed,
-        # apply the same damage value and move on.
-        if enemy in set([e for e in enemies if (
-            e.attacks == enemy.attacks
-            and e.attackType == enemy.attackType
-            and e.dodge == enemy.dodge
-            and e.move == enemy.move
-            and e.attackRange == enemy.attackRange
-            and e.attackEffect == enemy.attackEffect
-            and e != enemy
-            and e.damageDone > 0)]):
-            copyEnemy = [e for e in enemies if (
-                e.health == enemy.health
-                and e.armor == enemy.armor
-                and e.resist == enemy.resist
-                and "Hollow" in e.name == "Hollow" in enemy.name
-                and e != enemy
-                and e.damageDone > 0)][0]
-            enemy.damageDone = copyEnemy.damageDone
-            enemy.bleedDamage = copyEnemy.bleedDamage
-            enemy.damagingAttacks = copyEnemy.damagingAttacks
-            enemy.totalAttacks = copyEnemy.totalAttacks
-            continue
+                currentHealth -= damage
 
-        for l, loadoutKey in enumerate(loadouts, 1):
-            block = loadouts[loadoutKey]["expected damage block"]
-            resist = loadouts[loadoutKey]["expected damage resist"]
-            dodge = loadouts[loadoutKey]["dodge mod"]
-            immunities = loadouts[loadoutKey]["immunities"]
+                if currentHealth <= 0:
+                    enemy.deaths += 1
+                    currentHealth = enemy.health
+                elif enemy.name == "Heavy Knight" and currentHealth <= 15:
+                    currentHealth += 3 * (1/5)
 
-            # If we've already seen a loadout that has the same defensive
-            # stats as this one, go get the results from that loadout
-            # rather than calculating it over again.
-            if str([block, resist, dodge, immunities]) in enemy.loadoutDamage:
-                totalAttacks = enemy.loadoutDamage[str([block, resist, dodge, immunities])][0]
-                damagingAttacks = enemy.loadoutDamage[str([block, resist, dodge, immunities])][1]
-                damageDone = [d for d in enemy.loadoutDamage[str([block, resist, dodge, immunities])][2]]
-                bleedDamage = enemy.loadoutDamage[str([block, resist, dodge, immunities])][3]
-            else:
-                totalAttacks = 0
-                damagingAttacks = 0
-                bleedDamage = 0
-                damageDone = []
-                
-                # For each enemy attack, calculate the expected
-                # damage the enemy would do to this loadout.
-                # Everything gets multiplied by two decimals.
-                # One represents the reach concept - how likely
-                # the enemy is to be in range to attack at all.
-                # The second represents character dodge - how
-                # likely the attack is to be dodged.
-                for i in range(len(enemy.attacks)):
-                    totalAttacks += 1
+                staminaSpent += attack.staminaCost
 
-                    poison = ((1 if enemy.attackEffect and "poison" in enemy.attackEffect[i] and "poison" not in loadouts[loadoutKey]["immunities"] else 0)
-                        * reachMod[enemy.move[i] + enemy.attackRange[i]]
-                        * dodge[str(enemy.dodge)])
-
-                    bleedDamage += ((2 if enemy.attackEffect and "bleed" in enemy.attackEffect[i] and "bleed" not in loadouts[loadoutKey]["immunities"] else 0)
-                        * reachMod[enemy.move[i] + enemy.attackRange[i]]
-                        * dodge[str(enemy.dodge)])
+                if {"stagger", "frostbite"} & set(enemy.attackEffect):
+                    staminaSpent += dodgeMod[enemy.dodge]
                     
-                    expectedDamage = (reachMod[enemy.move[i] + enemy.attackRange[i]]
-                        * block[str(enemy.dodge)][str(enemy.attacks[i])] if enemy.attackType[i] == "physical" else resist[str(enemy.dodge)][str(enemy.attacks[i])]) + poison
+                if enemy.name == "Winged Knight":
+                    staminaSpent += expectedBlock3Plus
+                elif enemy.name == "Black Knight":
+                    staminaSpent += blackKnight
+                elif enemy.name == "Heavy Knight":
+                    staminaSpent += dodgeMod[enemy.dodge] * (0.8 if currentHealth <= 15 else 1)
+        else:
+            for _ in range(maxAttacksTaken):
+                currentHealth -= damage
+                if currentHealth <= 0:
+                    enemy.deaths += 1
+                    currentHealth = enemy.health
+                elif enemy.name == "Heavy Knight" and currentHealth <= 15:
+                    currentHealth += 3 * (1/5)
 
-                    damagingAttacks += dodge[str(enemy.dodge)]
-                        
-                    damageDone.append(expectedDamage)
+# Calculate enemy offense.
+for x, loadout in enumerate(loadouts):
+    if x % 100000 == 0 and x > 0:
+        print(str((x/len(loadouts))*100)[:6] + "%")
+    for enemy in enemies:
+        totalAttacks = 0
+        damagingAttacks = 0
+        bleedDamage1 = 0
+        bleedDamage2 = 0
+        bleedDamage3 = 0
+        bleedDamage4 = 0
+        damageDone1 = []
+        damageDone2 = []
+        damageDone3 = []
+        damageDone4 = []
+        
+        # For each enemy attack, calculate the expected
+        # damage the enemy would do to this loadout.
+        # Everything gets multiplied by two decimals.
+        # One represents the reach concept - how likely
+        # the enemy is to be in range to attack at all.
+        # The second represents character dodge - how
+        # likely the attack is to be dodged.
+        for i in range(len(enemy.attacks)):
+            totalAttacks += 1
+            reach = reachMod[min([4, sum(enemy.move[:i+1]) + sum(enemy.attackRange[:i+1])])]
+            dodge = 1 if loadout["dodge"] == 0 else (1 - (sum([1 for do in product(*loadout["dodge"]) if sum(do) >= enemy.dodge]) / len(list(product(*loadout["dodge"])))))
+            damagingAttacks += dodge
 
-                # Add this loadouts results to the dictionary
-                # so if we come across another loadout with the
-                # same defensive stats we can just look it up
-                # rather than calculate it over again.
-                enemy.loadoutDamage[str([block, resist, dodge, immunities])] = (totalAttacks, damagingAttacks, damageDone, bleedDamage)
+            poison1 = ((1 if enemy.attackEffect and "poison" in enemy.attackEffect[i] and "poison" not in loadout["immunities"] else 0)
+                * reach
+                * dodge)
+            poison2 = ((1 if enemy.attackEffect and "poison" in enemy.attackEffect[i] and "poison" not in loadout["immunities"] else 0)
+                * reach
+                * dodge
+                * (nodeAttackMod[2] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
+                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[2] if enemy.nodesAttacked[i] > 0 else 1)
+            poison3 = ((1 if enemy.attackEffect and "poison" in enemy.attackEffect[i] and "poison" not in loadout["immunities"] else 0)
+                * reach
+                * dodge
+                * (nodeAttackMod[3] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
+                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[3] if enemy.nodesAttacked[i] > 0 else 1)
+            poison4 = ((1 if enemy.attackEffect and "poison" in enemy.attackEffect[i] and "poison" not in loadout["immunities"] else 0)
+                * reach
+                * dodge
+                * (nodeAttackMod[4] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
+                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[4] if enemy.nodesAttacked[i] > 0 else 1)
 
-            enemy.totalAttacks += totalAttacks
-            enemy.damagingAttacks += damagingAttacks
-            enemy.damageDone += sum([d for d in damageDone])
-            enemy.bleedDamage += bleedDamage
+            bleedDamage1 += ((2 if enemy.attackEffect and "bleed" in enemy.attackEffect[i] and "bleed" not in loadout["immunities"] else 0)
+                * reach
+                * dodge)
+            bleedDamage2 += ((2 if enemy.attackEffect and "bleed" in enemy.attackEffect[i] and "bleed" not in loadout["immunities"] else 0)
+                * reach
+                * dodge
+                * (nodeAttackMod[2] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
+                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[2] if enemy.nodesAttacked[i] > 0 else 1)
+            bleedDamage3 += ((2 if enemy.attackEffect and "bleed" in enemy.attackEffect[i] and "bleed" not in loadout["immunities"] else 0)
+                * reach
+                * dodge
+                * (nodeAttackMod[3] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
+                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[3] if enemy.nodesAttacked[i] > 0 else 1)
+            bleedDamage4 += ((2 if enemy.attackEffect and "bleed" in enemy.attackEffect[i] and "bleed" not in loadout["immunities"] else 0)
+                * reach
+                * dodge
+                * (nodeAttackMod[4] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
+                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[4] if enemy.nodesAttacked[i] > 0 else 1)
+            
+            expectedDamage1 = (max([0, enemy.attacks[i] - (loadout["block"] if enemy.attackType[i] == "physical" else loadout["resist"])])
+                * reach
+                * dodge
+                ) + poison1
+            expectedDamage2 = (max([0, enemy.attacks[i] - (loadout["block"] if enemy.attackType[i] == "physical" else loadout["resist"])])
+                * reach
+                * dodge
+                * (nodeAttackMod[2] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
+                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[2] if enemy.nodesAttacked[i] > 0 else 1
+                ) + poison2
+            expectedDamage3 = (max([0, enemy.attacks[i] - (loadout["block"] if enemy.attackType[i] == "physical" else loadout["resist"])])
+                * reach
+                * dodge
+                * (nodeAttackMod[3] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
+                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[3] if enemy.nodesAttacked[i] > 0 else 1
+                ) + poison3
+            expectedDamage4 = (max([0, enemy.attacks[i] - (loadout["block"] if enemy.attackType[i] == "physical" else loadout["resist"])])
+                * reach
+                * dodge
+                * (nodeAttackMod[4] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
+                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[4] if enemy.nodesAttacked[i] > 0 else 1
+                ) + poison4
 
-        with open(baseFolder + "\\enemies\\" + enemy.name + ".json", "w") as enemyFile:
-            dump({"deaths": enemy.deaths, "totalAttacks": enemy.totalAttacks, "damagingAttacks": enemy.damagingAttacks, "damageDone": enemy.damageDone, "bleedDamage": enemy.bleedDamage, "loadoutDamage": enemy.loadoutDamage}, enemyFile)
+            damagingAttacks += dodge
+                
+            damageDone1.append(expectedDamage1)
+            damageDone2.append(expectedDamage2)
+            damageDone3.append(expectedDamage3)
+            damageDone4.append(expectedDamage4)
+
+        enemy.totalAttacks += totalAttacks
+        enemy.damagingAttacks += damagingAttacks
+        enemy.damageDone1 += sum([d for d in damageDone1])
+        enemy.damageDone2 += sum([d for d in damageDone2])
+        enemy.damageDone3 += sum([d for d in damageDone3])
+        enemy.damageDone4 += sum([d for d in damageDone4])
+        enemy.bleedDamage1 += bleedDamage1
+        enemy.bleedDamage2 += bleedDamage2
+        enemy.bleedDamage3 += bleedDamage3
+        enemy.bleedDamage4 += bleedDamage4
             
 # (Damaging attacks / total attacks) * average enemy reach
 # This is the % that bleed will be procced.  The attack has
 # to be made (reach), and then do damage.
-bleedProc = (sum([enemy.damagingAttacks * enemy.numberOfModels for enemy in enemies]) / sum([enemy.totalAttacks * enemy.numberOfModels for enemy in enemies])) * meanReachMod
+# Do not include invaders.
+bleedProc = (sum([enemy.damagingAttacks * enemy.numberOfModels for enemy in enemies if enemy.expansion != "Phantoms"]) / sum([enemy.totalAttacks * enemy.numberOfModels for enemy in enemies if enemy.expansion != "Phantoms"])) * meanReachMod
+
 
 for enemy in enemies:
-    enemy.damageDone += enemy.bleedDamage * bleedProc
+    enemy.damageDone1 += enemy.bleedDamage1 * bleedProc
+    enemy.damageDone2 += enemy.bleedDamage2 * bleedProc
+    enemy.damageDone3 += enemy.bleedDamage3 * bleedProc
+    enemy.damageDone4 += enemy.bleedDamage4 * bleedProc
     with open(baseFolder + "\\enemies\\" + enemy.name + ".json", "w") as enemyFile:
-        dump({"deaths": enemy.deaths, "totalAttacks": enemy.totalAttacks, "damagingAttacks": enemy.damagingAttacks, "damageDone": enemy.damageDone, "bleedDamage": enemy.bleedDamage, "loadoutDamage": enemy.loadoutDamage}, enemyFile)
+        dump({"deaths": enemy.deaths, "totalAttacks": enemy.totalAttacks, "damagingAttacks": enemy.damagingAttacks, "damageDone": {1: enemy.damageDone1, 2: enemy.damageDone2, 3: enemy.damageDone3, 4: enemy.damageDone4}, "bleedDamage": {1: enemy.bleedDamage1, 2: enemy.bleedDamage2, 3: enemy.bleedDamage3, 4: enemy.bleedDamage4}, "loadoutDamage": enemy.loadoutDamage}, enemyFile)
 
 for enemyFile in listdir(baseFolder + "\\enemies"):
     with open(path.join(baseFolder + "\\enemies", enemyFile)) as ef:
         enemy = load(ef)
-    print(enemyFile[:-5] + "_" + str(enemy["damageDone"]) + "_" + str(enemy["deaths"]))
+    print(enemyFile[:-5] + "_1_" + str(enemy["damageDone"]["1"]) + "_" + str(enemy["deaths"]))
+    print(enemyFile[:-5] + "_2_" + str(enemy["damageDone"]["2"]) + "_" + str(enemy["deaths"]))
+    print(enemyFile[:-5] + "_3_" + str(enemy["damageDone"]["3"]) + "_" + str(enemy["deaths"]))
+    print(enemyFile[:-5] + "_4_" + str(enemy["damageDone"]["4"]) + "_" + str(enemy["deaths"]))
+input()

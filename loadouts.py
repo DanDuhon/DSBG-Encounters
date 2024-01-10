@@ -1,86 +1,44 @@
-from itertools import product
-from os import path
-from json import dump
-from random import shuffle
+from itertools import product, chain, combinations
+from statistics import mean
 
 from armor import armor
 from hand_items import handItems
-from attacks import attacks
 
 
-baseFolder = path.dirname(__file__)
+b = (0, 1, 1, 1, 2, 2)
+u = (1, 1, 2, 2, 2, 3)
+o = (1, 2, 2, 3, 3, 4)
+d = (0, 0, 0, 1, 1, 1)
+means = {
+    b: mean(b),
+    u: mean(u),
+    o: mean(o),
+    d: mean(d)
+}
 
-lenArmor = len(armor)
+loadoutsCombos = chain(
+    product(armor, product([h for h in handItems if h.twoHanded], [h for h in handItems if h.canUseWithTwoHanded])),
+    product(armor, combinations([h for h in handItems if not h.twoHanded], 2)))
 
-expectedDamageBlock = dict()
-for x in range(5):
-    expectedDamageBlock[x] = dict()
-    for y in range(2, 10):
-        expectedDamageBlock[x][y] = 0
+loadouts = []
 
-expectedDamageResist = dict()
-for x in range(5):
-    expectedDamageResist[x] = dict()
-    for y in range(2, 10):
-        expectedDamageResist[x][y] = 0
+for l in loadoutsCombos:
+    loadouts.append({
+        "block": sum([means[die] for die in l[0].block + l[1][0].block + l[1][1].block]) + sum([l[0].blockMod, l[1][0].blockMod, l[1][1].blockMod]),
+        "resist": sum([means[die] for die in l[0].resist + l[1][0].resist + l[1][1].resist]) + sum([l[0].resistMod, l[1][0].resistMod, l[1][1].resistMod]),
+        "dodge": 0 if not all([l[0].canDodge, l[1][0].canDodge, l[1][1].canDodge]) else (l[0].dodge + l[1][0].dodge + l[1][1].dodge),
+        "dodgeBonus": l[0].dodgeBonus,
+        "immunities": l[0].immunities | l[1][0].immunities | l[1][1].immunities
+    })
 
-# Because we're attacking enemies with every possible result of
-# a weapon's damage rolls, I want to make sure each weapon gets
-# equal representation.  Find a number that can be divided by
-# all weapon results evenly.  That's how many results we want
-# to apply for each weapon.
-attackResults = sorted(list(set([len([d for d in product(*attack.damage)]) for attack in attacks])), reverse=True)
-rounds = attackResults[0]
-for a in attackResults[1:]:
-    if a != 0 and rounds % a != 0:
-        rounds = rounds * a
+# Overall dodge modifier for the following dodge difficulties.
+# Used for enemies that inflict Stagger or Frostbite.
+dodgeMod = {
+    1: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 1]) / len(list(product(*l["dodge"]))))) for l in loadouts]),
+    2: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 2]) / len(list(product(*l["dodge"]))))) for l in loadouts]),
+    3: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 3]) / len(list(product(*l["dodge"]))))) for l in loadouts]),
+    4: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 4]) / len(list(product(*l["dodge"]))))) for l in loadouts])
+}
 
-allAttacks = []
-# A weapon's attack
-for attack in attacks:
-    # Each roll inside that attack (multiple for repeats)
-    for i, roll in enumerate(attack.damage):
-        attackResults = [max([0, sum(a) + attack.damageMod]) for a in product(*attack.damage[i])]
-        totalResults = attackResults * int(rounds / len(attackResults))
-        shuffle(totalResults)
-        # Each possible result of the roll
-        for result in totalResults:
-            allAttacks.append((result, attack.damageBonus, attack.magic, attack.ignoreArmor, attack.poison, attack.bleed))
-
-# Randomize the order of the attacks.
-shuffle(allAttacks)
-
-with open(baseFolder + "\\attacks.json", "w") as enemyFile:
-    dump(allAttacks, enemyFile)
-
-dodgeMod = dict()
-
-for i, a in enumerate(armor):
-    loadouts = {}
-    print(a.name)
-    for mh in handItems:
-        if not mh.name:
-            continue
-        for oh in handItems:
-            if oh.twoHanded or mh == oh or (mh.twoHanded and not oh.canUseWithTwoHanded) or (not mh.twoHanded and oh is None):
-                continue
-
-            for x in range(5):
-                dodgeMod[x] = 1 if all([not a.canDodge, not mh.canDodge, not oh.canDodge]) else 1 - (sum([1 for do in product(*(a.dodge + mh.dodge + oh.dodge)) if sum(do) >= x]) / len(list(product(*(a.dodge + mh.dodge + oh.dodge)))))
-                for y in range(2, 10):
-                    expectedDamageBlock[x][y] = a.expectedDamageBlock[x][y]
-                    expectedDamageResist[x][y] = a.expectedDamageResist[x][y]
-            
-            loadoutKey = frozenset([a.name, mh.name, oh.name])
-
-            if loadoutKey not in loadouts:
-                loadouts[loadoutKey] = {
-                    "expected damage block": expectedDamageBlock,
-                    "expected damage resist": expectedDamageResist,
-                    "dodge mod": {k: dodgeMod[k] for k in dodgeMod},
-                    "immunities": ["bleed" if any(["bleed" in mh.immunities, "bleed" in oh.immunities, "bleed" in a.immunities]) else None, "poison" if any(["poison" in mh.immunities, "poison" in oh.immunities, "poison" in a.immunities]) else None],
-                    "dodge bonus": None if any([not a.canDodge, not mh.canDodge, not oh.canDodge]) else a.dodgeBonus
-                    }
-                    
-    with open(baseFolder + "\\loadouts\\" + a.name + ".json", "w") as loadoutsFile:
-        dump({str(k): loadouts[k] for k in loadouts}, loadoutsFile)
+# Winged Knight gets a bonus against blocks of 3 or higher.
+expectedBlock3Plus = sum([1 for l in loadouts if l["block"] >= 3]) / len(loadouts)

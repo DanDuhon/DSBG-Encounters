@@ -88,9 +88,9 @@ with open(path.join(baseFolder, "encounters.json")) as ef:
 
 # skip = True
 for e in enc:
-    if e != "Puppet Master":
-        continue
-        skip = False
+    # if e != "Puppet Master":
+    #     continue
+    #     skip = False
     # if skip:
     #     continue
     encounter = enc[e]
