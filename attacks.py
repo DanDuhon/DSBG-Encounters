@@ -21,13 +21,14 @@ bleedTrigger = {
             3: []
         }
 
-
+# Need to add a flag for weapons that can't attack at range 0
 class Attack:
-    def __init__(self, name, attackNumber, staminaCost, damage=[[]], damageMod=0, magic=False, bleed=False, poison=False, ignoreDefense=False, damageBonus=set()) -> None:
+    def __init__(self, name, attackNumber, staminaCost, attackRange, damage=[[]], damageMod=0, magic=False, bleed=False, poison=False, ignoreDefense=False, damageBonus=set(), noRange0=False) -> None:
         attacks.append(self)
         self.name = name
         self.attackNumber = attackNumber
         self.staminaCost = staminaCost
+        self.attackRange = attackRange
         self.damage = damage
         self.damageMod = damageMod
         self.magic = magic
@@ -35,6 +36,7 @@ class Attack:
         self.poison = poison
         self.ignoreDefense = ignoreDefense
         self.damageBonus = damageBonus
+        self.noRange0 = noRange0
         self.totalDamage = {}
 
         self.expectedDamage = {

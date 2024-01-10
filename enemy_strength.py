@@ -128,6 +128,8 @@ for enemy in enemies:
                     staminaSpent += blackKnight
                 elif enemy.name == "Heavy Knight":
                     staminaSpent += dodgeMod[enemy.dodge] * (0.8 if currentHealth <= 15 else 1)
+                elif enemy.name == "Gargoyle" and currentHealth <= 12 and not attack.noRange0:
+                    staminaSpent += 1/(attack.range + 1) 
         else:
             for _ in range(maxAttacksTaken):
                 currentHealth -= damage
