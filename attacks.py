@@ -18,7 +18,8 @@ bleedTrigger = {
             0: [],
             1: [],
             2: [],
-            3: []
+            3: [],
+            4: []
         }
 
 # Need to add a flag for weapons that can't attack at range 0
@@ -44,16 +45,17 @@ class Attack:
             0: 0,
             1: 0,
             2: 0,
-            3: 0
+            3: 0,
+            4: 0
         }
-        for x in range(4): # defense
+        for x in range(5): # defense
             for attack in self.damage:
                 for die in attack:
                     self.expectedDamage[x] += means[die]
                 self.expectedDamage[x] = self.expectedDamage[x] + self.damageMod - (x if not self.ignoreDefense else 0)
             self.expectedDamage[x] = max([0, self.expectedDamage[x] + (1 if poison else 0)])
 
-        for x in range(4): # defense
+        for x in range(5): # defense
             for attack in self.damage:
                 combos = list(product(*attack))
                 bleedTrigger[x].append((sum([1 for c in combos if sum(c) > x]) / len([c for c in combos]) if len([c for c in combos]) > 0 else 0))

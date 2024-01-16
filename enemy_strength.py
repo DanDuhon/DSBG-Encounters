@@ -21,11 +21,41 @@ d = [0, 0, 0, 1, 1, 1]
 # reach. This gives us expected damage across all possible
 # configurations on an otherwise empty tile.
 reachMod = {
-    0: 0.07692307692307693,
-    1: 0.44970414201183434,
-    2: 0.8224852071005917,
-    3: 0.9763313609467456,
-    4: 1
+    "regular": {
+        0: 0.07692307692307693,
+        1: 0.44970414201183434,
+        2: 0.8224852071005917,
+        3: 0.9763313609467456,
+        4: 1
+    },
+    "invader": {
+        0: 0.07692307692307693,
+        1: 0.44970414201183434,
+        2: 0.8224852071005917,
+        3: 0.9763313609467456,
+        4: 1
+    },
+    "mini boss": {
+        0: 0.07692307692307693,
+        1: 0.44970414201183434,
+        2: 0.8224852071005917,
+        3: 0.9763313609467456,
+        4: 1
+    },
+    "main boss": {
+        0: 0.07692307692307693,
+        1: 0.44970414201183434,
+        2: 0.8224852071005917,
+        3: 0.9763313609467456,
+        4: 1
+    },
+    "mega boss": {
+        0: 0.07692307692307693,
+        1: 0.44970414201183434,
+        2: 0.8224852071005917,
+        3: 0.9763313609467456,
+        4: 1
+    }
 }
 
 # Node attacks get a damage multiplier based on how likely
@@ -59,12 +89,11 @@ def arc_damage_mod(nodesAttacked, megaBoss):
 reachSum = 0
 reachDiv = 0
 for enemy in enemies:
-    if enemy.expansion == "Phantoms":
-        continue
-    for _ in range(enemy.numberOfModels):
-        for i in range(len(enemy.attacks)):
-            reachSum += reachMod[min([4, sum(enemy.move[:i+1]) + sum(enemy.attackRange[:i+1])])]
-            reachDiv += 1
+    if enemy.enemyType == "regular":
+        for _ in range(enemy.numberOfModels):
+            for i in range(len(enemy.attacks)):
+                reachSum += reachMod[enemy.enemyType][max([0, min([4, sum(enemy.move[:i+1]) + sum(enemy.attackRange[:i+1]) - (1 if enemy.windup else 0)])])]
+                reachDiv += 1
 meanReachMod = reachSum / reachDiv
 
 for enemy in enemies:
@@ -76,6 +105,8 @@ maxStaminaSpent = 0
 # Calculate enemy defense.
 # First pass to get how many times to apply each attack.
 for enemy in enemies:
+    if enemy.skip:
+        continue
     for attack in attacks:
         damage = attack.expectedDamage[enemy.resist if attack.magic else enemy.armor]
 
@@ -98,6 +129,8 @@ for enemy in enemies:
 
 # Second pass to get the number of deaths the attacks cause.
 for enemy in enemies:
+    if enemy.skip:
+        continue
     for attack in attacks:
         damage = attack.totalDamage[enemy]
         currentHealth = enemy.health
@@ -119,9 +152,9 @@ for enemy in enemies:
 
                 staminaSpent += attack.staminaCost
 
-                if {"stagger", "frostbite"} & set(enemy.attackEffect):
+                if any([{"stagger", "frostbite"} & e for e in enemy.attackEffect]):
                     staminaSpent += dodgeMod[enemy.dodge]
-                    
+
                 if enemy.name == "Winged Knight":
                     staminaSpent += expectedBlock3Plus
                 elif enemy.name == "Black Knight":
@@ -144,6 +177,8 @@ for x, loadout in enumerate(loadouts):
     if x % 100000 == 0 and x > 0:
         print(str((x/len(loadouts))*100)[:6] + "%")
     for enemy in enemies:
+        if enemy.skip:
+            continue
         totalAttacks = 0
         damagingAttacks = 0
         bleedDamage1 = 0
@@ -164,9 +199,34 @@ for x, loadout in enumerate(loadouts):
         # likely the attack is to be dodged.
         for i in range(len(enemy.attacks)):
             totalAttacks += 1
-            reach = reachMod[min([4, sum(enemy.move[:i+1]) + sum(enemy.attackRange[:i+1])])]
-            dodge = 1 if loadout["dodge"] == 0 else (1 - (sum([1 for do in product(*loadout["dodge"]) if sum(do) >= enemy.dodge]) / len(list(product(*loadout["dodge"])))))
+            reach = reachMod[enemy.enemyType][max([0, min([4, sum(enemy.move[:i+1]) + sum(enemy.attackRange[:i+1]) - (1 if enemy.windup else 0)])])]
+            if type(enemy.dodge) == int:
+                dodge = 1 if loadout["dodge"] == 0 else (1 - (sum([1 for do in product(*loadout["dodge"]) if sum(do) >= enemy.dodge]) / len(list(product(*loadout["dodge"])))))
+            else:
+                dodge = 1 if loadout["dodge"] == 0 else (1 - (sum([1 for do in product(*loadout["dodge"]) if sum(do) >= enemy.dodge[i]]) / len(list(product(*loadout["dodge"])))))
+
+            # This is the effect of Calamity, see below for more details.
+            if "Black Dragon Kalameet" in enemy.name:
+                dodge -= 0.1528822055
+                
             damagingAttacks += dodge
+
+            # This is the effect of Corrosion
+            # Average chance of pulling Corrosive Ooze across the fight
+            # Pre-heatup chance: (1/6) * (20/46)
+            # Post-heatup chance: (2/7) * (26/46)
+            if "Gaping Dragon" in enemy.name and enemy.attackType[i] == "physical":
+                enemy.attacks[i] += 0.2339544513
+            # This is the effect of Calamity
+            # Average chance of pulling Mark of Calamity across the fight
+            # Pre-heatup chance: (1/6) * (16/38)
+            # Post-heatup chance: (1/7) * (22/38)
+            elif "Black Dragon Kalameet" in enemy.name:
+                enemy.attacks[i] += 0.1528822055
+            # The horse still damages you if you completely block/resist it.
+            elif "Executioner's Chariot" in enemy.name and len(list(product(*loadout["blockRoll" if enemy.attackType[i] == "physical" else "resistRoll"]))) > 0:
+                enemy.attacks[i] += (sum([1 for do in product(*loadout["blockRoll" if enemy.attackType[i] == "physical" else "resistRoll"]) if sum(do) >= enemy.attacks[i]]) / len(list(product(*loadout["blockRoll" if enemy.attackType[i] == "physical" else "resistRoll"]))))
+                
 
             poison1 = ((1 if enemy.attackEffect and "poison" in enemy.attackEffect[i] and "poison" not in loadout["immunities"] else 0)
                 * reach
@@ -175,17 +235,17 @@ for x, loadout in enumerate(loadouts):
                 * reach
                 * dodge
                 * (nodeAttackMod[2] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[2] if enemy.nodesAttacked[i] > 0 else 1)
+                * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[2] if enemy.nodesAttacked[i] > 0 else 1))
             poison3 = ((1 if enemy.attackEffect and "poison" in enemy.attackEffect[i] and "poison" not in loadout["immunities"] else 0)
                 * reach
                 * dodge
                 * (nodeAttackMod[3] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[3] if enemy.nodesAttacked[i] > 0 else 1)
+                * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[3] if enemy.nodesAttacked[i] > 0 else 1))
             poison4 = ((1 if enemy.attackEffect and "poison" in enemy.attackEffect[i] and "poison" not in loadout["immunities"] else 0)
                 * reach
                 * dodge
                 * (nodeAttackMod[4] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[4] if enemy.nodesAttacked[i] > 0 else 1)
+                * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[4] if enemy.nodesAttacked[i] > 0 else 1))
 
             bleedDamage1 += ((2 if enemy.attackEffect and "bleed" in enemy.attackEffect[i] and "bleed" not in loadout["immunities"] else 0)
                 * reach
@@ -194,17 +254,17 @@ for x, loadout in enumerate(loadouts):
                 * reach
                 * dodge
                 * (nodeAttackMod[2] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[2] if enemy.nodesAttacked[i] > 0 else 1)
+                * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[2] if enemy.nodesAttacked[i] > 0 else 1))
             bleedDamage3 += ((2 if enemy.attackEffect and "bleed" in enemy.attackEffect[i] and "bleed" not in loadout["immunities"] else 0)
                 * reach
                 * dodge
                 * (nodeAttackMod[3] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[3] if enemy.nodesAttacked[i] > 0 else 1)
+                * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[3] if enemy.nodesAttacked[i] > 0 else 1))
             bleedDamage4 += ((2 if enemy.attackEffect and "bleed" in enemy.attackEffect[i] and "bleed" not in loadout["immunities"] else 0)
                 * reach
                 * dodge
                 * (nodeAttackMod[4] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[4] if enemy.nodesAttacked[i] > 0 else 1)
+                * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[4] if enemy.nodesAttacked[i] > 0 else 1))
             
             expectedDamage1 = (max([0, enemy.attacks[i] - (loadout["block"] if enemy.attackType[i] == "physical" else loadout["resist"])])
                 * reach
@@ -214,19 +274,19 @@ for x, loadout in enumerate(loadouts):
                 * reach
                 * dodge
                 * (nodeAttackMod[2] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[2] if enemy.nodesAttacked[i] > 0 else 1
+                * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[2] if enemy.nodesAttacked[i] > 0 else 1)
                 ) + poison2
             expectedDamage3 = (max([0, enemy.attacks[i] - (loadout["block"] if enemy.attackType[i] == "physical" else loadout["resist"])])
                 * reach
                 * dodge
                 * (nodeAttackMod[3] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[3] if enemy.nodesAttacked[i] > 0 else 1
+                * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[3] if enemy.nodesAttacked[i] > 0 else 1)
                 ) + poison3
             expectedDamage4 = (max([0, enemy.attacks[i] - (loadout["block"] if enemy.attackType[i] == "physical" else loadout["resist"])])
                 * reach
                 * dodge
                 * (nodeAttackMod[4] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                * arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[4] if enemy.nodesAttacked[i] > 0 else 1
+                * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[4] if enemy.nodesAttacked[i] > 0 else 1)
                 ) + poison4
 
             damagingAttacks += dodge
