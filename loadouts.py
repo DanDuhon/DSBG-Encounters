@@ -22,7 +22,10 @@ loadoutsCombos = chain(
 
 loadouts = []
 
-for l in loadoutsCombos:
+for i, l in enumerate(loadoutsCombos):
+    # This is to speed things up for testing.
+    # if i > 100:
+    #     break
     loadouts.append({
         "block": sum([means[die] for die in l[0].block + l[1][0].block + l[1][1].block]) + sum([l[0].blockMod, l[1][0].blockMod, l[1][1].blockMod]),
         "blockRoll": [[v + sum([l[0].blockMod, l[1][0].blockMod, l[1][1].blockMod]) for v in b] for b in l[0].block + l[1][0].block + l[1][1].block],

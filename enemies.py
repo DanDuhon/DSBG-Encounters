@@ -19,7 +19,8 @@ class Enemy:
             enemies.append(self)
         elif "Vordt" in name:
             vordtStuff.append(self)
-        elif "Guardian Dragon" in name:
+        
+        if "Guardian Dragon" in name:
             guardianDragonStuff.append(self)
 
         self.name = name
@@ -129,11 +130,11 @@ Enemy(name="Armorer Dennis - Soul Greatsword", expansion="Phantoms", enemyType="
 Enemy(name="Armorer Dennis - Soul Vortex", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[4,4], attackType=["magic", "magic"], nodeAttack=[True, True], dodge=1, move=[0,0], attackRange=[4,4])
 Enemy(name="Armorer Dennis - Soul Flash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[4], attackType=["magic"], dodge=2, move=[2], attackRange=[0])
 Enemy(name="Armorer Dennis - Upward Slash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[6], attackType=["physical"], dodge=1, move=[1], attackRange=[0])
-Enemy(name="Armorer Dennis - Soul Spear Launch (heat up)", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[5], attackType=["magic"], dodge=2, move=[0], attackRange=[4])
-Enemy(name="Armorer Dennis - Soul Greatsword (heat up)", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[6], attackType=["magic"], nodeAttack=[True], dodge=2, move=[0], attackRange=[1])
-Enemy(name="Armorer Dennis - Soul Vortex (heat up)", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[4,4], attackType=["magic", "magic"], nodeAttack=[True, True], dodge=2, move=[0,0], attackRange=[4,4])
-Enemy(name="Armorer Dennis - Soul Flash (heat up)", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[4], attackType=["magic"], dodge=3, move=[2], attackRange=[0])
-Enemy(name="Armorer Dennis - Upward Slash (heat up)", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[6], attackType=["physical"], dodge=2, move=[1], attackRange=[0])
+Enemy(name="Armorer Dennis (heatup) - Soul Spear Launch", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[5], attackType=["magic"], dodge=2, move=[0], attackRange=[4])
+Enemy(name="Armorer Dennis (heatup) - Soul Greatsword", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[6], attackType=["magic"], nodeAttack=[True], dodge=2, move=[0], attackRange=[1])
+Enemy(name="Armorer Dennis (heatup) - Soul Vortex", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[4,4], attackType=["magic", "magic"], nodeAttack=[True, True], dodge=2, move=[0,0], attackRange=[4,4])
+Enemy(name="Armorer Dennis (heatup) - Soul Flash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[4], attackType=["magic"], dodge=3, move=[2], attackRange=[0])
+Enemy(name="Armorer Dennis (heatup) - Upward Slash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[6], attackType=["physical"], dodge=2, move=[1], attackRange=[0])
 Enemy(name="Fencer Sharron - Puzzling Stone Sword Charge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=1, resist=1, attacks=[5], attackType=["physical"], dodge=2, move=[2], attackRange=[0])
 Enemy(name="Fencer Sharron - Puzzling Stone Sword Whip", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=1, resist=1, attacks=[6,0], attackType=["physical", "physical"], dodge=1, move=[0,-1], attackRange=[1,1])
 Enemy(name="Fencer Sharron - Spider Fang Sword Strike", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=1, resist=1, attacks=[6], attackType=["physical"], dodge=1, move=[1], attackRange=[0])
@@ -465,17 +466,17 @@ Enemy(name="The Last Giant (heatup) - Beat You With It", expansion="The Last Gia
 Enemy(name="The Last Giant (heatup) - Armed Swings", expansion="The Last Giant", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, dodge=1, attacks=[6,0,6,0], attackType=["physical", "physical", "physical", "physical"], nodesAttacked=[20,0,20,0], move=[0,1,0,1], attackRange=[2,2,2,2])
 Enemy(name="The Last Giant (heatup) - Arm Smash", expansion="The Last Giant", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, dodge=3, attacks=[6], attackType=["physical"], attackEffect=[{"stagger",}], nodeAttack=[True], move=[0], attackRange=[2], windup=True)
 Enemy(name="The Last Giant (heatup) - Falling Slam", expansion="The Last Giant", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, dodge=1, weakArcs=4, attacks=[9], attackType=["physical"], nodeAttack=[True], move=[4], attackRange=[0])
-Enemy(skip=True, name="Guardian Dragon - Fireball", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[5], attackType=["magic"], nodeAttack=[True], move=[0], attackRange=[3], dodge=[3])
-Enemy(skip=True, name="Guardian Dragon - Fire Breath", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[5,0,5,0], attackType=["magic", "magic", "magic", "magic"], nodesAttacked=[4,0,4,0], move=[0,-1,0,-1], attackRange=[2,2,2,2], dodge=[1,1,1,1])
-Enemy(skip=True, name="Guardian Dragon - Leaping Breath", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[4,0,4,0], attackType=["magic", "magic", "magic", "magic"], nodesAttacked=[12,0,12,0], move=[0,4,0,4], attackRange=[0,1,0,1], dodge=[1,1,1,1], weakArcs=0)
-Enemy(skip=True, name="Guardian Dragon - Fire Sweep", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[4,4,0], attackType=["magic", "magic", "magic"], nodesAttacked=[7,7,0], move=[0,0,1], attackRange=[1,1,1], dodge=[2,2,2])
-Enemy(skip=True, name="Guardian Dragon - Charging Flame", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[5,0,5,0], attackType=["magic", "magic", "magic", "magic"], nodesAttacked=[4,0,4,0], move=[0,1,0,1], attackRange=[1,1,1,1], dodge=[2,2,2,2])
-Enemy(skip=True, name="Guardian Dragon - Tail Sweep", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6], attackEffect=[{"stagger",}], attackType=["physical"], nodesAttacked=[4], move=[1], attackRange=[2], dodge=[2])
-Enemy(skip=True, name="Guardian Dragon - Bite", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[8], attackEffect=[{"stagger",}], attackType=["physical"], nodeAttack=[True], move=[0], attackRange=[1], dodge=[2])
-Enemy(skip=True, name="Guardian Dragon - Left Stomp", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6], attackEffect=[{"stagger",}], attackType=["magic"], nodesAttacked=[7], move=[0], attackRange=[1], dodge=[1])
-Enemy(skip=True, name="Guardian Dragon - Right Stomp", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6], attackEffect=[{"stagger",}], attackType=["magic"], nodesAttacked=[7], move=[0], attackRange=[1], dodge=[1])
-Enemy(skip=True, name="Guardian Dragon (heatup) - Cage Grasp Inferno 1", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[5,0], attackType=["magic", "magic"], nodesAttacked=[7,0], move=[0,2], attackRange=[1,0], dodge=[1,1])
-Enemy(skip=True, name="Guardian Dragon (heatup) - Cage Grasp Inferno 2", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[5,0], attackType=["magic", "magic"], nodesAttacked=[7,0], move=[0,2], attackRange=[1,0], dodge=[1,1])
+Enemy(name="Guardian Dragon - Fireball", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[5], attackType=["magic"], nodeAttack=[True], move=[0], attackRange=[3], dodge=[3])
+Enemy(name="Guardian Dragon - Fire Breath", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[5,0,5,0], attackType=["magic", "magic", "magic", "magic"], nodesAttacked=[4,0,4,0], move=[0,-1,0,-1], attackRange=[2,2,2,2], dodge=[1,1,1,1])
+Enemy(name="Guardian Dragon - Leaping Breath", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[4,0,4,0], attackType=["magic", "magic", "magic", "magic"], nodesAttacked=[12,0,12,0], move=[0,4,0,4], attackRange=[0,1,0,1], dodge=[1,1,1,1], weakArcs=0)
+Enemy(name="Guardian Dragon - Fire Sweep", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[4,4,0], attackType=["magic", "magic", "magic"], nodesAttacked=[7,7,0], move=[0,0,1], attackRange=[1,1,1], dodge=[2,2,2])
+Enemy(name="Guardian Dragon - Charging Flame", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[5,0,5,0], attackType=["magic", "magic", "magic", "magic"], nodesAttacked=[4,0,4,0], move=[0,1,0,1], attackRange=[1,1,1,1], dodge=[2,2,2,2])
+Enemy(name="Guardian Dragon - Tail Sweep", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6], attackEffect=[{"stagger",}], attackType=["physical"], nodesAttacked=[4], move=[1], attackRange=[2], dodge=[2])
+Enemy(name="Guardian Dragon - Bite", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[8], attackEffect=[{"stagger",}], attackType=["physical"], nodeAttack=[True], move=[0], attackRange=[1], dodge=[2])
+Enemy(name="Guardian Dragon - Left Stomp", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6], attackEffect=[{"stagger",}], attackType=["magic"], nodesAttacked=[7], move=[0], attackRange=[1], dodge=[1])
+Enemy(name="Guardian Dragon - Right Stomp", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6], attackEffect=[{"stagger",}], attackType=["magic"], nodesAttacked=[7], move=[0], attackRange=[1], dodge=[1])
+Enemy(skip=True, name="Guardian Dragon (heatup) - Cage Grasp Inferno 1", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[5,0], attackType=["magic", "magic"], nodesAttacked=[7,0], move=[0,2], attackRange=[1,0], dodge=[1,1], weakArcs=0)
+Enemy(skip=True, name="Guardian Dragon (heatup) - Cage Grasp Inferno 2", expansion="Guardian Dragon", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[5,0], attackType=["magic", "magic"], nodesAttacked=[7,0], move=[0,2], attackRange=[1,0], dodge=[1,1], weakArcs=0)
 Enemy(name="Gaping Dragon (signature) - Stomach Slam", expansion="Gaping Dragon", enemyType="mega boss", numberOfModels=1, health=46, armor=3, resist=2, attacks=[7,5,5,5], attackType=["physical", "physical", "physical", "physical"], nodesAttacked=[4,0,0,0], nodeAttack=[False, True, True, True], move=[0,1,1,1], attackRange=[2,0,0,0], dodge=[2,1,1,1])
 Enemy(name="Gaping Dragon (signature) - Stomach Slam", expansion="Gaping Dragon", enemyType="mega boss", numberOfModels=1, health=46, armor=3, resist=2, attacks=[7,5,5,5], attackType=["physical", "physical", "physical", "physical"], nodesAttacked=[4,0,0,0], nodeAttack=[False, True, True, True], move=[0,1,1,1], attackRange=[2,0,0,0], dodge=[2,1,1,1])
 Enemy(name="Gaping Dragon - Right Hook", expansion="Gaping Dragon", enemyType="mega boss", numberOfModels=1, health=46, armor=3, resist=2, attacks=[6], attackEffect=[{"stagger",}], attackType=["physical"], nodesAttacked=[7], move=[1], attackRange=[1], dodge=2)
@@ -534,7 +535,7 @@ Enemy(name="Old Iron King (beam) - Fire Beam", expansion="Old Iron King", enemyT
 Enemy(name="Old Iron King (beam, heatup) - Fire Beam", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6], attackType=["magic"], nodesAttacked=[8.333333333], move=[0], attackRange=[1], dodge=2)
 Enemy(name="Old Iron King (beam, heatup) - Fire Beam", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6], attackType=["magic"], nodesAttacked=[8.333333333], move=[0], attackRange=[1], dodge=2)
 Enemy(name="Old Iron King (beam, heatup) - Fire Beam", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[7], attackType=["magic"], nodesAttacked=[8.333333333], move=[0], attackRange=[1], dodge=2)
-Enemy(name="Executioner's Chariot - Death Race", expansion="Executioner Chariot", enemyType="mega boss", numberOfModels=1, health=24, armor=3, resist=3, attacks=[7], attackType=["physical"], nodesAttacked=[5], move=[0], attackRange=[1], dodge=1)
+Enemy(name="Executioner's Chariot (race) - Death Race", expansion="Executioner Chariot", enemyType="mega boss", numberOfModels=1, health=24, armor=3, resist=3, attacks=[7], attackType=["physical"], nodesAttacked=[5], move=[0], attackRange=[1], dodge=1)
 Enemy(name="Executioner's Chariot - Charging Ram", expansion="Executioner Chariot", enemyType="mega boss", numberOfModels=1, health=24, armor=3, resist=3, attacks=[6], attackType=["physical"], nodesAttacked=[20], move=[2], attackRange=[1], dodge=2)
 Enemy(name="Executioner's Chariot - Roiling Darkness", expansion="Executioner Chariot", enemyType="mega boss", numberOfModels=1, health=24, armor=3, resist=3, attacks=[5], attackType=["magic"], nodesAttacked=[14], move=[0], attackRange=[2], dodge=1)
 Enemy(name="Executioner's Chariot (heatup) - Stomp Rush", expansion="Executioner Chariot", enemyType="mega boss", numberOfModels=1, health=24, armor=3, resist=3, attacks=[7,0,7,0], weakArcs=2, attackType=["physical", "physical", "physical", "physical"], nodeAttack=[True, False, True, False], move=[0,1,0,1], attackRange=[1,1,1,1], dodge=2)
@@ -563,8 +564,8 @@ for g in [g for g in guardianDragonStuff if "Cage Grasp Inferno" in g.name]:
             continue
         guardianDragonProduct.append(p)
 
-for g in [g for g in guardianDragonStuff if "Cage Grasp Inferno" not in g.name]:
-    for p in product([g], [a for a in guardianDragonStuff if "Cage Grasp Inferno" in a.name]):
+for g in [g for g in guardianDragonStuff if "Cage Grasp Inferno" in g.name]:
+    for p in product([g], [a for a in guardianDragonStuff if a.name != g.name]):
         guardianDragonProduct.append(p)
 
 for g in guardianDragonProduct:
