@@ -64,8 +64,8 @@ class Enemy:
             self.gang = "Alonne"
         elif "Skeleton" in self.name and self.health == 1:
             self.gang = "Skeleton"
-        elif "Scarecrow" in self.name:
-            self.gang = "Scarecrow"
+        elif "Silver Knight" in self.name and self.health == 1:
+            self.gang = "Silver Knight"
         else:
             self.gang = None
 
@@ -112,8 +112,8 @@ Enemy(id=16, name="Large Hollow Soldier", expansion="Dark Souls The Board Game",
 Enemy(id=17, name="Mushroom Child", expansion="Darkroot", enemyType="regular", numberOfModels=1, health=5, armor=1, resist=2, attacks=[5], attackType=["physical"], dodge=1, move=[1], attackRange=[0], difficulty={1: 5.52, 2: 5.52, 3: 5.52, 4: 5.52})
 Enemy(id=18, name="Mushroom Parent", expansion="Darkroot", enemyType="regular", numberOfModels=1, health=10, armor=1, resist=2, attacks=[6], attackType=["physical"], nodeAttack=[True], attackEffect=[{"stagger",}], dodge=1, move=[1], attackRange=[0], difficulty={1: 18.73, 2: 20.17, 3: 21.61, 4: 23.39})
 Enemy(id=19, name="Necromancer", expansion="Tomb of Giants", enemyType="regular", numberOfModels=2, health=5, armor=1, resist=2, attacks=[3], attackType=["magic"], nodeAttack=[True], dodge=1, move=[0], attackRange=[4], difficulty={1: 11.86, 2: 12.78, 3: 13.7, 4: 14.81})
-Enemy(id=20, name="Phalanx", expansion="Painted World of Ariamis", enemyType="regular", numberOfModels=1, health=5, armor=1, resist=1, attacks=[5,0], attackType=["physical", "physical"], nodeAttack=[True, False], dodge=1, move=[0,1], attackRange=[1,0], difficulty={1: 1.17, 2: 1.17, 3: 1.17, 4: 1.17})
-Enemy(id=21, name="Phalanx Hollow", expansion="Painted World of Ariamis", enemyType="regular", numberOfModels=5, health=1, armor=1, resist=1, attacks=[4,0], attackType=["physical", "physical"], dodge=1, move=[0,1], attackRange=[1,0], difficulty={1: 8.49, 2: 8.87, 3: 9.25, 4: 9.73})
+Enemy(id=20, name="Phalanx", expansion="Painted World of Ariamis", enemyType="regular", numberOfModels=1, health=5, armor=1, resist=1, attacks=[5,0], attackType=["physical", "physical"], nodeAttack=[True, False], dodge=1, move=[0,1], attackRange=[1,0], difficulty={1: 8.49, 2: 8.87, 3: 9.25, 4: 9.73})
+Enemy(id=21, name="Phalanx Hollow", expansion="Painted World of Ariamis", enemyType="regular", numberOfModels=5, health=1, armor=1, resist=1, attacks=[4,0], attackType=["physical", "physical"], dodge=1, move=[0,1], attackRange=[1,0], difficulty={1: 1.17, 2: 1.17, 3: 1.17, 4: 1.17})
 Enemy(id=22, name="Plow Scarecrow", expansion="Darkroot", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=1, attacks=[4], attackType=["physical"], dodge=2, move=[2], attackRange=[1], difficulty={1: 4.48, 2: 4.48, 3: 4.48, 4: 4.48})
 Enemy(id=23, name="Sentinel", expansion="Dark Souls The Board Game", enemyType="regular", numberOfModels=2, health=10, armor=2, resist=1, attacks=[6], attackType=["physical"], nodeAttack=[True], dodge=1, move=[1], attackRange=[1], difficulty={1: 37.5, 2: 40.39, 3: 43.27, 4: 46.82})
 Enemy(id=24, name="Shears Scarecrow", expansion="Darkroot", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=1, attacks=[3,3], attackType=["physical", "physical"], nodeAttack=[True, True], dodge=2, move=[1, 1], attackRange=[0, 0], difficulty={1: 2.69, 2: 2.9, 3: 3.11, 4: 3.36})
@@ -298,6 +298,7 @@ Enemy(id=48, name="Voracious Mimic", expansion="Explorers", enemyType="invader",
 # Enemy(name="Gargoyle (heatup) - Swooping Cleave", weakArcs=0, expansion="Dark Souls The Board Game", enemyType="main boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[6], attackType=["physical"], nodeAttack=[True], dodge=2, move=[2], attackRange=[1])
 # Enemy(name="Gargoyle (heatup) - Aerial Electric Breath", weakArcs=0, expansion="Dark Souls The Board Game", enemyType="main boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[5], attackType=["magic"], nodesAttacked=[6], dodge=2, move=[0], attackRange=[2])
 
+# # Main bosses
 # Enemy(name="Smelter Demon - Double Sweep", expansion="Iron Keep", enemyType="main boss", numberOfModels=1, health=22, armor=4, resist=3, attacks=[6,0,6,0], attackType=["physical", "physical", "physical", "physical"], nodesAttacked=[7,0,7,0], dodge=1, move=[0,-1,0,-1], attackRange=[1,1,1,1])
 # Enemy(name="Smelter Demon - Overhead Chop", weakArcs=2, expansion="Iron Keep", enemyType="main boss", numberOfModels=1, health=22, armor=4, resist=3, attacks=[6], attackType=["physical"], nodeAttack=[True], attackEffect=[{"stagger",}], dodge=2, move=[1], attackRange=[1])
 # Enemy(name="Smelter Demon - Fiery Blast", weakArcs=0, expansion="Iron Keep", enemyType="main boss", numberOfModels=1, health=22, armor=4, resist=3, attacks=[5], attackType=["magic"], nodesAttacked=[12], dodge=2, move=[0], attackRange=[1])
@@ -437,6 +438,7 @@ Enemy(id=48, name="Voracious Mimic", expansion="Explorers", enemyType="invader",
 # Enemy(name="Sir Alonne - Right Sidestep Slash", expansion="Iron Keep", enemyType="main boss", numberOfModels=1, health=26, armor=3, resist=3, attacks=[6], attackType=["physical"], nodesAttacked=[7], dodge=1, move=[0], attackRange=[1])
 # Enemy(name="Sir Alonne - Katana Plunge", expansion="Iron Keep", enemyType="main boss", numberOfModels=1, health=26, armor=3, resist=3, attacks=[6], attackType=["physical"], dodge=2, move=[4], attackRange=[1])
 
+# # Mega bosses
 # Enemy(name="Stray Demon - Mighty Hammer Smash", windup=True, expansion="Asylum Demon", enemyType="mega boss", numberOfModels=1, health=34, armor=4, resist=3, attacks=[8], attackType=["physical"], nodeAttack=[True], dodge=1, move=[4], attackRange=[0])
 # Enemy(name="Stray Demon - Leaping Hammer Smash", expansion="Asylum Demon", enemyType="mega boss", numberOfModels=1, health=34, armor=4, resist=3, attacks=[6], attackType=["physical"], nodeAttack=[True], dodge=2, move=[4], attackRange=[0])
 # Enemy(name="Stray Demon - Ground Pound", windup=True, expansion="Asylum Demon", enemyType="mega boss", numberOfModels=1, health=34, armor=4, resist=3, attacks=[9], attackType=["physical"], attackEffect=[{"stagger",}], nodesAttacked=[12], dodge=1, move=[0], attackRange=[1])
@@ -555,13 +557,13 @@ Enemy(id=48, name="Voracious Mimic", expansion="Explorers", enemyType="invader",
 # Enemy(name="Black Dragon Kalameet - Swooping Charge", expansion="Black Dragon Kalameet", enemyType="mega boss", numberOfModels=1, health=38, armor=4, resist=3, attacks=[5,5,5], attackType=["physical", "physical", "physical"], nodeAttack=[True, True, True], attackEffect=[{"stagger",}, {"stagger",}, {"stagger",}], move=[1,1,1], attackRange=[0,0,0], dodge=2)
 # Enemy(name="Black Dragon Kalameet (heatup) - Hellfire Barrage", expansion="Black Dragon Kalameet", enemyType="mega boss", numberOfModels=1, health=38, armor=4, resist=3, attacks=[6], weakArcs=0, attackType=["magic"], nodesAttacked=[11.5], move=[0], attackRange=[1], dodge=2)
 # Enemy(name="Old Iron King - Fist Pound", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6], attackType=["physical"], nodesAttacked=[4], move=[0], attackRange=[1], attackEffect=[{"stagger",}], dodge=2)
-# Enemy(name="Old Iron King - Double Fist Pound", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6], attackType=["physical"], nodesAttacked=[8], move=[0], attackEffect=[{"stagger",}], attackRange=[1], dodge=2)
-# Enemy(name="Old Iron King - Swipe", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6], attackType=["physical"], nodesAttacked=[10], move=[0], attackRange=[1], weakArcs=0, dodge=1)
+# Enemy(name="Old Iron King - Double Fist Pound", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6], attackType=["physical"], nodesAttacked=[6], move=[0], attackEffect=[{"stagger",}], attackRange=[1], dodge=2)
+# Enemy(name="Old Iron King - Swipe", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6], attackType=["physical"], nodesAttacked=[8], move=[0], attackRange=[1], weakArcs=0, dodge=1)
 # Enemy(name="Old Iron King - Shockwave", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[5], attackType=["physical"], nodesAttacked=[16], move=[0], attackRange=[2], dodge=1)
 # Enemy(name="Old Iron King - Bash", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6], attackType=["physical"], nodeAttack=[True], move=[0], attackEffect=[{"stagger",}], attackRange=[2], dodge=3)
 # Enemy(name="Old Iron King - Searing Blast", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6], attackType=["magic"], nodeAttack=[True], move=[0], attackRange=[4], dodge=1)
-# Enemy(name="Old Iron King (heatup) - Double Swipe", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6,6], attackType=["physical", "physical"], nodesAttacked=[7,7], move=[0,0], attackRange=[1,1], dodge=2, weakArcs=0)
-# Enemy(name="Old Iron King (heatup) - Firestorm", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[5], attackType=["magic"], nodesAttacked=[10], move=[0], attackRange=[4], dodge=2)
+# Enemy(name="Old Iron King (heatup) - Double Swipe", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6,6], attackType=["physical", "physical"], nodesAttacked=[6,6], move=[0,0], attackRange=[1,1], dodge=2, weakArcs=0)
+# Enemy(name="Old Iron King (heatup) - Firestorm", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[5], attackType=["magic"], nodesAttacked=[14.33333333333333], move=[0], attackRange=[4], dodge=2)
 # Enemy(name="Old Iron King (heatup) - Magma Blast", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[6], attackType=["magic"], nodeAttack=[True], move=[0], attackRange=[4], dodge=3)
 # Enemy(name="Old Iron King (beam) - Fire Beam", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[5], attackType=["magic"], nodesAttacked=[8.333333333], move=[0], attackRange=[1], dodge=1)
 # Enemy(name="Old Iron King (beam) - Fire Beam", expansion="Old Iron King", enemyType="mega boss", numberOfModels=1, health=44, armor=3, resist=3, attacks=[5], attackType=["magic"], nodesAttacked=[8.333333333], move=[0], attackRange=[1], dodge=1)
