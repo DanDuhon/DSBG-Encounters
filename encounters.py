@@ -110,13 +110,13 @@ with open(path.join(baseFolder, "encounters.json")) as ef:
     encMain = load(ef)
 
 try:
-    skip = True
+    # skip = True
     for e in enc:
-        if e in {"Brume Tower"}:
-            # continue
-            skip = False
-        if skip:
-            continue
+        # if e in {"Brume Tower"}:
+        #     # continue
+        #     skip = False
+        # if skip:
+        #     continue
         encounter = enc[e]
 
         for characterCount in range(1, 5):
@@ -415,7 +415,7 @@ try:
             # This is manually set for each encounter in the JSON file.
             # enemySlots is the number of enemies in each row following this pattern:
             # [Tile 1 Row 1, Tile 1 Row 2, Tile 1 Row 3 (level 3 only), Tile 1 Row 4 (level 3 only), Tile 2 Row 1, Tile 2 Row 2, Tile 3 Row 3]
-            with open(path.join(baseFolder + "\\encounters", e + ".json")) as ef:
+            with open(path.join(baseFolder + "\\encounters", e + str(characterCount) + ".json")) as ef:
                 thisEnc = load(ef)
             alternatives["enemySlots"] = thisEnc.get("enemySlots")
                 
@@ -521,10 +521,10 @@ try:
                         "name": enc[e]["name"],
                         "expansion": enc[e]["expansion"],
                         "level": enc[e]["level"],
-                        "expansionCombos": [str(k).split(",") for k in alternatives["alternatives"].keys()]
+                        "expansionCombos": {1: [], 2: [], 3: [], 4: []}
                         }
-                else:
-                    encMain[e]["expansionCombos"] = [str(k).split(",") for k in alternatives["alternatives"].keys()]
+                    
+                encMain[e]["expansionCombos"][characterCount] = [str(k).split(",") for k in alternatives["alternatives"].keys()]
                     
             with open(baseFolder + "\\encounters\\" + e + str(characterCount) + ".json", "w") as encountersFile:
                 dump(alternatives, encountersFile)
