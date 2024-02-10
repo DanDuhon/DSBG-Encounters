@@ -2,7 +2,8 @@ from os import path
 from json import load, dump
 from itertools import combinations, islice, product, filterfalse
 from random import shuffle
-from collections import defaultdict, Counter
+from collections import defaultdict
+from glob import glob
 
 from enemies import enemyIds, enemiesDict
 
@@ -109,27 +110,48 @@ with open(path.join(baseFolder + "\\encounters", "all_encounters.json")) as aef:
 with open(path.join(baseFolder, "encounters.json")) as ef:
     encMain = load(ef)
 
+
+def check_if_valid(encounter, combo, difficulty, rangedCount):
+    comboDifficulty = sum([enemyIds[enemy].difficulty[characterCount] * (1.5 if enemy in skeletons and blackHollowMage in combo else 1) for enemy in combo])
+    comboRangedCount = sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3])
+    comboHigherHealthCount = sum([1 for enemy in combo if enemyIds[enemy].health >= 5])
+
+    return (difficulty * 0.9 <= comboDifficulty <= difficulty * 1.1
+        and comboRangedCount == rangedCount
+        and comboHigherHealthCount == higherHealthCount
+        and sum([1 for enemy in combo if enemy in invaders]) == invaderCount
+        # Can't have more enemies than available models and Phalanx is 3 Phalanx Hollows shoved together
+        and ((3 if phalanx in combo else 0) + combo.count(phalanxHollow) < 6 or encounter == "Eye of the Storm")
+        # Black Hollow Mages need to be with at least one "skeleton" enemy
+        and (blackHollowMage not in combo or set(combo) & skeletons))
+
 try:
     # skip = True
     for e in enc:
-        # if e in {"Brume Tower"}:
-        #     # continue
+        # if e != "Deathly Freeze":
+        #     continue
         #     skip = False
         # if skip:
         #     continue
         encounter = enc[e]
 
         for characterCount in range(1, 5):
+            # Don't process an encounter already being processed.
+            if glob(baseFolder + "\\combine\\" + e + str(characterCount) + ".json"):
+                continue
+
+            # Put a temporary file out there so we know it's being processed.
+            with open(baseFolder + "\\combine\\" + e + str(characterCount) + ".json", "w") as ef:
+                dump({}, ef)
+
             print(e + " " + str(characterCount))
             alternatives = dict()
-            combosDict = dict()
-            diffMod = 0.1
             enemies = []
             for tile in encounter["tiles"]:
                 enemies += encounter["tiles"][tile]["enemies"] + encounter["tiles"][tile]["spawns"]
 
             enemyCount = len(enemies)
-            rangedCount = sum([1 for enemy in enemies if max(enemyIds[enemy].attackRange) > 1])
+            rangedCount = sum([1 for enemy in enemies if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) == 4])
             invaderCount = sum([1 for enemy in enemies if enemy in invaders])
             higherHealthCount = sum([1 for enemy in enemies if enemyIds[enemy].health >= 5 and enemy not in invaders])
             difficulty = sum([enemyIds[enemy].difficulty[characterCount] * enemies.count(enemy) for enemy in enemyIds if enemy in enemies])
@@ -191,21 +213,12 @@ try:
                     + [enemiesDict["Black Hollow Mage"].id] * 2
                 )
 
-                allCombos = []
-                for gang in gangs:
-                    higherHealthCombos = set(combinations([enemyIds[en].id for en in higherHealthEnemies], higherHealthCount))
-                    for hh in higherHealthCombos:
-                        nonGangCombos = set(combinations([enemyIds[en].id for en in nonGangs], nonGangCount))
-                        for combo in nonGangCombos:
-                            if (not set(combo) & set(gang)
-                                and difficulty * (1 - diffMod) <= sum([enemyIds[enemy].difficulty[characterCount] for enemy in combo]) <= difficulty * (1 + diffMod)
-                                and (sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1]) == rangedCount
-                                    or sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3]) == rangedCount)):
-                                continue
-                            allCombos.append(tuple(gang) + tuple(hh) + tuple(combo))
+                higherHealthCombos = set(combinations([enemyIds[en].id for en in higherHealthEnemies], higherHealthCount))
+                nonGangCombos = set(combinations([enemyIds[en].id for en in nonGangs], nonGangCount))
+                allCombos = [tuple(list(p[0]) + list(p[1]) + list(p[2])) for p in product(gangs, nonGangCombos, higherHealthCombos) if check_if_valid(e, list(p[0]) + list(p[1]) + list(p[2]), difficulty, rangedCount) and not set(p[0]) & set(p[1])]
                         
                 combosDict = defaultdict(set)
-                [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo])].add(combo) for combo in allCombos]
+                [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set())].add(combo) for combo in allCombos]
             # For whatever reason, Corvian Host basically takes up all my memory. Not quite enough to cause the script to fail, but
             # I bet if more enemies are added it would.
             elif e == "Corvian Host":
@@ -215,14 +228,10 @@ try:
                 enemyCount = 8
                 rangedCount = 4
 
-                allCombos = [combo[0] + tuple([combo[1]] * 4) for combo in product(smallEnemyCombos, bigEnemies)]
+                allCombos = [combo[0] + tuple([combo[1]] * 4) for combo in product(smallEnemyCombos, bigEnemies) if check_if_valid(e, combo[0] + tuple([combo[1]] * 4), difficulty, rangedCount)]
 
                 combosDict = defaultdict(set)
-                [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo])].add(combo) for combo in allCombos if (
-                    difficulty * (1 - diffMod) <= sum([enemyIds[enemy].difficulty[characterCount] for enemy in combo]) <= difficulty * (1 + diffMod)
-                    and (sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1]) == rangedCount
-                        or sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3]) == rangedCount)
-                    and (3 if phalanx in enemies else 0) + enemies.count(phalanxHollow) < 6)]
+                [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set())].add(combo) for combo in allCombos]
             # Encounters that can break model limits because characters can't enter certain tiles until enemies are killed.
             # These have a flag that marks these encounters.
             # Enemies are generated at the tile level and saved that way.
@@ -240,17 +249,7 @@ try:
                     combosDict[tile] = defaultdict(set)
 
                     # Generate all combinations of enemies.
-                    # Also make sure we don't replace a single 5 health enemy with a 1 health enemy.
-                    allCombos = list(set(filterfalse(lambda s: not (
-                        sum([1 for enemy in s if enemyIds[enemy].health >= 5]) == higherHealthCount
-                        and difficulty * (1 - diffMod) <= sum([enemyIds[enemy].difficulty[characterCount] * (1.5 if enemy in skeletons and blackHollowMage in enemies else 1) for enemy in s]) <= difficulty * (1 + diffMod)
-                        and sum([1 for enemy in s if enemy in invaders]) == invaderCount
-                        and (sum([1 for enemy in s if max(enemyIds[enemy].attackRange) > 1]) == rangedCount
-                            or sum([1 for enemy in s if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3]) == rangedCount)
-                        and (3 if phalanx in enemies else 0) + enemies.count(phalanxHollow) < 6
-                        # Black Hollow Mages need to be with at least one "skeleton" enemy
-                        and (blackHollowMage not in s or [enemy in skeletons for enemy in s].count(True) > 0)),
-                        combinations(allEnemies, enemyCount))))
+                    allCombos = list(set(filterfalse(lambda s: not check_if_valid(e, s, difficulty, rangedCount), combinations(allEnemies, enemyCount))))
 
                     # Create a dictionary of alternatives, put into keys that are the
                     # sets in which those enemies are found.
@@ -267,40 +266,31 @@ try:
             elif enemyCount < 7:
                 # Generate all combinations of enemies.
                 allCombos = list(set(filterfalse(lambda s: not (
-                        sum([1 for enemy in s if enemyIds[enemy].health >= 5]) == higherHealthCount
-                        and difficulty * (1 - diffMod) <= sum([enemyIds[enemy].difficulty[characterCount] * (1.5 if enemy in skeletons and blackHollowMage in enemies else 1) for enemy in s]) <= difficulty * (1 + diffMod)
-                        and sum([1 for enemy in s if enemy in invaders]) == invaderCount
-                        and (sum([1 for enemy in s if max(enemyIds[enemy].attackRange) > 1]) == rangedCount
-                            or sum([1 for enemy in s if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3]) == rangedCount)
-                        and ((3 if phalanx in enemies else 0) + enemies.count(phalanxHollow) < 6 or e == "Eye of the Storm")
-                        # Black Hollow Mages need to be with at least one "skeleton" enemy
-                        and (blackHollowMage not in s or [enemy in skeletons for enemy in s].count(True) > 0)
+                        check_if_valid(e, s, difficulty, rangedCount)
                         # Enemies must be different
                         and (e not in set(["Abandoned and Forgotten", "The First Bastion"]) or len(s) == len(set(s)))
-                        # Two enemies with 5 health
-                        and (e != "Puppet Master" or [enemyIds[enemy].health >= 5 for enemy in s].count(True) == 2)
                         # No more than one of the two strongest enemies
                         and (e != "Trecherous Tower" or (s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1 and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 1))
-                        # One of the strongest enemy
-                        and (e != "Cold Snap" or s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1)
-                        # A pair of enemies
-                        and (e != "Corrupted Hovel" or any([s.count(enemy) == 2 for enemy in s]))
-                        # Two pairs of enemies and the pairs can't contain the strongest enemy
-                        and (e != "Gleaming Silver" or (len(set([enemy for enemy in s if s.count(enemy) == 2])) == 2 and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1))
-                        # Two of the weakest 1 health enemy
-                        and (e not in set(["Skeletal Spokes", "The Shine of Gold"]) or ([enemy for enemy in s if enemyIds[enemy].health == 1] and s.count(sorted([enemy for enemy in s if enemyIds[enemy].health == 1], key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 2))
-                        # Three of the weakest 1 health enemy, also no poison causing enemies
-                        and (e != "Shattered Keep" or (
-                            s.count(sorted([enemy for enemy in s if enemyIds[enemy].health == 1], key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 3
-                            and all(["poison" not in enemyIds[enemy].attackEffect for enemy in s])))
+                        # One of the toughest enemy
+                        and (e != "Cold Snap" or s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].health + enemyIds[x].armor + enemyIds[x].resist, reverse=True)[0]) == 1)
+                        # Two of the toughest enemy
+                        and (e != "Corrupted Hovel" or s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].health + enemyIds[x].armor + enemyIds[x].resist, reverse=True)[0]) == 2)
+                        # Two pairs of enemies and the pairs can't contain the strongest enemy or the weakest enemy
+                        and (e != "Gleaming Silver" or (len(set([enemy for enemy in s if s.count(enemy) == 2])) == 2 and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1 and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 1))
+                        # Two of the strongest enemy
+                        and (e != "Skeletal Spokes" or s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 2)
+                        # Two of the weakest enemy
+                        and (e != "The Shine of Gold" or s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 2)
+                        # Three of the weakest enemy that don't cause poison
+                        and (e != "Shattered Keep" or s.count(sorted([enemy for enemy in s if all(["poison" not in enemyIds[enemy].attackEffect])], key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 3)
                        # No poison causing enemies
                         and (e != "Rain of Filth" or all(["poison" not in enemyIds[enemy].attackEffect for enemy in s]))
-                        # One of the strongest enemy and either 4 of the weakest enemy or 2 pairs of the two weakest enemies
+                        # One of the second strongest enemy and either 4 of the weakest enemy or 2 pairs of the two weakest enemies
                         and (e != "Eye of the Storm" or (
                             (s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 4
                                 or (s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 2
                                     and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount])[2]) == 2))
-                            and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1))),
+                            and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 1))),
                     combinations([enemyIds[en].id for en in allEnemies if (
                     (en not in invaders or invaderCount > 0))], enemyCount))))
 
@@ -324,23 +314,15 @@ try:
                 for x in range(1, 3):
                     for expCombo in combinations(expansions, x):
                         expEnemies = [enemy for enemy in allEnemies if enemyIds[enemy].expansion in expCombo]
-                        # Generate all combinations of enemies, excluding invaders and old style mimics.
-                        # Also make sure we don't replace a single 5 health enemy with a 1 health enemy.
-                        allCombos = list(set(filterfalse(lambda s: (
-                                sum([1 for enemy in s if enemyIds[enemy].health >= 5]) == higherHealthCount
-                                and difficulty * (1 - diffMod) <= sum([enemyIds[enemy].difficulty[characterCount] * (1.5 if enemy in skeletons and blackHollowMage in enemies else 1) for enemy in s]) <= difficulty * (1 + diffMod)
-                                and sum([1 for enemy in s if enemy in invaders]) == invaderCount
-                                and (sum([1 for enemy in s if max(enemyIds[enemy].attackRange) > 1]) == rangedCount
-                                    or sum([1 for enemy in s if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3]) == rangedCount)
-                                and (3 if phalanx in enemies else 0) + enemies.count(phalanxHollow) < 6
-                                # Black Hollow Mages need to be with at least one "skeleton" enemy
-                                and (blackHollowMage not in s or [enemy in skeletons for enemy in s].count(True) > 0)
-                                # Two of the strongest 1 health enemy
-                                and (e != "Frozen Revolutions" or s.count(sorted([enemy for enemy in s if enemyIds[enemy].health == 1], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 2)
-                                # If there are 2 of the strongest enemy and that enemy isn't in the blacklist
+                        # Generate all combinations of enemies.
+                        allCombos = list(set(filterfalse(lambda s: not (
+                                check_if_valid(e, s, difficulty, rangedCount)
+                                # Two of the strongest enemy
+                                and (e != "Frozen Revolutions" or s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 2)
+                                # If there are 2 of the toughest enemy and that enemy isn't in the blacklist
                                 and (e != "Deathly Freeze" or (
-                                    s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 2
-                                    and sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0] not in deathlyFreezeEnemyBlacklist))
+                                    s.count(sorted(s, key=lambda x: enemyIds[x].health + enemyIds[x].armor + enemyIds[x].resist, reverse=True)[0]) == 2
+                                    and sorted(s, key=lambda x: enemyIds[x].health + enemyIds[x].armor + enemyIds[x].resist, reverse=True)[0] not in deathlyFreezeEnemyBlacklist))
                                 # Two of the second strongest enemy (second strongest cannot also be the first strongest)
                                 and (e != "Trophy Room" or (s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 2
                                                             and sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1] == sorted(list(set([enemy for enemy in s])), key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]))),
@@ -371,21 +353,14 @@ try:
                         shuffle(shuffledEnemies)
 
                     # Grab the first 50,000 combinations.
-                    allCombos = list(filterfalse(lambda s: (
-                                sum([1 for enemy in s if enemyIds[enemy].health >= 5]) == higherHealthCount
-                                and difficulty * (1 - diffMod) <= sum([enemyIds[enemy].difficulty[characterCount] * (1.5 if enemy in skeletons and blackHollowMage in enemies else 1) for enemy in s]) <= difficulty * (1 + diffMod)
-                                and sum([1 for enemy in s if enemy in invaders]) == invaderCount
-                                and (sum([1 for enemy in s if max(enemyIds[enemy].attackRange) > 1]) == rangedCount
-                                    or sum([1 for enemy in s if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3]) == rangedCount)
-                                and (3 if phalanx in enemies else 0) + enemies.count(phalanxHollow) < 6
-                                # Black Hollow Mages need to be with at least one "skeleton" enemy
-                                and (blackHollowMage not in s or [enemy in skeletons for enemy in s].count(True) > 0)
-                                # Two of the strongest 1 health enemy
-                                and (e != "Frozen Revolutions" or s.count(sorted([enemy for enemy in s if enemyIds[enemy].health == 1], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 2)
-                                # If there are 2 of the strongest enemy and that enemy isn't in the blacklist
+                    allCombos = list(filterfalse(lambda s: not (
+                                check_if_valid(e, s, difficulty, rangedCount)
+                                # Two of the strongest enemy
+                                and (e != "Frozen Revolutions" or s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 2)
+                                # If there are 2 of the toughest enemy and that enemy isn't in the blacklist
                                 and (e != "Deathly Freeze" or (
-                                    s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 2
-                                    and sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0] not in deathlyFreezeEnemyBlacklist))
+                                    s.count(sorted(s, key=lambda x: enemyIds[x].health + enemyIds[x].armor + enemyIds[x].resist, reverse=True)[0]) == 2
+                                    and sorted(s, key=lambda x: enemyIds[x].health + enemyIds[x].armor + enemyIds[x].resist, reverse=True)[0] not in deathlyFreezeEnemyBlacklist))
                                 # Two of the second strongest enemy (second strongest cannot also be the first strongest)
                                 and (e != "Trophy Room" or (s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 2
                                                             and sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1] == sorted(list(set([enemy for enemy in s])), key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]))),
@@ -529,7 +504,7 @@ try:
             with open(baseFolder + "\\encounters\\" + e + str(characterCount) + ".json", "w") as encountersFile:
                 dump(alternatives, encountersFile)
 
-            with open(baseFolder + "\\encounters.json", "w") as ef:
+            with open(baseFolder + "\\combine\\" + e + str(characterCount) + ".json", "w") as ef:
                 dump(encMain, ef)
 except Exception as ex:
     input(ex)

@@ -198,7 +198,7 @@ encounters = {
     "Snowblind": {"enemies": [[ph,bs],[ph,cd],[]], "enemyExpansions": set([paint]), "level": 2, "spawns": [[],[],[]], "expansion": paint},
     
     "Altar of Bones": {"enemies": [[ss,gsa],[ss,sa,gss],[]], "enemyExpansions": set([tomb]), "level": 2, "spawns": [[],[],[]], "expansion": tomb},
-    "In Deep Water": {"enemies": [[gsa,ss,ss,ss],[],[]], "enemyExpansions": set([tomb]), "level": 2, "spawns": [[],[],[]], "expansion": tomb},
+    "In Deep Water": {"enemies": [[gsa,ss,ss,ss],[],[]], "enemyExpansions": set([tomb]), "level": 2, "spawns": [[sa],[],[]], "expansion": tomb},
     "Far From the Sun": {"enemies": [[ss,gss],[ss,n,ss],[]], "enemyExpansions": set([tomb]), "level": 2, "spawns": [[],[],[]], "expansion": tomb},
     "Lost Chapel": {"enemies": [[ss,ss,n],[sa,sa,n,ss],[sb]], "enemyExpansions": set([tomb]), "level": 2, "spawns": [[],[],[]], "expansion": tomb},
     "Maze of the Dead": {"enemies": [[ss,n],[sb],[sa,ss,ss]], "enemyExpansions": set([tomb]), "level": 2, "spawns": [[],[],[]], "expansion": tomb},
@@ -214,7 +214,7 @@ encounters = {
     "The Shine of Gold": {"enemies": [[hs,hs,m],[],[]], "enemyExpansions": set([dsbg,sun]), "level": 2, "spawns": [[],[],[]], "expansion": sun},
     "Deathly Tolls": {"enemies": [[sks,sks],[skg,hs,hs,skg,ch],[]], "enemyExpansions": set([dsbg,sun]), "level": 2, "spawns": [[],[m],[]], "expansion": sun},
     "Flooded Fortress": {"enemies": [[ch,hs,m],[ch,ch],[]], "enemyExpansions": set([dsbg,sun]), "level": 2, "spawns": [[],[],[]], "expansion": sun},
-    "Gleaming Silver": {"enemies": [[sks,skg],[hs,sks,skg],[]], "enemyExpansions": set([dsbg]), "level": 2, "spawns": [[],[],[]], "expansion": sun},
+    "Gleaming Silver": {"enemies": [[sks,skg],[hs,sks,skg],[]], "enemyExpansions": set([dsbg,sun]), "level": 2, "spawns": [[],[m],[]], "expansion": sun},
     "The Iron Golem": {"enemies": [[s],[],[]], "enemyExpansions": set([dsbg]), "level": 2, "spawns": [[],[],[]], "expansion": sun},
     
     "Cemetery of Ash": {"enemies": [[lhs,sks,sks,lhs,skg,skg],[],[]], "enemyExpansions": set([dsbg]), "level": 3, "spawns": [[],[],[]], "expansion": dsbg},
@@ -316,7 +316,7 @@ encounters = {
     "Blazing Furnace": {"enemies": [[akc,ask,fh,fh,ics,enemiesDict["Fencer Sharron"].id],[],[]], "enemyExpansions": set([exp, keep, phan]), "level": 4, "spawns": [[],[],[]], "expansion": iron},
     "Fortress Gates": {"enemies": [[enemiesDict["Armorer Dennis"].id, abk,akc,ask,ics],[],[]], "enemyExpansions": set([phan, keep]), "level": 4, "spawns": [[],[],[]], "expansion": iron},
     "Ironhearth Hall": {"enemies": [[sks,s,ch,ch,lhs,hs,hs,lhs,skg,skg],[],[]], "enemyExpansions": set([dsbg]), "level": 4, "spawns": [[],[],[]], "expansion": iron},
-    "Lava Path": {"enemies": [[sks,ch,sks,ch,ch,s,s],[],[]], "enemyExpansions": set([dsbg]), "level": 4, "spawns": [[],[],[]], "expansion": "Lava Path"},
+    "Lava Path": {"enemies": [[sks,ch,sks,ch,ch,s,s],[],[]], "enemyExpansions": set([dsbg]), "level": 4, "spawns": [[],[],[]], "expansion": iron},
 
     "Cursed Cavern": {"enemies": [[lhs,skg,lhs,skg,s,ch,s,ch],[],[]], "enemyExpansions": set([dsbg]), "level": 4, "spawns": [[],[],[]], "expansion": kings},
     "Edge of the Abyss": {"enemies": [[s,hs,lhs,ch,ch,skg,skg,sks,sks],[],[]], "enemyExpansions": set([dsbg]), "level": 4, "spawns": [[],[],[]], "expansion": kings},
