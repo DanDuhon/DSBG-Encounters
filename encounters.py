@@ -128,8 +128,8 @@ def check_if_valid(encounter, combo, difficulty, rangedCount):
 try:
     # skip = True
     for e in enc:
-        if e != "Gleaming Silver":
-            continue
+        # if e not in  {"Cold Snap", "Corrupted Hovel", "Deathly Freeze"}:
+        #     continue
         #     skip = False
         # if skip:
         #     continue
@@ -272,17 +272,19 @@ try:
                         # No more than one of the two strongest enemies
                         and (e != "Trecherous Tower" or (s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1 and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 1))
                         # One of the toughest enemy
-                        and (e != "Cold Snap" or s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].health + enemyIds[x].armor + enemyIds[x].resist, reverse=True)[0]) == 1)
+                        and (e != "Cold Snap" or s.count(sorted([enemy for enemy in s], key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0]) == 1)
                         # Two of the toughest enemy
-                        and (e != "Corrupted Hovel" or s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].health + enemyIds[x].armor + enemyIds[x].resist, reverse=True)[0]) == 2)
+                        and (e != "Corrupted Hovel" or s.count(sorted([enemy for enemy in s], key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0]) == 2)
                         # One of the weakest enemy and one of the strongest
                         and (e != "Gleaming Silver" or (s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1 and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 1))
                         # Two of the strongest enemy
                         and (e != "Skeletal Spokes" or s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 2)
                         # Two of the weakest enemy
                         and (e != "The Shine of Gold" or s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 2)
-                        # Three of the weakest enemy that don't cause poison
-                        and (e != "Shattered Keep" or s.count(sorted([enemy for enemy in s if all(["poison" not in enemyIds[enemy].attackEffect])], key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 3)
+                        # One of the strongest enemy and the rest can't cause poison
+                        and (e != "Shattered Keep" or (
+                            s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1
+                            and sorted([enemy for enemy in s if all(["poison" not in enemyIds[enemy].attackEffect])], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1:]))
                        # No poison causing enemies
                         and (e != "Rain of Filth" or all(["poison" not in enemyIds[enemy].attackEffect for enemy in s]))
                         # One of the second strongest enemy and either 4 of the weakest enemy or 2 pairs of the two weakest enemies
@@ -321,11 +323,18 @@ try:
                                 and (e != "Frozen Revolutions" or s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 2)
                                 # If there are 2 of the toughest enemy and that enemy isn't in the blacklist
                                 and (e != "Deathly Freeze" or (
-                                    s.count(sorted(s, key=lambda x: enemyIds[x].health + enemyIds[x].armor + enemyIds[x].resist, reverse=True)[0]) == 2
-                                    and sorted(s, key=lambda x: enemyIds[x].health + enemyIds[x].armor + enemyIds[x].resist, reverse=True)[0] not in deathlyFreezeEnemyBlacklist))
-                                # Two of the second strongest enemy (second strongest cannot also be the first strongest)
-                                and (e != "Trophy Room" or (s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 2
-                                                            and sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1] == sorted(list(set([enemy for enemy in s])), key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]))),
+                                    s.count(sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0]) == 2
+                                    and sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0] not in deathlyFreezeEnemyBlacklist))
+                                # One of the strongest enemy and either two of the second strongest or two that are the second and third strongest
+                                and (e != "Trophy Room" or (
+                                    (
+                                        s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1
+                                        and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 2)
+                                    or (
+                                        s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1
+                                        and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 1
+                                        and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[2]) == 1)
+                                    ))),
                             combinations([enemyIds[en].id for en in expEnemies if en not in invaders or invaderCount > 0], enemyCount))))
 
                         # Create a dictionary of alternatives, put into keys that are the
@@ -359,11 +368,18 @@ try:
                                 and (e != "Frozen Revolutions" or s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 2)
                                 # If there are 2 of the toughest enemy and that enemy isn't in the blacklist
                                 and (e != "Deathly Freeze" or (
-                                    s.count(sorted(s, key=lambda x: enemyIds[x].health + enemyIds[x].armor + enemyIds[x].resist, reverse=True)[0]) == 2
-                                    and sorted(s, key=lambda x: enemyIds[x].health + enemyIds[x].armor + enemyIds[x].resist, reverse=True)[0] not in deathlyFreezeEnemyBlacklist))
-                                # Two of the second strongest enemy (second strongest cannot also be the first strongest)
-                                and (e != "Trophy Room" or (s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 2
-                                                            and sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1] == sorted(list(set([enemy for enemy in s])), key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]))),
+                                    s.count(sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0]) == 2
+                                    and sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0] not in deathlyFreezeEnemyBlacklist))
+                                # One of the strongest enemy and either two of the second strongest or two that are the second and third strongest
+                                and (e != "Trophy Room" or (
+                                    (
+                                        s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1
+                                        and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 2)
+                                    or (
+                                        s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1
+                                        and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 1
+                                        and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[2]) == 1)
+                                    ))),
                             islice(combinations([en for en in shuffledEnemies if en not in invaders or invaderCount > 0], enemyCount), 50000)))
 
                     # Create the dictionary with the enemy sets as keys.
