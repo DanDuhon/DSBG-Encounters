@@ -128,8 +128,8 @@ def check_if_valid(encounter, combo, difficulty, rangedCount):
 try:
     # skip = True
     for e in enc:
-        # if e != "In Deep Water":
-        #     continue
+        if e != "Gleaming Silver":
+            continue
         #     skip = False
         # if skip:
         #     continue
@@ -275,7 +275,7 @@ try:
                         and (e != "Cold Snap" or s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].health + enemyIds[x].armor + enemyIds[x].resist, reverse=True)[0]) == 1)
                         # Two of the toughest enemy
                         and (e != "Corrupted Hovel" or s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].health + enemyIds[x].armor + enemyIds[x].resist, reverse=True)[0]) == 2)
-                        # Two pairs of enemies and the pairs can't contain the strongest enemy or the weakest enemy
+                        # One of the weakest enemy and one of the strongest
                         and (e != "Gleaming Silver" or (s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1 and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 1))
                         # Two of the strongest enemy
                         and (e != "Skeletal Spokes" or s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 2)

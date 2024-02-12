@@ -1,8 +1,6 @@
 from json import load, dump
 from os import path, listdir
 
-from enemies import enemies
-
 
 baseFolder = path.dirname(__file__)
 
