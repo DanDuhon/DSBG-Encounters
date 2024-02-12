@@ -12,6 +12,14 @@ for enemy in enemies:
         if "0" in enemyFile and enemy.name in enemyFile:
             if enemy.name == "Mimic" and ("Voracious" in enemyFile or "Hungry" in enemyFile):
                 continue
+            if enemy.name == "Hollow Soldier" and "Large" in enemyFile:
+                continue
+            if enemy.name == "Skeleton Soldier" and "Giant" in enemyFile:
+                continue
+            if enemy.name == "Skeleton Archer" and "Giant" in enemyFile:
+                continue
+            if enemy.name == "Phalanx" and "Hollow" in enemyFile:
+                continue
             with open(path.join(baseFolder + "\\enemies", enemyFile)) as efd:
                 ed = load(efd)
             enemy.deaths = ed["deaths"]
@@ -19,6 +27,14 @@ for enemy in enemies:
         if "0" not in enemyFile or enemy.name not in enemyFile:
             continue
         if enemy.name == "Mimic" and ("Voracious" in enemyFile or "Hungry" in enemyFile):
+            continue
+        if enemy.name == "Hollow Soldier" and "Large" in enemyFile:
+            continue
+        if enemy.name == "Skeleton Soldier" and "Giant" in enemyFile:
+            continue
+        if enemy.name == "Skeleton Archer" and "Giant" in enemyFile:
+            continue
+        if enemy.name == "Phalanx" and "Hollow" in enemyFile:
             continue
         with open(path.join(baseFolder + "\\enemies", enemyFile)) as ef:
             e = load(ef)

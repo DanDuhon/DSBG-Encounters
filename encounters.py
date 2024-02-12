@@ -128,7 +128,7 @@ def check_if_valid(encounter, combo, difficulty, rangedCount):
 try:
     # skip = True
     for e in enc:
-        # if e != "Deathly Freeze":
+        # if e != "Gleaming Silver":
         #     continue
         #     skip = False
         # if skip:
@@ -276,7 +276,7 @@ try:
                         # Two of the toughest enemy
                         and (e != "Corrupted Hovel" or s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].health + enemyIds[x].armor + enemyIds[x].resist, reverse=True)[0]) == 2)
                         # Two pairs of enemies and the pairs can't contain the strongest enemy or the weakest enemy
-                        and (e != "Gleaming Silver" or (len(set([enemy for enemy in s if s.count(enemy) == 2])) == 2 and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1 and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 1))
+                        and (e != "Gleaming Silver" or (s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1 and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 1))
                         # Two of the strongest enemy
                         and (e != "Skeletal Spokes" or s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 2)
                         # Two of the weakest enemy
@@ -505,7 +505,7 @@ try:
                 dump(alternatives, encountersFile)
 
             with open(baseFolder + "\\combine\\" + e + str(characterCount) + ".json", "w") as ef:
-                dump(encMain, ef)
+                dump(encMain[e], ef)
 except Exception as ex:
     input(ex)
     raise
