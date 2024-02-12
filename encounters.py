@@ -128,7 +128,7 @@ def check_if_valid(encounter, combo, difficulty, rangedCount):
 try:
     # skip = True
     for e in enc:
-        # if e != "Gleaming Silver":
+        # if e != "In Deep Water":
         #     continue
         #     skip = False
         # if skip:
