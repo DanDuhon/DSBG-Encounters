@@ -71,6 +71,12 @@ gangEncounters = {
     "Twilight Falls"
 }
 
+# For these encounters, it made more sense to sort the enemies
+# by toughness rather than difficulty.
+toughnessSortedEncounters = {
+    "Deathly Freeze",
+}
+
 # Encounters in which you have to kill all enemies on a tile in order
 # to leave that tile, therefore normal encounter model limits do not apply.
 # These encounters will be generated one tile at a time, and the app
@@ -270,29 +276,29 @@ try:
                         # Enemies must be different
                         and (e not in set(["Abandoned and Forgotten", "The First Bastion"]) or len(s) == len(set(s)))
                         # No more than one of the two strongest enemies
-                        and (e != "Trecherous Tower" or (s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1 and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 1))
+                        and (e != "Trecherous Tower" or (s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1 and s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 1))
                         # One of the toughest enemy
-                        and (e != "Cold Snap" or s.count(sorted([enemy for enemy in s], key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0]) == 1)
+                        and (e != "Cold Snap" or s.count(sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0]) == 1)
                         # Two of the toughest enemy
-                        and (e != "Corrupted Hovel" or s.count(sorted([enemy for enemy in s], key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0]) == 2)
+                        and (e != "Corrupted Hovel" or s.count(sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0]) == 2)
                         # One of the weakest enemy and one of the strongest
-                        and (e != "Gleaming Silver" or (s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1 and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 1))
+                        and (e != "Gleaming Silver" or (s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1 and s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 1))
                         # Two of the strongest enemy
                         and (e != "Skeletal Spokes" or s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 2)
                         # Two of the weakest enemy
                         and (e != "The Shine of Gold" or s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 2)
                         # One of the strongest enemy and the rest can't cause poison
                         and (e != "Shattered Keep" or (
-                            s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1
+                            s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1
                             and sorted([enemy for enemy in s if all(["poison" not in enemyIds[enemy].attackEffect])], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1:]))
                        # No poison causing enemies
                         and (e != "Rain of Filth" or all(["poison" not in enemyIds[enemy].attackEffect for enemy in s]))
                         # One of the second strongest enemy and either 4 of the weakest enemy or 2 pairs of the two weakest enemies
                         and (e != "Eye of the Storm" or (
-                            (s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 4
-                                or (s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 2
-                                    and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount])[2]) == 2))
-                            and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 1))),
+                            (s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 4
+                                or (s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount])[0]) == 2
+                                    and s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount])[2]) == 2))
+                            and s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 1))),
                     combinations([enemyIds[en].id for en in allEnemies if (
                     (en not in invaders or invaderCount > 0))], enemyCount))))
 
@@ -321,19 +327,20 @@ try:
                                 check_if_valid(e, s, difficulty, rangedCount)
                                 # Two of the strongest enemy
                                 and (e != "Frozen Revolutions" or s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 2)
-                                # If there are 2 of the toughest enemy and that enemy isn't in the blacklist
+                                # Two of the toughest single target melee enemy and that enemy isn't in the blacklist
                                 and (e != "Deathly Freeze" or (
-                                    s.count(sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0]) == 2
-                                    and sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0] not in deathlyFreezeEnemyBlacklist))
+                                    sum([1 for enemy in s if enemy not in deathlyFreezeEnemyBlacklist and (max(enemyIds[enemy].attackRange) < 2 or True not in set(enemyIds[enemy].nodeAttack)) and enemy == sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0]]) == 2))
+                                    # sum([1 for enemy in s if all([max([attack < 1 for attack in enemyIds[enemy].attackRange]), True not in enemyIds[enemy].nodeAttack]) and enemy not in deathlyFreezeEnemyBlacklist]) == 2
+                                    # and sum([enemy for enemy in s if all([max([attack < 1 for attack in enemyIds[enemy].attackRange]), True not in enemyIds[enemy].nodeAttack]) and enemy not in deathlyFreezeEnemyBlacklist and (enemy, enemyIds[enemy].toughness, enemyIds[enemy].difficulty[characterCount]) == sorted([(enemy, enemyIds[enemy].toughness, enemyIds[enemy].difficulty[characterCount]) for enemy in s if all([max([attack < 1 for attack in enemyIds[enemy].attackRange]), True not in enemyIds[enemy].nodeAttack]) and enemy not in deathlyFreezeEnemyBlacklist], key=lambda x: (-enemyIds[x[0]].toughness, enemyIds[x[0]].difficulty[characterCount]), reverse=True)[0]]) == 2))
                                 # One of the strongest enemy and either two of the second strongest or two that are the second and third strongest
                                 and (e != "Trophy Room" or (
                                     (
-                                        s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1
-                                        and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 2)
+                                        s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1
+                                        and s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 2)
                                     or (
-                                        s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1
-                                        and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 1
-                                        and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[2]) == 1)
+                                        s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1
+                                        and s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 1
+                                        and s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[2]) == 1)
                                     ))),
                             combinations([enemyIds[en].id for en in expEnemies if en not in invaders or invaderCount > 0], enemyCount))))
 
@@ -366,19 +373,20 @@ try:
                                 check_if_valid(e, s, difficulty, rangedCount)
                                 # Two of the strongest enemy
                                 and (e != "Frozen Revolutions" or s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 2)
-                                # If there are 2 of the toughest enemy and that enemy isn't in the blacklist
+                                # Two of the toughest single target melee enemy and that enemy isn't in the blacklist
                                 and (e != "Deathly Freeze" or (
-                                    s.count(sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0]) == 2
-                                    and sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0] not in deathlyFreezeEnemyBlacklist))
+                                    sum([1 for enemy in s if enemy not in deathlyFreezeEnemyBlacklist and (max(enemyIds[enemy].attackRange) < 2 or True not in set(enemyIds[enemy].nodeAttack)) and enemy == sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0]]) == 2))
+                                    # sum([1 for enemy in s if all([max([attack < 1 for attack in enemyIds[enemy].attackRange]), True not in enemyIds[enemy].nodeAttack]) and enemy not in deathlyFreezeEnemyBlacklist]) == 2
+                                    # and sum([enemy for enemy in s if all([max([attack < 1 for attack in enemyIds[enemy].attackRange]), True not in enemyIds[enemy].nodeAttack]) and enemy not in deathlyFreezeEnemyBlacklist and (enemy, enemyIds[enemy].toughness, enemyIds[enemy].difficulty[characterCount]) == sorted([(enemy, enemyIds[enemy].toughness, enemyIds[enemy].difficulty[characterCount]) for enemy in s if all([max([attack < 1 for attack in enemyIds[enemy].attackRange]), True not in enemyIds[enemy].nodeAttack]) and enemy not in deathlyFreezeEnemyBlacklist], key=lambda x: (-enemyIds[x[0]].toughness, enemyIds[x[0]].difficulty[characterCount]), reverse=True)[0]]) == 2))
                                 # One of the strongest enemy and either two of the second strongest or two that are the second and third strongest
                                 and (e != "Trophy Room" or (
                                     (
-                                        s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1
-                                        and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 2)
+                                        s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1
+                                        and s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 2)
                                     or (
-                                        s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1
-                                        and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 1
-                                        and s.count(sorted([enemy for enemy in s], key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[2]) == 1)
+                                        s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[0]) == 1
+                                        and s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[1]) == 1
+                                        and s.count(sorted(s, key=lambda x: enemyIds[x].difficulty[characterCount], reverse=True)[2]) == 1)
                                     ))),
                             islice(combinations([en for en in shuffledEnemies if en not in invaders or invaderCount > 0], enemyCount), 50000)))
 
@@ -485,9 +493,14 @@ try:
                     newAlts = []
                     for alt in alternatives["alternatives"][expansionCombo]:
                         newAlt = []
-                        altDifficulty = sorted(alt, key=lambda x: enemyIds[x].difficulty[characterCount])
-                        for ord in enc[e]["difficultyOrder"][str(characterCount)]:
-                            newAlt.append(altDifficulty[ord])
+                        if e in toughnessSortedEncounters:
+                            altDifficulty = sorted(alt, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]))
+                            for ord in enc[e]["difficultyOrder"][str(characterCount)]:
+                                newAlt.append(altDifficulty[ord])
+                        else:
+                            altDifficulty = sorted(alt, key=lambda x: enemyIds[x].difficulty[characterCount])
+                            for ord in enc[e]["difficultyOrder"][str(characterCount)]:
+                                newAlt.append(altDifficulty[ord])
                         if newAlt not in newAlts:
                             newAlts.append(newAlt)
                     alternatives["alternatives"][expansionCombo] = newAlts

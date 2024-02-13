@@ -7,17 +7,29 @@ from enemies import enemiesDict, enemyIds, enemies
 baseFolder = path.dirname(__file__)
 
 
-def calculate_rank(l):
+def calculate_rank(l, sortByToughness=False):
     diff = {}
-    for d in range(1, 5):
-        a = {}
-        for i, num in enumerate(sorted(l, key=lambda x: enemyIds[x].difficulty[d])):
-            if num not in a:
-                a[num] = [sum([1 for e in sorted(l, key=lambda x: enemyIds[x].difficulty[d])[:i] if enemyIds[e].difficulty[d] <= enemyIds[num].difficulty[d]])]
-            else:
-                a[num].append(sum([1 for e in sorted(l, key=lambda x: enemyIds[x].difficulty[d])[:i] if enemyIds[e].difficulty[d] <= enemyIds[num].difficulty[d]]))
+    
+    if sortByToughness:
+        for d in range(1, 5):
+            a = {}
+            for i, num in enumerate(sorted(l, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[d]))):
+                if num not in a:
+                    a[num] = [sum([1 for e in sorted(l, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[d]))[:i] if enemyIds[e].toughness >= enemyIds[num].toughness])]
+                else:
+                    a[num].append(sum([1 for e in sorted(l, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[d]))[:i] if enemyIds[e].toughness >= enemyIds[num].toughness]))
 
-        diff[d] = [a[e][l[:i].count(e)] for i, e in enumerate(l)]
+            diff[d] = [a[e][l[:i].count(e)] for i, e in enumerate(l)]
+    else:
+        for d in range(1, 5):
+            a = {}
+            for i, num in enumerate(sorted(l, key=lambda x: enemyIds[x].difficulty[d])):
+                if num not in a:
+                    a[num] = [sum([1 for e in sorted(l, key=lambda x: enemyIds[x].difficulty[d])[:i] if enemyIds[e].difficulty[d] <= enemyIds[num].difficulty[d]])]
+                else:
+                    a[num].append(sum([1 for e in sorted(l, key=lambda x: enemyIds[x].difficulty[d])[:i] if enemyIds[e].difficulty[d] <= enemyIds[num].difficulty[d]]))
+
+            diff[d] = [a[e][l[:i].count(e)] for i, e in enumerate(l)]
 
     return diff
 
@@ -364,7 +376,7 @@ for encounter in encounters:
             "expansion": encounters[encounter]["expansion"],
             "level": encounters[encounter]["level"],
             "tiles": {"1": {"enemies": [], "spawns": []}, "2": {"enemies": [], "spawns": []}, "3": {"enemies": [], "spawns": []}},
-            "difficultyOrder": calculate_rank(encounterEnemies)
+            "difficultyOrder": calculate_rank(encounterEnemies, sortByToughness=True if encounter in {"Deathly Freeze",} else False)
         }
 
     for i in range(1, 4):
