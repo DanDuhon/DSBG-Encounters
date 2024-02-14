@@ -114,7 +114,7 @@ for enemy in enemyIds:
 with open(path.join(baseFolder + "\\encounters", "all_encounters.json")) as aef:
     enc = load(aef)
 
-with open(path.join(baseFolder, "encounters.json")) as ef:
+with open(path.join(baseFolder, "dsbg_shuffle_encounters.json")) as ef:
     encMain = load(ef)
 
 

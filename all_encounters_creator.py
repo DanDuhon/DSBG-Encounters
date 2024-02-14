@@ -348,6 +348,13 @@ encounters = {
 
 allEncounters = {}
 
+# For these encounters, it made more sense to sort the enemies
+# by toughness rather than difficulty.
+toughnessSortedEncounters = {
+    "Cold Snap",
+    "Deathly Freeze"
+}
+
 for encounter in encounters:
     encounterEnemies = (encounters[encounter]["enemies"][0]
                         + encounters[encounter]["spawns"][0]
@@ -376,7 +383,7 @@ for encounter in encounters:
             "expansion": encounters[encounter]["expansion"],
             "level": encounters[encounter]["level"],
             "tiles": {"1": {"enemies": [], "spawns": []}, "2": {"enemies": [], "spawns": []}, "3": {"enemies": [], "spawns": []}},
-            "difficultyOrder": calculate_rank(encounterEnemies, sortByToughness=True if encounter in {"Deathly Freeze",} else False)
+            "difficultyOrder": calculate_rank(encounterEnemies, sortByToughness=True if encounter in toughnessSortedEncounters else False)
         }
 
     for i in range(1, 4):
