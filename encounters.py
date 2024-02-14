@@ -123,7 +123,9 @@ def check_if_valid(encounter, combo, difficulty, rangedCount):
     comboHigherHealthCount = sum([1 for enemy in combo if enemyIds[enemy].health >= 5])
 
     return (difficulty * 0.9 <= comboDifficulty <= difficulty * 1.1
-        and comboRangedCount == rangedCount
+        # Since Painted World has no real ranged enemies, Snow Rat and Crow Demon are counted as both
+        # Thus, they can be replaced with either a ranged or melee enemy
+        and ((enc[e]["expansion"] == "Painted World of Ariamis" and comboRangedCount <= rangedCount) or comboRangedCount == rangedCount)
         and comboHigherHealthCount == higherHealthCount
         and sum([1 for enemy in combo if enemy in invaders]) == invaderCount
         # Can't have more enemies than available models and Phalanx is 3 Phalanx Hollows shoved together
@@ -134,7 +136,7 @@ def check_if_valid(encounter, combo, difficulty, rangedCount):
 try:
     # skip = True
     for e in enc:
-        # if e not in  {"Cold Snap", "Corrupted Hovel", "Deathly Freeze"}:
+        # if e != "Deathly Freeze":
         #     continue
         #     skip = False
         # if skip:
@@ -225,8 +227,8 @@ try:
                         
                 combosDict = defaultdict(set)
                 [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set())].add(combo) for combo in allCombos]
-            # For whatever reason, Corvian Host basically takes up all my memory. Not quite enough to cause the script to fail, but
-            # I bet if more enemies are added it would.
+            # Corvian Host is kinda like a model limit break encounter, except that the 5 health enemies all have to be the same.
+            # Easier to have some custom code for it.
             elif e == "Corvian Host":
                 smallEnemies = [enemyIds[enemy].id for enemy in allEnemies if enemyIds[enemy].health == 1]
                 smallEnemyCombos = combinations(smallEnemies, 4)
