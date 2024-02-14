@@ -74,7 +74,8 @@ gangEncounters = {
 # For these encounters, it made more sense to sort the enemies
 # by toughness rather than difficulty.
 toughnessSortedEncounters = {
-    "Deathly Freeze",
+    "Cold Snap",
+    "Deathly Freeze"
 }
 
 # Encounters in which you have to kill all enemies on a tile in order
@@ -332,8 +333,6 @@ try:
                                 # Two of the toughest single target melee enemy and that enemy isn't in the blacklist
                                 and (e != "Deathly Freeze" or (
                                     sum([1 for enemy in s if enemy not in deathlyFreezeEnemyBlacklist and (max(enemyIds[enemy].attackRange) < 2 or True not in set(enemyIds[enemy].nodeAttack)) and enemy == sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0]]) == 2))
-                                    # sum([1 for enemy in s if all([max([attack < 1 for attack in enemyIds[enemy].attackRange]), True not in enemyIds[enemy].nodeAttack]) and enemy not in deathlyFreezeEnemyBlacklist]) == 2
-                                    # and sum([enemy for enemy in s if all([max([attack < 1 for attack in enemyIds[enemy].attackRange]), True not in enemyIds[enemy].nodeAttack]) and enemy not in deathlyFreezeEnemyBlacklist and (enemy, enemyIds[enemy].toughness, enemyIds[enemy].difficulty[characterCount]) == sorted([(enemy, enemyIds[enemy].toughness, enemyIds[enemy].difficulty[characterCount]) for enemy in s if all([max([attack < 1 for attack in enemyIds[enemy].attackRange]), True not in enemyIds[enemy].nodeAttack]) and enemy not in deathlyFreezeEnemyBlacklist], key=lambda x: (-enemyIds[x[0]].toughness, enemyIds[x[0]].difficulty[characterCount]), reverse=True)[0]]) == 2))
                                 # One of the strongest enemy and either two of the second strongest or two that are the second and third strongest
                                 and (e != "Trophy Room" or (
                                     (
@@ -378,8 +377,6 @@ try:
                                 # Two of the toughest single target melee enemy and that enemy isn't in the blacklist
                                 and (e != "Deathly Freeze" or (
                                     sum([1 for enemy in s if enemy not in deathlyFreezeEnemyBlacklist and (max(enemyIds[enemy].attackRange) < 2 or True not in set(enemyIds[enemy].nodeAttack)) and enemy == sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[characterCount]), reverse=True)[0]]) == 2))
-                                    # sum([1 for enemy in s if all([max([attack < 1 for attack in enemyIds[enemy].attackRange]), True not in enemyIds[enemy].nodeAttack]) and enemy not in deathlyFreezeEnemyBlacklist]) == 2
-                                    # and sum([enemy for enemy in s if all([max([attack < 1 for attack in enemyIds[enemy].attackRange]), True not in enemyIds[enemy].nodeAttack]) and enemy not in deathlyFreezeEnemyBlacklist and (enemy, enemyIds[enemy].toughness, enemyIds[enemy].difficulty[characterCount]) == sorted([(enemy, enemyIds[enemy].toughness, enemyIds[enemy].difficulty[characterCount]) for enemy in s if all([max([attack < 1 for attack in enemyIds[enemy].attackRange]), True not in enemyIds[enemy].nodeAttack]) and enemy not in deathlyFreezeEnemyBlacklist], key=lambda x: (-enemyIds[x[0]].toughness, enemyIds[x[0]].difficulty[characterCount]), reverse=True)[0]]) == 2))
                                 # One of the strongest enemy and either two of the second strongest or two that are the second and third strongest
                                 and (e != "Trophy Room" or (
                                     (

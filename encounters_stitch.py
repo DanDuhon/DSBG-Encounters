@@ -11,5 +11,5 @@ for encounterFile in listdir(baseFolder + "\\combine"):
         e = load(efl)
     encounters[e["name"]] = e
 
-with open(baseFolder + "\\encounters.json", "w") as efd:
+with open(baseFolder + "\\dsbg_shuffle_encounters.json", "w") as efd:
     dump(encounters, efd)
