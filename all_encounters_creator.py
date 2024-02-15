@@ -160,7 +160,7 @@ encounters = {
     "Kingdom's Messengers": {"enemies": [[hs,sks],[ch,ch,sks],[]], "enemyExpansions": set([dsbg]), "level": 1, "spawns": [[],[],[]], "expansion": sun},
     "Shattered Keep": {"enemies": [[skg,ch,ch,ch],[],[]], "enemyExpansions": set([dsbg]), "level": 1, "spawns": [[],[],[]], "expansion": sun},
     "Tempting Maw": {"enemies": [[skg],[hs,hs,ch],[]], "enemyExpansions": set([dsbg,sun]), "level": 1, "spawns": [[m],[],[]], "expansion": sun},
-    "The Bell Tower": {"enemies": [[ch,ch],[],[]], "enemyExpansions": set([dsbg]), "level": 1, "spawns": [[hs],[],[]], "expansion": sun},
+    "The Bell Tower": {"enemies": [[ch,ch],[],[]], "enemyExpansions": set([dsbg]), "level": 1, "spawns": [[hs,hs],[],[]], "expansion": sun},
     "Undead Sanctum": {"enemies": [[hs,ch,ch],[hs,hs,sks],[]], "enemyExpansions": set([dsbg]), "level": 1, "spawns": [[],[],[]], "expansion": sun},
     
     "Black Dungeon": {"enemies": [[sks,sks,skg,sks],[],[]], "enemyExpansions": set([dsbg]), "level": 2, "spawns": [[],[],[]], "expansion": dsbg},
@@ -203,14 +203,14 @@ encounters = {
     "Cold Snap": {"enemies": [[sr,sr],[ph,ez,ph],[]], "enemyExpansions": set([paint]), "level": 2, "spawns": [[],[],[]], "expansion": paint},
     "Corrupted Hovel": {"enemies": [[sr,ez,ph,ez],[],[]], "enemyExpansions": set([paint]), "level": 2, "spawns": [[],[],[]], "expansion": paint},
     "Distant Tower": {"enemies": [[ph,ph,sr],[bs,bs],[cd]], "enemyExpansions": set([paint]), "level": 2, "spawns": [[],[],[]], "expansion": paint},
-    "Gnashing Beaks": {"enemies": [[sr,sr],[cd],[]], "enemyExpansions": set([paint]), "level": 2, "spawns": [[ph,cd],[],[]], "expansion": paint},
+    "Gnashing Beaks": {"enemies": [[sr,sr],[cd],[]], "enemyExpansions": set([paint]), "level": 2, "spawns": [[ph,ph,cd],[],[]], "expansion": paint},
     "Inhospitable Ground": {"enemies": [[sr,ez],[p],[]], "enemyExpansions": set([paint]), "level": 2, "spawns": [[],[],[]], "expansion": paint},
     "Monstrous Maw": {"enemies": [[sr],[],[]], "enemyExpansions": set([paint]), "level": 2, "spawns": [[],[],[]], "expansion": paint},
     "Skeletal Spokes": {"enemies": [[ez,ez],[bs,bs],[]], "enemyExpansions": set([paint]), "level": 2, "spawns": [[],[],[]], "expansion": paint},
     "Snowblind": {"enemies": [[ph,bs],[ph,cd],[]], "enemyExpansions": set([paint]), "level": 2, "spawns": [[],[],[]], "expansion": paint},
     
     "Altar of Bones": {"enemies": [[ss,gsa],[ss,sa,gss],[]], "enemyExpansions": set([tomb]), "level": 2, "spawns": [[],[],[]], "expansion": tomb},
-    "In Deep Water": {"enemies": [[gsa,ss,ss,ss],[],[]], "enemyExpansions": set([tomb]), "level": 2, "spawns": [[sa],[],[]], "expansion": tomb},
+    "In Deep Water": {"enemies": [[gsa,ss,ss,ss],[],[]], "enemyExpansions": set([tomb]), "level": 2, "spawns": [[sa,sa],[],[]], "expansion": tomb},
     "Far From the Sun": {"enemies": [[ss,gss],[ss,n,ss],[]], "enemyExpansions": set([tomb]), "level": 2, "spawns": [[],[],[]], "expansion": tomb},
     "Lost Chapel": {"enemies": [[ss,ss,n],[sa,sa,n,ss],[sb]], "enemyExpansions": set([tomb]), "level": 2, "spawns": [[],[],[]], "expansion": tomb},
     "Maze of the Dead": {"enemies": [[ss,n],[sb],[sa,ss,ss]], "enemyExpansions": set([tomb]), "level": 2, "spawns": [[],[],[]], "expansion": tomb},
@@ -279,7 +279,7 @@ encounters = {
     "Death's Precipice": {"enemies": [[sa,ss,ss],[gsa,gss],[gsa,gss,sb]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[]], "expansion": tomb},
     "Giant's Coffin": {"enemies": [[gss,gsa],[gss,gsa],[]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[gsa,gss],[]], "expansion": tomb},
     "Honour Guard": {"enemies": [[ss,sa,ss,ss,sa],[],[]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[]], "expansion": tomb},
-    "Lakeview Refuge": {"enemies": [[n,ss,ss],[sa,sa],[n,gsa,gss]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[ss],[sb]], "expansion": tomb},
+    "Lakeview Refuge": {"enemies": [[n,ss,ss],[sa,sa],[n,gsa,gss]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[sb]], "expansion": tomb},
     "Last Shred of Light": {"enemies": [[sb,ss,sa],[gsa],[]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[]], "expansion": tomb},
     "Skeleton Overlord": {"enemies": [[gss],[],[]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[ss],[],[]], "expansion": tomb},
     "The Locked Grave": {"enemies": [[gsa,ss],[gss,n],[gsa,sa,sa]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[sb]], "expansion": tomb},
@@ -383,7 +383,7 @@ for encounter in encounters:
             "expansion": encounters[encounter]["expansion"],
             "level": encounters[encounter]["level"],
             "tiles": {"1": {"enemies": [], "spawns": []}, "2": {"enemies": [], "spawns": []}, "3": {"enemies": [], "spawns": []}},
-            "difficultyOrder": calculate_rank(encounterEnemies, sortByToughness=True if encounter in toughnessSortedEncounters else False)
+            "difficultyOrder": calculate_rank(encounterEnemies, sortByToughness=encounter in toughnessSortedEncounters)
         }
 
     for i in range(1, 4):
@@ -394,6 +394,12 @@ for encounter in encounters:
             allEncounters[encounter]["tiles"][str(i)] = {"enemies": encounters[encounter]["enemies"][i-1], "spawns": encounters[encounter]["spawns"][i-1]}
             if i > 1 and not encounters[encounter]["enemies"][i-1] and not encounters[encounter]["spawns"][i-1]:
                 allEncounters[encounter]["tiles"][str(i)] = {"enemies": [], "spawns": []}
+
+    # Lakeview Refuge spawns a number of Skeleton Soldiers equal to the number of characters.
+    if encounter == "Lakeview Refuge":
+        for i in range(1, 5):
+            encounterEnemies.extend([ss])
+            allEncounters[encounter]["difficultyOrder"][i] = calculate_rank(encounterEnemies)[i]
 
 with open(baseFolder + "\\encounters\\all_encounters.json", "w") as file:
     dump(allEncounters, file)

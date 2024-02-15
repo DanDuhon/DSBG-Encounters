@@ -159,6 +159,10 @@ try:
             for tile in encounter["tiles"]:
                 enemies += encounter["tiles"][tile]["enemies"] + encounter["tiles"][tile]["spawns"]
 
+            if encounter["name"] == "Lakeview Refuge":
+                for _ in range(characterCount):
+                    enemies.append(skeletonSoldier)
+
             enemyCount = len(enemies)
             rangedCount = sum([1 for enemy in enemies if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) == 4])
             invaderCount = sum([1 for enemy in enemies if enemy in invaders])
@@ -433,9 +437,6 @@ try:
                     # original enemies. This way I can just iterate through the list
                     # when we load the encounter and take the enemies in order.
                     alternatives["alternatives"][tile] = {",".join([k for k in key]): list(value) for key, value in combosDict[tile].items()}
-
-                    # Alternative enemy order by difficulty matching original enemy order.
-                    alternatives["alternatives"][tile] = {",".join([k for k in key]): list(value) for key, value in combosDict[tile].items()}
                     for expansionCombo in alternatives["alternatives"][tile]:
                         newAlts = []
                         for alt in alternatives["alternatives"][tile][expansionCombo]:
@@ -473,7 +474,7 @@ try:
                         encMain[e]["expansionCombos"][tile] = [str(k).split(",") for k in alternatives["alternatives"][tile].keys()] if [str(k).split(",") for k in alternatives["alternatives"][tile].keys()] else []
             else:
                 alts = min([50000, sum([len(combosDict[combo]) for combo in combosDict])])
-                if alts == 50000:
+                if alts >=0:#== 50000:
                     keys = len(combosDict)
                     numToKeep = int(alts / keys)
                     for expansionCombo in combosDict:
@@ -484,9 +485,6 @@ try:
                 # Put the alternative enemies in the same difficulty order as the
                 # original enemies. This way I can just iterate through the list
                 # when we load the encounter and take the enemies in order.
-                alternatives["alternatives"] = {",".join([k for k in key]): list(value) for key, value in combosDict.items()}
-
-                # Alternative enemy order by difficulty matching original enemy order.
                 alternatives["alternatives"] = {",".join([k for k in key]): list(value) for key, value in combosDict.items()}
                 for expansionCombo in alternatives["alternatives"]:
                     newAlts = []
