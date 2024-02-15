@@ -281,7 +281,7 @@ encounters = {
     "Honour Guard": {"enemies": [[ss,sa,ss,ss,sa],[],[]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[]], "expansion": tomb},
     "Lakeview Refuge": {"enemies": [[n,ss,ss],[sa,sa],[n,gsa,gss]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[sb]], "expansion": tomb},
     "Last Shred of Light": {"enemies": [[sb,ss,sa],[gsa],[]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[]], "expansion": tomb},
-    "Skeleton Overlord": {"enemies": [[gss],[],[]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[ss],[],[]], "expansion": tomb},
+    "Skeleton Overlord": {"enemies": [[gss],[],[]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[ss,ss],[],[]], "expansion": tomb},
     "The Locked Grave": {"enemies": [[gsa,ss],[gss,n],[gsa,sa,sa]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[sb]], "expansion": tomb},
     "The Skeleton Ball": {"enemies": [[n,gsa],[sa,gss],[gsa,n,ss,ss]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[]], "expansion": tomb},
     

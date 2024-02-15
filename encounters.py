@@ -416,7 +416,8 @@ try:
 
             # This is manually set for each encounter in the JSON file.
             # enemySlots is the number of enemies in each row following this pattern:
-            # [Tile 1 Row 1, Tile 1 Row 2, Tile 1 Row 3 (level 3 only), Tile 1 Row 4 (level 3 only), Tile 2 Row 1, Tile 2 Row 2, Tile 3 Row 3]
+            # [Tile 1 Row 1, Tile 1 Row 2, Tile 1 Row 3 (level 4 only), Tile 1 Row 4 (level 4 only), Tile 1 spawns,
+            # Tile 2 Row 1, Tile 2 Row 2, Tile 2 spawns, Tile 3 Row 1, Tile 3 Row 2, Tile 3 spawns]
             with open(path.join(baseFolder + "\\encounters", e + str(characterCount) + ".json")) as ef:
                 thisEnc = load(ef)
             alternatives["enemySlots"] = thisEnc.get("enemySlots")
