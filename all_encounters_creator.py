@@ -159,7 +159,7 @@ encounters = {
     "Illusionary Doorway": {"enemies": [[ch,sks],[skg,hs,skg],[]], "enemyExpansions": set([dsbg]), "level": 1, "spawns": [[],[],[]], "expansion": sun},
     "Kingdom's Messengers": {"enemies": [[hs,sks],[ch,ch,sks],[]], "enemyExpansions": set([dsbg]), "level": 1, "spawns": [[],[],[]], "expansion": sun},
     "Shattered Keep": {"enemies": [[skg,ch,ch,ch],[],[]], "enemyExpansions": set([dsbg]), "level": 1, "spawns": [[],[],[]], "expansion": sun},
-    "Tempting Maw": {"enemies": [[skg],[hs,hs,ch],[]], "enemyExpansions": set([dsbg,sun]), "level": 1, "spawns": [[m],[],[]], "expansion": sun},
+    "Tempting Maw": {"enemies": [[skg,hs,hs,ch],[],[]], "enemyExpansions": set([dsbg,sun]), "level": 1, "spawns": [[m],[],[]], "expansion": sun},
     "The Bell Tower": {"enemies": [[ch,ch],[],[]], "enemyExpansions": set([dsbg]), "level": 1, "spawns": [[hs,hs],[],[]], "expansion": sun},
     "Undead Sanctum": {"enemies": [[hs,ch,ch],[hs,hs,sks],[]], "enemyExpansions": set([dsbg]), "level": 1, "spawns": [[],[],[]], "expansion": sun},
     
@@ -352,7 +352,9 @@ allEncounters = {}
 # by toughness rather than difficulty.
 toughnessSortedEncounters = {
     "Cold Snap",
-    "Deathly Freeze"
+    "Dark Alleyway",
+    "Deathly Freeze",
+    "No Safe Haven"
 }
 
 for encounter in encounters:
