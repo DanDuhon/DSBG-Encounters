@@ -1,8 +1,8 @@
 from itertools import product, chain, combinations
 from statistics import mean
 
-from armor import armor
-from hand_items import handItems
+from armor import armorTiers
+from hand_items import handItemTiers
 
 
 b = (0, 1, 1, 1, 2, 2)
@@ -16,34 +16,49 @@ means = {
     d: mean(d)
 }
 
-loadoutsCombos = chain(
-    product(armor, product([h for h in handItems if h.twoHanded], [h for h in handItems if h.canUseWithTwoHanded])),
-    product(armor, combinations([h for h in handItems if not h.twoHanded], 2)))
-
-loadouts = []
-
-for i, l in enumerate(loadoutsCombos):
-    # This is to speed things up for testing.
-    # if i > 100:
-    #     break
-    loadouts.append({
-        "block": sum([means[die] for die in l[0].block + l[1][0].block + l[1][1].block]) + sum([l[0].blockMod, l[1][0].blockMod, l[1][1].blockMod]),
-        "blockRoll": [[v + sum([l[0].blockMod, l[1][0].blockMod, l[1][1].blockMod]) for v in b] for b in l[0].block + l[1][0].block + l[1][1].block],
-        "resist": sum([means[die] for die in l[0].resist + l[1][0].resist + l[1][1].resist]) + sum([l[0].resistMod, l[1][0].resistMod, l[1][1].resistMod]),
-        "resistRoll": [[v + sum([l[0].resistMod, l[1][0].resistMod, l[1][1].resistMod]) for v in b] for b in l[0].resist + l[1][0].resist + l[1][1].resist],
-        "dodge": 0 if not all([l[0].canDodge, l[1][0].canDodge, l[1][1].canDodge]) else (l[0].dodge + l[1][0].dodge + l[1][1].dodge),
-        "dodgeBonus": l[0].dodgeBonus,
-        "immunities": l[0].immunities | l[1][0].immunities | l[1][1].immunities
-    })
-
-# Overall dodge modifier for the following dodge difficulties.
-# Used for enemies that inflict Stagger or Frostbite.
-dodgeMod = {
-    1: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 1]) / len(list(product(*l["dodge"]))))) for l in loadouts]),
-    2: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 2]) / len(list(product(*l["dodge"]))))) for l in loadouts]),
-    3: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 3]) / len(list(product(*l["dodge"]))))) for l in loadouts]),
-    4: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 4]) / len(list(product(*l["dodge"]))))) for l in loadouts])
+loadouts = {
+    1: [],
+    2: [],
+    3: []
 }
 
+dodgeMod = {
+    1: {},
+    2: {},
+    3: {}
+}
+
+for tier in range(1, 4):
+    loadoutsCombos = chain(
+        product(armorTiers[tier], product([h for h in handItemTiers[tier] if h.twoHanded], [h for h in handItemTiers[tier] if h.canUseWithTwoHanded])),
+        product(armorTiers[tier], combinations([h for h in handItemTiers[tier] if not h.twoHanded], 2)))
+
+    for i, l in enumerate(loadoutsCombos):
+        # This is to speed things up for testing.
+        # if i > 100:
+        #     break
+        loadouts[tier].append({
+            "block": sum([means[die] for die in l[0].block + l[1][0].block + l[1][1].block]) + sum([l[0].blockMod, l[1][0].blockMod, l[1][1].blockMod]),
+            "blockRoll": [[v + sum([l[0].blockMod, l[1][0].blockMod, l[1][1].blockMod]) for v in b] for b in l[0].block + l[1][0].block + l[1][1].block],
+            "resist": sum([means[die] for die in l[0].resist + l[1][0].resist + l[1][1].resist]) + sum([l[0].resistMod, l[1][0].resistMod, l[1][1].resistMod]),
+            "resistRoll": [[v + sum([l[0].resistMod, l[1][0].resistMod, l[1][1].resistMod]) for v in b] for b in l[0].resist + l[1][0].resist + l[1][1].resist],
+            "dodge": 0 if not all([l[0].canDodge, l[1][0].canDodge, l[1][1].canDodge]) else (l[0].dodge + l[1][0].dodge + l[1][1].dodge),
+            "dodgeBonus": l[0].dodgeBonus,
+            "immunities": l[0].immunities | l[1][0].immunities | l[1][1].immunities
+        })
+
+    # Overall dodge modifier for the following dodge difficulties.
+    # Used for enemies that inflict Stagger or Frostbite.
+    dodgeMod[tier] = {
+        1: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 1]) / len(list(product(*l["dodge"]))))) for l in loadouts[tier]]),
+        2: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 2]) / len(list(product(*l["dodge"]))))) for l in loadouts[tier]]),
+        3: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 3]) / len(list(product(*l["dodge"]))))) for l in loadouts[tier]]),
+        4: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 4]) / len(list(product(*l["dodge"]))))) for l in loadouts[tier]])
+    }
+
 # Winged Knight gets a bonus against blocks of 3 or higher.
-expectedBlock3Plus = sum([1 for l in loadouts if l["block"] >= 3]) / len(loadouts)
+expectedBlock3Plus = {
+    1: sum([1 for l in loadouts[1] if l["block"] >= 3]) / len(loadouts[1]),
+    2: sum([1 for l in loadouts[2] if l["block"] >= 3]) / len(loadouts[2]),
+    3: sum([1 for l in loadouts[3] if l["block"] >= 3]) / len(loadouts[3])
+    }

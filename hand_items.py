@@ -1,8 +1,13 @@
 from statistics import mean
-from itertools import product, chain
+from item_tier import itemTier
 
 
 handItems = []
+handItemTiers = {
+    1: [],
+    2: [],
+    3: []
+}
 
 b = (0, 1, 1, 1, 2, 2)
 u = (1, 1, 2, 2, 2, 3)
@@ -17,6 +22,8 @@ means = {
 
 class HandItem:
     def __init__(self, name, block=[], resist=[], dodge=[], blockMod=0, resistMod=0, twoHanded=False, canUseWithTwoHanded=False, canDodge=True, immunities=set()) -> None:
+        if name not in itemTier:
+            return
         handItems.append(self)
         self.name = name
         self.block = block
@@ -28,6 +35,8 @@ class HandItem:
         self.canUseWithTwoHanded = canUseWithTwoHanded
         self.canDodge = canDodge
         self.immunities = immunities
+        self.tier = itemTier[name]
+        handItemTiers[self.tier].append(self)
 
 
 HandItem(name=None, canUseWithTwoHanded=True)
@@ -130,7 +139,6 @@ HandItem(name="Great Mace", twoHanded=True, block=[b], resist=[b])
 HandItem(name="Great Machete", twoHanded=True, block=[b], resist=[b])
 HandItem(name="Great Magic Weapon")
 HandItem(name="Great Scythe", twoHanded=True, block=[b], resist=[b])
-HandItem(name="Great Stone Axe", twoHanded=True, block=[b], resist=[b])
 HandItem(name="Great Wooden Hammer", twoHanded=True, block=[b])
 HandItem(name="Greatshield of Artorias", block=[o], resist=[u], immunities=set(["bleed", "poison"]))
 HandItem(name="Greatsword", twoHanded=True, block=[b], resist=[b])

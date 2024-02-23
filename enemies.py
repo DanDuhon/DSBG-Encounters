@@ -1,6 +1,6 @@
 from json import dump
 from os import path
-from itertools import product
+from itertools import product, combinations, filterfalse
 
 
 baseFolder = path.dirname(__file__)
@@ -10,15 +10,37 @@ enemiesDict = {}
 reach = []
 vordtStuff = []
 guardianDragonStuff = []
+pursuerStuff = []
+
+# newGamePlusMods = [
+#     "dodge1", "dodge2",
+#     "damage1", "damage2", "damage3", "damage4",
+#     "move1",
+#     "block1", "block2",
+#     "resist1", "resist2",
+#     "repeat1",
+#     "magic",
+#     "poison",
+#     "bleed",
+#     "stagger",
+#     "frostbite",
+#     "health1", "health2", "health3", "health4", "health5"
+# ]
+
+# ngpc = filterfalse(lambda c: len(c) != len(set([a[:-1] for a in c])), combinations(newGamePlusMods, 5))
+# pass
 
 
 class Enemy:
-    def __init__(self, name, expansion, enemyType, numberOfModels, health, armor, resist, attacks, attackType, dodge, move, attackRange, id=None, skip=False, nodeAttack=[], nodesAttacked=0, attackEffect=[], weakArcs=None, windup=False, toughness=0, difficulty=0) -> None:
+    def __init__(self, name, expansion, enemyType, numberOfModels, health, armor, resist, attacks, attackType, dodge, move, attackRange, id=None, skip=False, nodeAttack=[], nodesAttacked=0, attackEffect=[], weakArcs=None, windup=False, toughness=0, difficultyTiers=0) -> None:
         if not skip:
             enemiesDict[name] = self
             enemies.append(self)
         elif "Vordt" in name:
             vordtStuff.append(self)
+        
+        if "The Pursuer" in name:
+            pursuerStuff.append(self)
         
         if "Guardian Dragon" in name:
             guardianDragonStuff.append(self)
@@ -34,18 +56,18 @@ class Enemy:
         self.health = health
         self.armor = armor
         self.resist = resist
-        self.attacks = attacks
-        self.nodeAttack = nodeAttack if nodeAttack else [False for _ in self.attacks]
-        self.nodesAttacked = nodesAttacked if nodesAttacked else [0 for _ in self.attacks]
-        self.attackType = attackType
+        self.attacks = attacks * (2 if id else 1)
+        self.nodeAttack = nodeAttack * (2 if id else 1) if nodeAttack else [False for _ in self.attacks]
+        self.nodesAttacked = nodesAttacked * (2 if id else 1) if nodesAttacked else [0 for _ in self.attacks]
+        self.attackType = attackType * (2 if id else 1)
         self.dodge = dodge
-        self.move = move
-        self.attackRange = attackRange
-        self.attackEffect = attackEffect
+        self.move = move * (2 if id else 1)
+        self.attackRange = attackRange * (2 if id else 1)
+        self.attackEffect = attackEffect * (2 if id else 1)
         self.weakArcs = weakArcs if weakArcs is not None else 1 if "boss" in enemyType else 0
         self.windup = windup
         self.skip = skip
-        self.difficulty = difficulty
+        self.difficultyTiers = difficultyTiers
         # Lower is better
         self.toughness = toughness
 
@@ -71,19 +93,62 @@ class Enemy:
         else:
             self.gang = None
 
-        self.deaths = 0
-        self.damageDone1 = 0
-        self.damageDone2 = 0
-        self.damageDone3 = 0
-        self.damageDone4 = 0
-        self.bleedDamage1 = 0
-        self.bleedDamage2 = 0
-        self.bleedDamage3 = 0
-        self.bleedDamage4 = 0
-        self.damagingAttacks = 0
-        self.totalAttacks = 0
+        self.deaths = {
+            1: 0,
+            2: 0,
+            3: 0
+        }
+        self.damageDone1 = {
+            1: 0,
+            2: 0,
+            3: 0
+        }
+        self.damageDone2 = {
+            1: 0,
+            2: 0,
+            3: 0
+        }
+        self.damageDone3 = {
+            1: 0,
+            2: 0,
+            3: 0
+        }
+        self.damageDone4 = {
+            1: 0,
+            2: 0,
+            3: 0
+        }
+        self.bleedDamage1 = {
+            1: 0,
+            2: 0,
+            3: 0
+        }
+        self.bleedDamage2 = {
+            1: 0,
+            2: 0,
+            3: 0
+        }
+        self.bleedDamage3 = {
+            1: 0,
+            2: 0,
+            3: 0
+        }
+        self.bleedDamage4 = {
+            1: 0,
+            2: 0,
+            3: 0
+        }
+        self.damagingAttacks = {
+            1: 0,
+            2: 0,
+            3: 0
+        }
+        self.totalAttacks = {
+            1: 0,
+            2: 0,
+            3: 0
+        }
         self.loadoutDamage = {}
-        self.imagePath = baseFolder + "\\images\\" + name + ".png"
 
         for i, m in enumerate(self.move):
             reach.append(min([4, max([0, m + self.attackRange[i]])]))
@@ -95,56 +160,56 @@ class Enemy:
 
 
 # Regular enemies
-Enemy(id=1, name="Alonne Bow Knight", expansion="Iron Keep", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=1, attacks=[4], attackType=["physical"], dodge=2, move=[0], attackRange=[4], toughness=243160, difficulty={1: 4.59, 2: 4.59, 3: 4.59, 4: 4.59})
-Enemy(id=2, name="Alonne Knight Captain", expansion="Iron Keep", enemyType="regular", numberOfModels=3, health=5, armor=2, resist=2, attacks=[5], attackType=["magic"], dodge=1, move=[2], attackRange=[0], toughness=57099, difficulty={1: 17.92, 2: 17.92, 3: 17.92, 4: 17.92})
-Enemy(id=3, name="Alonne Sword Knight", expansion="Iron Keep", enemyType="regular", numberOfModels=3, health=1, armor=2, resist=2, attacks=[5], attackType=["physical"], dodge=1, move=[2], attackRange=[0], toughness=183940, difficulty={1: 4.98, 2: 4.98, 3: 4.98, 4: 4.98})
-Enemy(id=4, name="Black Hollow Mage", expansion="Executioner Chariot", enemyType="regular", numberOfModels=2, health=5, armor=2, resist=3, attacks=[4], attackType=["magic"], dodge=2, move=[0], attackRange=[4], toughness=51913, difficulty={1: 24.09, 2: 24.09, 3: 24.09, 4: 24.09})
-Enemy(id=5, name="Bonewheel Skeleton", expansion="Painted World of Ariamis", enemyType="regular", numberOfModels=2, health=1, armor=1, resist=1, attacks=[4,4,4], attackType=["physical","physical", "physical"], nodeAttack=[True,True, True], dodge=2, move=[0,1, 1], attackRange=[0,0, 0], toughness=243160, difficulty={1: 6.19, 2: 6.67, 3: 7.14, 4: 7.73})
-Enemy(id=6, name="Crossbow Hollow", expansion="Dark Souls The Board Game", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=0, attacks=[3], attackType=["magic"], dodge=1, move=[0], attackRange=[4], toughness=251760, difficulty={1: 1.38, 2: 1.38, 3: 1.38, 4: 1.38})
-Enemy(id=7, name="Crow Demon", expansion="Painted World of Ariamis", enemyType="regular", numberOfModels=2, health=5, armor=1, resist=2, attacks=[6,6], attackType=["physical","physical"], nodeAttack=[True,True], dodge=2, move=[0,4], attackRange=[0,0], toughness=90742, difficulty={1: 32.78, 2: 35.3, 3: 37.82, 4: 40.93})
-Enemy(id=8, name="Demonic Foliage", expansion="Darkroot", enemyType="regular", numberOfModels=2, health=1, armor=2, resist=1, attacks=[5], attackType=["physical"], dodge=1, move=[1], attackRange=[1], toughness=203535, difficulty={1: 4.5, 2: 4.5, 3: 4.5, 4: 4.5})
-Enemy(id=9, name="Engorged Zombie", expansion="Painted World of Ariamis", enemyType="regular", numberOfModels=2, health=1, armor=2, resist=2, attacks=[4], attackType=["magic"], dodge=1, move=[1], attackRange=[0], toughness=183940, difficulty={1: 1.82, 2: 1.82, 3: 1.82, 4: 1.82})
-Enemy(id=10, name="Falchion Skeleton", expansion="Executioner Chariot", enemyType="regular", numberOfModels=2, health=1, armor=1, resist=1, attacks=[3], attackType=["physical"], attackEffect=[{"bleed",}], dodge=1, move=[2], attackRange=[0], toughness=243160, difficulty={1: 4.29, 2: 4.29, 3: 4.29, 4: 4.29})
-Enemy(id=11, name="Firebomb Hollow", expansion="Explorers", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=1, attacks=[3], attackType=["magic"], nodeAttack=[True], dodge=1, move=[1], attackRange=[2], toughness=243160, difficulty={1: 1.39, 2: 1.5, 3: 1.6, 4: 1.74})
-Enemy(id=12, name="Giant Skeleton Archer", expansion="Tomb of Giants", enemyType="regular", numberOfModels=2, health=5, armor=1, resist=1, attacks=[2,2,5], attackType=["physical","physical", "physical"], nodeAttack=[True,True, False], dodge=2, move=[0, 0,0], attackRange=[0,0, 4], toughness=100540, difficulty={1: 19.02, 2: 19.04, 3: 19.06, 4: 19.09})
-Enemy(id=13, name="Giant Skeleton Soldier", expansion="Tomb of Giants", enemyType="regular", numberOfModels=2, health=5, armor=1, resist=1, attacks=[2,2,5], attackType=["physical","physical", "physical"], nodeAttack=[True,True, False], dodge=1, move=[0,1, 1], attackRange=[0,0, 1], toughness=100540, difficulty={1: 11.24, 2: 11.28, 3: 11.31, 4: 11.35})
-Enemy(id=14, name="Hollow Soldier", expansion="Dark Souls The Board Game", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=1, attacks=[4], attackType=["physical"], dodge=1, move=[1], attackRange=[0], toughness=243160, difficulty={1: 1.17, 2: 1.17, 3: 1.17, 4: 1.17})
-Enemy(id=15, name="Ironclad Soldier", expansion="Iron Keep", enemyType="regular", numberOfModels=3, health=5, armor=3, resist=2, attacks=[5,5], attackType=["physical","physical"], nodeAttack=[True,True], attackEffect=[{"stagger",},{"stagger",}], dodge=2, move=[0,1], attackRange=[0,0], toughness=24945, difficulty={1: 39.83, 2: 42.89, 3: 45.96, 4: 49.73})
-Enemy(id=16, name="Large Hollow Soldier", expansion="Dark Souls The Board Game", enemyType="regular", numberOfModels=2, health=5, armor=1, resist=0, attacks=[5,5], attackType=["physical","physical"], nodeAttack=[True,True], dodge=1, move=[0,1], attackRange=[0,0], toughness=110052, difficulty={1: 5.33, 2: 5.74, 3: 6.15, 4: 6.65})
-Enemy(id=17, name="Mushroom Child", expansion="Darkroot", enemyType="regular", numberOfModels=1, health=5, armor=1, resist=2, attacks=[5], attackType=["physical"], dodge=1, move=[1], attackRange=[0], toughness=90742, difficulty={1: 5.52, 2: 5.52, 3: 5.52, 4: 5.52})
-Enemy(id=18, name="Mushroom Parent", expansion="Darkroot", enemyType="regular", numberOfModels=1, health=10, armor=1, resist=2, attacks=[6,6], attackType=["physical","physical"], nodeAttack=[True,True], attackEffect=[{"stagger",},{"stagger",}], dodge=1, move=[0,1], attackRange=[0,0], toughness=40011, difficulty={1: 21.94, 2: 23.62, 3: 25.31, 4: 27.39})
-Enemy(id=19, name="Necromancer", expansion="Tomb of Giants", enemyType="regular", numberOfModels=2, health=5, armor=1, resist=2, attacks=[3], attackType=["magic"], nodeAttack=[True], dodge=1, move=[0], attackRange=[4], toughness=90742, difficulty={1: 12.16, 2: 13.08, 3: 14.03, 4: 15.17})
-Enemy(id=20, name="Phalanx", expansion="Painted World of Ariamis", enemyType="regular", numberOfModels=1, health=5, armor=1, resist=1, attacks=[5,0], attackType=["physical", "physical"], nodeAttack=[True, False], dodge=1, move=[0,1], attackRange=[1,0], toughness=100540, difficulty={1: 8.49, 2: 8.87, 3: 9.25, 4: 9.73})
-Enemy(id=21, name="Phalanx Hollow", expansion="Painted World of Ariamis", enemyType="regular", numberOfModels=5, health=1, armor=1, resist=1, attacks=[4,0], attackType=["physical", "physical"], dodge=1, move=[0,1], attackRange=[1,0], toughness=243160, difficulty={1: 1.17, 2: 1.17, 3: 1.17, 4: 1.17})
-Enemy(id=22, name="Plow Scarecrow", expansion="Darkroot", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=1, attacks=[4], attackType=["physical"], dodge=2, move=[2], attackRange=[1], toughness=243160, difficulty={1: 7.99, 2: 7.99, 3: 7.99, 4: 7.99})
-Enemy(id=23, name="Sentinel", expansion="Dark Souls The Board Game", enemyType="regular", numberOfModels=2, health=10, armor=2, resist=1, attacks=[6], attackType=["physical"], nodeAttack=[True], dodge=1, move=[1], attackRange=[1], toughness=36549, difficulty={1: 37.5, 2: 40.39, 3: 43.27, 4: 46.82})
-Enemy(id=24, name="Shears Scarecrow", expansion="Darkroot", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=1, attacks=[3,3], attackType=["physical", "physical"], nodeAttack=[True, True], dodge=2, move=[1, 1], attackRange=[0, 0], toughness=243160, difficulty={1: 2.69, 2: 2.9, 3: 3.11, 4: 3.36})
-Enemy(id=25, name="Silver Knight Greatbowman", expansion="Dark Souls The Board Game", enemyType="regular", numberOfModels=3, health=1, armor=2, resist=0, attacks=[4], attackType=["physical"], nodeAttack=[True], dodge=1, move=[0], attackRange=[4], toughness=212135, difficulty={1: 2.99, 2: 3.22, 3: 3.46, 4: 3.74})
-Enemy(id=26, name="Silver Knight Spearman", expansion="Explorers", enemyType="regular", numberOfModels=3, health=1, armor=2, resist=1, attacks=[6,0], attackType=["physical", "physical"], dodge=2, move=[0,1], attackRange=[1,0], toughness=203535, difficulty={1: 6.1, 2: 6.1, 3: 6.1, 4: 6.1})
-Enemy(id=27, name="Silver Knight Swordsman", expansion="Dark Souls The Board Game", enemyType="regular", numberOfModels=3, health=1, armor=2, resist=1, attacks=[5], attackType=["physical"], nodeAttack=[True], dodge=2, move=[2], attackRange=[0], toughness=203535, difficulty={1: 7.62, 2: 8.21, 3: 8.8, 4: 9.52})
-Enemy(id=28, name="Skeleton Archer", expansion="Tomb of Giants", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=1, attacks=[4], attackType=["physical"], dodge=1, move=[0], attackRange=[4], toughness=243160, difficulty={1: 2.61, 2: 2.61, 3: 2.61, 4: 2.61})
-Enemy(id=29, name="Skeleton Beast", expansion="Tomb of Giants", enemyType="regular", numberOfModels=1, health=5, armor=2, resist=2, attacks=[4,4,4], attackType=["physical", "physical","physical"], nodeAttack=[True, True,True], dodge=2, move=[0,1, 1], attackRange=[0, 0,0], toughness=57099, difficulty={1: 26.36, 2: 28.39, 3: 30.41, 4: 32.91})
-Enemy(id=30, name="Skeleton Soldier", expansion="Tomb of Giants", enemyType="regular", numberOfModels=3, health=1, armor=2, resist=1, attacks=[2,2], attackType=["physical", "physical"], nodeAttack=[True,True], attackEffect=[{"bleed",},{"bleed",}], dodge=1, move=[0,1], attackRange=[0,0], toughness=203535, difficulty={1: 2.78, 2: 2.99, 3: 3.21, 4: 3.47})
-Enemy(id=31, name="Snow Rat", expansion="Painted World of Ariamis", enemyType="regular", numberOfModels=2, health=1, armor=0, resist=1, attacks=[3], attackType=["physical"], attackEffect=[{"poison",}], dodge=1, move=[4], attackRange=[0], toughness=255460, difficulty={1: 3.33, 2: 3.33, 3: 3.33, 4: 3.33})
-Enemy(id=32, name="Stone Guardian", expansion="Darkroot", enemyType="regular", numberOfModels=2, health=5, armor=2, resist=3, attacks=[4,4,5], attackType=["physical","physical", "physical"], nodeAttack=[True,True, True], dodge=1, move=[0,1, 0], attackRange=[0,0, 1], toughness=51748, difficulty={1: 24.16, 2: 26.01, 3: 27.87, 4: 30.16})
-Enemy(id=33, name="Stone Knight", expansion="Darkroot", enemyType="regular", numberOfModels=2, health=5, armor=3, resist=2, attacks=[5], attackType=["magic"], dodge=1, move=[1], attackRange=[0], toughness=33619, difficulty={1: 16.64, 2: 16.64, 3: 16.64, 4: 16.64})
-Enemy(id=34, name="Mimic", expansion="The Sunless City", enemyType="regular", numberOfModels=1, health=5, armor=1, resist=1, attacks=[6], attackType=["physical"], dodge=2, move=[2], attackRange=[1], toughness=100540, difficulty={1: 26.82, 2: 26.82, 3: 26.82, 4: 26.82})
+Enemy(id=1, name="Alonne Bow Knight", expansion="Iron Keep", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=1, attacks=[4], attackType=["physical"], dodge=2, move=[0], attackRange=[4], difficultyTiers={1: {"toughness": 37610, "difficulty": {1: 77.74, 2: 77.74, 3: 77.74, 4: 77.74}}, 2: {"toughness": 72308, "difficulty": {1: 7.95, 2: 7.95, 3: 7.95, 4: 7.95}}, 3: {"toughness": 100332, "difficulty": {1: 6.85, 2: 6.85, 3: 6.85, 4: 6.85}}})
+Enemy(id=2, name="Alonne Knight Captain", expansion="Iron Keep", enemyType="regular", numberOfModels=3, health=5, armor=2, resist=2, attacks=[5], attackType=["magic"], dodge=1, move=[2], attackRange=[0], difficultyTiers={1: {"toughness": 4470, "difficulty": {1: 627.34, 2: 627.34, 3: 627.34, 4: 627.34}}, 2: {"toughness": 11201, "difficulty": {1: 64.54, 2: 64.54, 3: 64.54, 4: 64.54}}, 3: {"toughness": 21403, "difficulty": {1: 24.43, 2: 24.43, 3: 24.43, 4: 24.43}}})
+Enemy(id=3, name="Alonne Sword Knight", expansion="Iron Keep", enemyType="regular", numberOfModels=3, health=1, armor=2, resist=2, attacks=[5], attackType=["physical"], dodge=1, move=[2], attackRange=[0], difficultyTiers={1: {"toughness": 18676, "difficulty": {1: 143.33, 2: 143.33, 3: 143.33, 4: 143.33}}, 2: {"toughness": 42074, "difficulty": {1: 13.14, 2: 13.14, 3: 13.14, 4: 13.14}}, 3: {"toughness": 70007, "difficulty": {1: 6.89, 2: 6.89, 3: 6.89, 4: 6.89}}})
+Enemy(id=4, name="Black Hollow Mage", expansion="Executioner Chariot", enemyType="regular", numberOfModels=2, health=5, armor=2, resist=3, attacks=[4], attackType=["magic"], dodge=2, move=[0], attackRange=[4], difficultyTiers={1: {"toughness": 4225, "difficulty": {1: 759.74, 2: 759.74, 3: 759.74, 4: 759.74}}, 2: {"toughness": 10143, "difficulty": {1: 76.9, 2: 76.9, 3: 76.9, 4: 76.9}}, 3: {"toughness": 19200, "difficulty": {1: 39.95, 2: 39.95, 3: 39.95, 4: 39.95}}})
+Enemy(id=5, name="Bonewheel Skeleton", expansion="Painted World of Ariamis", enemyType="regular", numberOfModels=2, health=1, armor=1, resist=1, attacks=[4,4,4], attackType=["physical","physical", "physical"], nodeAttack=[True,True, True], dodge=2, move=[0,1, 1], attackRange=[0,0, 0], difficultyTiers={1: {"toughness": 37610, "difficulty": {1: 161.24, 2: 173.64, 3: 186.04, 4: 201.31}}, 2: {"toughness": 72308, "difficulty": {1: 16.49, 2: 17.76, 3: 19.03, 4: 20.59}}, 3: {"toughness": 100332, "difficulty": {1: 14.2, 2: 15.3, 3: 16.39, 4: 17.73}}})
+Enemy(id=6, name="Crossbow Hollow", expansion="Dark Souls The Board Game", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=0, attacks=[3], attackType=["magic"], dodge=1, move=[0], attackRange=[4], difficultyTiers={1: {"toughness": 42716, "difficulty": {1: 23.94, 2: 23.94, 3: 23.94, 4: 23.94}}, 2: {"toughness": 77136, "difficulty": {1: 3.03, 2: 3.03, 3: 3.03, 4: 3.03}}, 3: {"toughness": 103144, "difficulty": {1: 1.41, 2: 1.41, 3: 1.41, 4: 1.41}}})
+Enemy(id=7, name="Crow Demon", expansion="Painted World of Ariamis", enemyType="regular", numberOfModels=2, health=5, armor=1, resist=2, attacks=[6,6], attackType=["physical","physical"], nodeAttack=[True,True], dodge=2, move=[0,4], attackRange=[0,0], difficultyTiers={1: {"toughness": 9910, "difficulty": {1: 993.09, 2: 1069.48, 3: 1145.87, 4: 1239.89}}, 2: {"toughness": 22118, "difficulty": {1: 107.81, 2: 116.11, 3: 124.4, 4: 134.61}}, 3: {"toughness": 36254, "difficulty": {1: 76.23, 2: 82.09, 3: 87.96, 4: 95.17}}})
+Enemy(id=8, name="Demonic Foliage", expansion="Darkroot", enemyType="regular", numberOfModels=2, health=1, armor=2, resist=1, attacks=[5], attackType=["physical"], dodge=1, move=[1], attackRange=[1], difficultyTiers={1: {"toughness": 23038, "difficulty": {1: 116.2, 2: 116.2, 3: 116.2, 4: 116.2}}, 2: {"toughness": 47704, "difficulty": {1: 11.59, 2: 11.59, 3: 11.59, 4: 11.59}}, 3: {"toughness": 79970, "difficulty": {1: 6.03, 2: 6.03, 3: 6.03, 4: 6.03}}})
+Enemy(id=9, name="Engorged Zombie", expansion="Painted World of Ariamis", enemyType="regular", numberOfModels=2, health=1, armor=2, resist=2, attacks=[4], attackType=["magic"], dodge=1, move=[1], attackRange=[0], difficultyTiers={1: {"toughness": 18676, "difficulty": {1: 67.79, 2: 67.79, 3: 67.79, 4: 67.79}}, 2: {"toughness": 42074, "difficulty": {1: 7.23, 2: 7.23, 3: 7.23, 4: 7.23}}, 3: {"toughness": 70007, "difficulty": {1: 2.95, 2: 2.95, 3: 2.95, 4: 2.95}}})
+Enemy(id=10, name="Falchion Skeleton", expansion="Executioner Chariot", enemyType="regular", numberOfModels=2, health=1, armor=1, resist=1, attacks=[3], attackType=["physical"], attackEffect=[{"bleed",}], dodge=1, move=[2], attackRange=[0], difficultyTiers={1: {"toughness": 37610, "difficulty": {1: 85.07, 2: 85.07, 3: 85.07, 4: 85.07}}, 2: {"toughness": 72308, "difficulty": {1: 11.4, 2: 11.4, 3: 11.4, 4: 11.4}}, 3: {"toughness": 100332, "difficulty": {1: 5.77, 2: 5.77, 3: 5.77, 4: 5.77}}})
+Enemy(id=11, name="Firebomb Hollow", expansion="Explorers", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=1, attacks=[3], attackType=["magic"], nodeAttack=[True], dodge=1, move=[1], attackRange=[2], difficultyTiers={1: {"toughness": 37610, "difficulty": {1: 26.87, 2: 28.93, 3: 31, 4: 33.54}}, 2: {"toughness": 72308, "difficulty": {1: 3.19, 2: 3.44, 3: 3.68, 4: 3.98}}, 3: {"toughness": 100332, "difficulty": {1: 1.44, 2: 1.55, 3: 1.66, 4: 1.79}}})
+Enemy(id=12, name="Giant Skeleton Archer", expansion="Tomb of Giants", enemyType="regular", numberOfModels=2, health=5, armor=1, resist=1, attacks=[2,2,5], attackType=["physical","physical", "physical"], nodeAttack=[True,True, False], dodge=2, move=[0, 0,0], attackRange=[0,0, 4], difficultyTiers={1: {"toughness": 11256, "difficulty": {1: 448.46, 2: 451.29, 3: 454.11, 4: 457.59}}, 2: {"toughness": 24465, "difficulty": {1: 45.65, 2: 45.96, 3: 46.27, 4: 46.65}}, 3: {"toughness": 39922, "difficulty": {1: 32.87, 2: 33.08, 3: 33.3, 4: 33.56}}})
+Enemy(id=13, name="Giant Skeleton Soldier", expansion="Tomb of Giants", enemyType="regular", numberOfModels=2, health=5, armor=1, resist=1, attacks=[2,2,5], attackType=["physical","physical", "physical"], nodeAttack=[True,True, False], dodge=1, move=[0,1, 1], attackRange=[0,0, 1], difficultyTiers={1: {"toughness": 11256, "difficulty": {1: 281.84, 2: 283.68, 3: 285.52, 4: 287.79}}, 2: {"toughness": 24465, "difficulty": {1: 26.27, 2: 26.41, 3: 26.54, 4: 26.71}}, 3: {"toughness": 39922, "difficulty": {1: 14.18, 2: 14.27, 3: 14.35, 4: 14.45}}})
+Enemy(id=14, name="Hollow Soldier", expansion="Dark Souls The Board Game", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=1, attacks=[4], attackType=["physical"], dodge=1, move=[1], attackRange=[0], difficultyTiers={1: {"toughness": 37610, "difficulty": {1: 31.09, 2: 31.09, 3: 31.09, 4: 31.09}}, 2: {"toughness": 72308, "difficulty": {1: 2.79, 2: 2.79, 3: 2.79, 4: 2.79}}, 3: {"toughness": 100332, "difficulty": {1: 1.84, 2: 1.84, 3: 1.84, 4: 1.84}}})
+Enemy(id=15, name="Ironclad Soldier", expansion="Iron Keep", enemyType="regular", numberOfModels=3, health=5, armor=3, resist=2, attacks=[5,5], attackType=["physical","physical"], nodeAttack=[True,True], attackEffect=[{"stagger",},{"stagger",}], dodge=2, move=[0,1], attackRange=[0,0], difficultyTiers={1: {"toughness": 1692, "difficulty": {1: 2463.41, 2: 2652.91, 3: 2842.4, 4: 3075.62}}, 2: {"toughness": 3897, "difficulty": {1: 235.17, 2: 253.26, 3: 271.35, 4: 293.61}}, 3: {"toughness": 9764, "difficulty": {1: 110.6, 2: 119.1, 3: 127.61, 4: 138.08}}})
+Enemy(id=16, name="Large Hollow Soldier", expansion="Dark Souls The Board Game", enemyType="regular", numberOfModels=2, health=5, armor=1, resist=0, attacks=[5,5], attackType=["physical","physical"], nodeAttack=[True,True], dodge=1, move=[0,1], attackRange=[0,0], difficultyTiers={1: {"toughness": 13023, "difficulty": {1: 202.88, 2: 218.49, 3: 234.1, 4: 253.3}}, 2: {"toughness": 26492, "difficulty": {1: 20.6, 2: 22.19, 3: 23.77, 4: 25.72}}, 3: {"toughness": 44562, "difficulty": {1: 10.69, 2: 11.51, 3: 12.33, 4: 13.35}}})
+Enemy(id=17, name="Mushroom Child", expansion="Darkroot", enemyType="regular", numberOfModels=1, health=5, armor=1, resist=2, attacks=[5], attackType=["physical"], dodge=1, move=[1], attackRange=[0], difficultyTiers={1: {"toughness": 9910, "difficulty": {1: 188.56, 2: 188.56, 3: 188.56, 4: 188.56}}, 2: {"toughness": 22118, "difficulty": {1: 17.45, 2: 17.45, 3: 17.45, 4: 17.45}}, 3: {"toughness": 36254, "difficulty": {1: 9.29, 2: 9.29, 3: 9.29, 4: 9.29}}})
+Enemy(id=18, name="Mushroom Parent", expansion="Darkroot", enemyType="regular", numberOfModels=1, health=10, armor=1, resist=2, attacks=[6,6], attackType=["physical","physical"], nodeAttack=[True,True], attackEffect=[{"stagger",},{"stagger",}], dodge=1, move=[0,1], attackRange=[0,0], difficultyTiers={1: {"toughness": 3864, "difficulty": {1: 947.46, 2: 1020.34, 3: 1093.22, 4: 1182.92}}, 2: {"toughness": 9080, "difficulty": {1: 95.45, 2: 102.79, 3: 110.13, 4: 119.17}}, 3: {"toughness": 16428, "difficulty": {1: 44.2, 2: 47.6, 3: 51, 4: 55.18}}})
+Enemy(id=19, name="Necromancer", expansion="Tomb of Giants", enemyType="regular", numberOfModels=2, health=5, armor=1, resist=2, attacks=[3], attackType=["magic"], nodeAttack=[True], dodge=1, move=[0], attackRange=[4], difficultyTiers={1: {"toughness": 9910, "difficulty": {1: 439.13, 2: 472.92, 3: 506.69, 4: 548.26}}, 2: {"toughness": 22118, "difficulty": {1: 56.7, 2: 61.05, 3: 65.43, 4: 70.78}}, 3: {"toughness": 36254, "difficulty": {1: 22.41, 2: 24.13, 3: 25.85, 4: 27.97}}})
+Enemy(id=20, name="Phalanx", expansion="Painted World of Ariamis", enemyType="regular", numberOfModels=1, health=5, armor=1, resist=1, attacks=[5,0], attackType=["physical", "physical"], nodeAttack=[True, False], dodge=1, move=[0,1], attackRange=[1,0], difficultyTiers={1: {"toughness": 11256, "difficulty": {1: 290.64, 2: 304.95, 3: 319.27, 4: 336.88}}, 2: {"toughness": 24465, "difficulty": {1: 27.08, 2: 28.44, 3: 29.8, 4: 31.47}}, 3: {"toughness": 39922, "difficulty": {1: 15.67, 2: 16.4, 3: 17.12, 4: 18.02}}})
+Enemy(id=21, name="Phalanx Hollow", expansion="Painted World of Ariamis", enemyType="regular", numberOfModels=5, health=1, armor=1, resist=1, attacks=[4,0], attackType=["physical", "physical"], dodge=1, move=[0,1], attackRange=[1,0], difficultyTiers={1: {"toughness": 37610, "difficulty": {1: 34.85, 2: 34.85, 3: 34.85, 4: 34.85}}, 2: {"toughness": 72308, "difficulty": {1: 3.13, 2: 3.13, 3: 3.13, 4: 3.13}}, 3: {"toughness": 100332, "difficulty": {1: 2.07, 2: 2.07, 3: 2.07, 4: 2.07}}})
+Enemy(id=22, name="Plow Scarecrow", expansion="Darkroot", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=1, attacks=[4], attackType=["physical"], dodge=2, move=[2], attackRange=[1], difficultyTiers={1: {"toughness": 37610, "difficulty": {1: 76.82, 2: 76.82, 3: 76.82, 4: 76.82}}, 2: {"toughness": 72308, "difficulty": {1: 7.86, 2: 7.86, 3: 7.86, 4: 7.86}}, 3: {"toughness": 100332, "difficulty": {1: 6.77, 2: 6.77, 3: 6.77, 4: 6.77}}})
+Enemy(id=23, name="Sentinel", expansion="Dark Souls The Board Game", enemyType="regular", numberOfModels=2, health=10, armor=2, resist=1, attacks=[6], attackType=["physical"], nodeAttack=[True], dodge=1, move=[1], attackRange=[1], difficultyTiers={1: {"toughness": 3016, "difficulty": {1: 1229.83, 2: 1324.43, 3: 1419.03, 4: 1535.46}}, 2: {"toughness": 7156, "difficulty": {1: 122.7, 2: 132.14, 3: 141.58, 4: 153.2}}, 3: {"toughness": 13793, "difficulty": {1: 53.33, 2: 57.43, 3: 61.54, 4: 66.59}}})
+Enemy(id=24, name="Shears Scarecrow", expansion="Darkroot", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=1, attacks=[3,3], attackType=["physical", "physical"], nodeAttack=[True, True], dodge=2, move=[1, 1], attackRange=[0, 0], difficultyTiers={1: {"toughness": 37610, "difficulty": {1: 60.06, 2: 64.68, 3: 69.3, 4: 74.99}}, 2: {"toughness": 72308, "difficulty": {1: 5.82, 2: 6.27, 3: 6.72, 4: 7.27}}, 3: {"toughness": 100332, "difficulty": {1: 5.1, 2: 5.49, 3: 5.89, 4: 6.37}}})
+Enemy(id=25, name="Silver Knight Greatbowman", expansion="Dark Souls The Board Game", enemyType="regular", numberOfModels=3, health=1, armor=2, resist=0, attacks=[4], attackType=["physical"], nodeAttack=[True], dodge=1, move=[0], attackRange=[4], difficultyTiers={1: {"toughness": 28144, "difficulty": {1: 65.33, 2: 70.35, 3: 75.38, 4: 81.56}}, 2: {"toughness": 52532, "difficulty": {1: 6.05, 2: 6.51, 3: 6.98, 4: 7.55}}, 3: {"toughness": 82782, "difficulty": {1: 3.51, 2: 3.79, 3: 4.06, 4: 4.39}}})
+Enemy(id=26, name="Silver Knight Spearman", expansion="Explorers", enemyType="regular", numberOfModels=3, health=1, armor=2, resist=1, attacks=[6,0], attackType=["physical", "physical"], dodge=2, move=[0,1], attackRange=[1,0], difficultyTiers={1: {"toughness": 23038, "difficulty": {1: 197.98, 2: 197.98, 3: 197.98, 4: 197.98}}, 2: {"toughness": 47704, "difficulty": {1: 23.17, 2: 23.17, 3: 23.17, 4: 23.17}}, 3: {"toughness": 79970, "difficulty": {1: 16.02, 2: 16.02, 3: 16.02, 4: 16.02}}})
+Enemy(id=27, name="Silver Knight Swordsman", expansion="Dark Souls The Board Game", enemyType="regular", numberOfModels=3, health=1, armor=2, resist=1, attacks=[5], attackType=["physical"], nodeAttack=[True], dodge=2, move=[2], attackRange=[0], difficultyTiers={1: {"toughness": 23038, "difficulty": {1: 183.3, 2: 197.4, 3: 211.5, 4: 228.86}}, 2: {"toughness": 47704, "difficulty": {1: 19.46, 2: 20.96, 3: 22.46, 4: 24.3}}, 3: {"toughness": 79970, "difficulty": {1: 13.68, 2: 14.73, 3: 15.79, 4: 17.08}}})
+Enemy(id=28, name="Skeleton Archer", expansion="Tomb of Giants", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=1, attacks=[4], attackType=["physical"], dodge=1, move=[0], attackRange=[4], difficultyTiers={1: {"toughness": 37610, "difficulty": {1: 48.88, 2: 48.88, 3: 48.88, 4: 48.88}}, 2: {"toughness": 72308, "difficulty": {1: 4.39, 2: 4.39, 3: 4.39, 4: 4.39}}, 3: {"toughness": 100332, "difficulty": {1: 2.9, 2: 2.9, 3: 2.9, 4: 2.9}}})
+Enemy(id=29, name="Skeleton Beast", expansion="Tomb of Giants", enemyType="regular", numberOfModels=1, health=5, armor=2, resist=2, attacks=[4,4,4], attackType=["physical", "physical","physical"], nodeAttack=[True, True,True], dodge=2, move=[0,1, 1], attackRange=[0, 0,0], difficultyTiers={1: {"toughness": 4470, "difficulty": {1: 1356.63, 2: 1460.99, 3: 1565.34, 4: 1693.78}}, 2: {"toughness": 11201, "difficulty": {1: 106.47, 2: 114.66, 3: 122.85, 4: 132.93}}, 3: {"toughness": 21403, "difficulty": {1: 66.58, 2: 71.7, 3: 76.82, 4: 83.13}}})
+Enemy(id=30, name="Skeleton Soldier", expansion="Tomb of Giants", enemyType="regular", numberOfModels=3, health=1, armor=2, resist=1, attacks=[2,2], attackType=["physical", "physical"], nodeAttack=[True,True], attackEffect=[{"bleed",},{"bleed",}], dodge=1, move=[0,1], attackRange=[0,0], difficultyTiers={1: {"toughness": 23038, "difficulty": {1: 111.98, 2: 120.6, 3: 129.21, 4: 139.81}}, 2: {"toughness": 47704, "difficulty": {1: 15.38, 2: 16.56, 3: 17.75, 4: 19.2}}, 3: {"toughness": 79970, "difficulty": {1: 6.13, 2: 6.6, 3: 7.07, 4: 7.65}}})
+Enemy(id=31, name="Snow Rat", expansion="Painted World of Ariamis", enemyType="regular", numberOfModels=2, health=1, armor=0, resist=1, attacks=[3], attackType=["physical"], attackEffect=[{"poison",}], dodge=1, move=[4], attackRange=[0], difficultyTiers={1: {"toughness": 41300, "difficulty": {1: 75.8, 2: 75.8, 3: 75.8, 4: 75.8}}, 2: {"toughness": 81158, "difficulty": {1: 10.07, 2: 10.07, 3: 10.07, 4: 10.07}}, 3: {"toughness": 110362, "difficulty": {1: 6.67, 2: 6.67, 3: 6.67, 4: 6.67}}})
+Enemy(id=32, name="Stone Guardian", expansion="Darkroot", enemyType="regular", numberOfModels=2, health=5, armor=2, resist=3, attacks=[4,4,5], attackType=["physical","physical", "physical"], nodeAttack=[True,True, True], dodge=1, move=[0,1, 0], attackRange=[0,0, 1], difficultyTiers={1: {"toughness": 4140, "difficulty": {1: 1162.95, 2: 1252.4, 3: 1341.86, 4: 1451.96}}, 2: {"toughness": 10143, "difficulty": {1: 90.93, 2: 97.93, 3: 104.92, 4: 113.53}}, 3: {"toughness": 19200, "difficulty": {1: 42.76, 2: 46.04, 3: 49.33, 4: 53.38}}})
+Enemy(id=33, name="Stone Knight", expansion="Darkroot", enemyType="regular", numberOfModels=2, health=5, armor=3, resist=2, attacks=[5], attackType=["magic"], dodge=1, move=[1], attackRange=[0], difficultyTiers={1: {"toughness": 2336, "difficulty": {1: 837.96, 2: 837.96, 3: 837.96, 4: 837.96}}, 2: {"toughness": 4791, "difficulty": {1: 105.32, 2: 105.32, 3: 105.32, 4: 105.32}}, 3: {"toughness": 12702, "difficulty": {1: 28.73, 2: 28.73, 3: 28.73, 4: 28.73}}})
+Enemy(id=34, name="Mimic", expansion="The Sunless City", enemyType="regular", numberOfModels=1, health=5, armor=1, resist=1, attacks=[6], attackType=["physical"], dodge=2, move=[2], attackRange=[1], difficultyTiers={1: {"toughness": 11256, "difficulty": {1: 561.59, 2: 561.59, 3: 561.59, 4: 561.59}}, 2: {"toughness": 24465, "difficulty": {1: 62.61, 2: 62.61, 3: 62.61, 4: 62.61}}, 3: {"toughness": 39922, "difficulty": {1: 44.46, 2: 44.46, 3: 44.46, 4: 44.46}}})
 
 # Invaders
-Enemy(id=35, name="Armorer Dennis", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=0, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficulty={1: 43.78, 2: 45.31, 3: 46.83, 4: 48.71})
-Enemy(id=36, name="Fencer Sharron", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=0, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficulty={1: 54.04, 2: 54.79, 3: 55.54, 4: 51.68})
-Enemy(id=37, name="Invader Brylex", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=0, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficulty={1: 88.22, 2: 91.97, 3: 95.72, 4: 100.33})
-Enemy(id=38, name="Kirk, Knight of Thorns", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=0, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficulty={1: 22.45, 2: 23.24, 3: 24.03, 4: 25.01})
-Enemy(id=39, name="Longfinger Kirk", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=0, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficulty={1: 121.19, 2: 123.95, 3: 126.71, 4: 130.1})
-Enemy(id=40, name="Maldron the Assassin", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=0, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficulty={1: 38.27, 2: 39.22, 3: 40.18, 4: 41.36})
-Enemy(id=41, name="Maneater Mildred", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=0, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficulty={1: 21.79, 2: 23.47, 3: 25.15, 4: 27.21})
-Enemy(id=42, name="Marvelous Chester", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=0, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficulty={1: 132.75, 2: 133.24, 3: 133.73, 4: 134.33})
-Enemy(id=43, name="Melinda the Butcher", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=0, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficulty={1: 16.83, 2: 17.55, 3: 18.27, 4: 19.16})
-Enemy(id=44, name="Oliver the Collector", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=0, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficulty={1: 25.62, 2: 26.48, 3: 27.35, 4: 28.42})
-Enemy(id=45, name="Paladin Leeroy", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=0, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficulty={1: 50.34, 2: 53.61, 3: 56.87, 4: 60.89})
-Enemy(id=46, name="Xanthous King Jeremiah", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=0, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficulty={1: 22.34, 2: 23.77, 3: 25.19, 4: 26.95})
-Enemy(id=47, name="Hungry Mimic", expansion="Explorers", enemyType="invader", numberOfModels=1, health=0, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficulty={1: 32.57, 2: 33.74, 3: 34.91, 4: 36.36})
-Enemy(id=48, name="Voracious Mimic", expansion="Explorers", enemyType="invader", numberOfModels=1, health=0, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficulty={1: 85.86, 2: 88.9, 3: 91.93, 4: 95.67})
+Enemy(id=35, name="Armorer Dennis", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 3038.6, "difficulty": {1: 325.66, 2: 336.77, 3: 347.88, 4: 361.55}}, 2: {"toughness": 6823.2, "difficulty": {1: 36.21, 2: 37.46, 3: 38.71, 4: 40.26}}, 3: {"toughness": 11588.2, "difficulty": {1: 16.66, 2: 17.18, 3: 17.7, 4: 18.34}}})
+Enemy(id=36, name="Fencer Sharron", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 2945.86, "difficulty": {1: 1254.99, 2: 1273.14, 3: 1291.3, 4: 1313.65}}, 2: {"toughness": 6493, "difficulty": {1: 131.99, 2: 133.89, 3: 135.79, 4: 138.13}}, 3: {"toughness": 10967.71, "difficulty": {1: 85.63, 2: 86.89, 3: 88.16, 4: 89.72}}})
+Enemy(id=37, name="Invader Brylex", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 1571, "difficulty": {1: 3057.39, 2: 3186.95, 3: 3316.52, 4: 3475.98}}, 2: {"toughness": 4056, "difficulty": {1: 269.34, 2: 280.69, 3: 292.03, 4: 305.99}}, 3: {"toughness": 8027, "difficulty": {1: 122.28, 2: 127.15, 3: 132.03, 4: 138.03}}})
+Enemy(id=38, name="Kirk, Knight of Thorns", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 5012, "difficulty": {1: 396.07, 2: 409.44, 3: 422.8, 4: 439.26}}, 2: {"toughness": 11049, "difficulty": {1: 41.48, 2: 42.88, 3: 44.29, 4: 46.01}}, 3: {"toughness": 18339, "difficulty": {1: 20.7, 2: 21.33, 3: 21.97, 4: 22.74}}})
+Enemy(id=39, name="Longfinger Kirk", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 1677, "difficulty": {1: 3187.26, 2: 3261.51, 3: 3335.76, 4: 3427.15}}, 2: {"toughness": 4325, "difficulty": {1: 303.57, 2: 310.39, 3: 317.22, 4: 325.62}}, 3: {"toughness": 8703, "difficulty": {1: 165.87, 2: 169.04, 3: 172.22, 4: 176.13}}})
+Enemy(id=40, name="Maldron the Assassin", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 4603, "difficulty": {1: 871.25, 2: 893.26, 3: 915.26, 4: 942.34}}, 2: {"toughness": 10189, "difficulty": {1: 89.16, 2: 91.36, 3: 93.55, 4: 96.25}}, 3: {"toughness": 17212, "difficulty": {1: 64.16, 2: 65.74, 3: 67.31, 4: 69.25}}})
+Enemy(id=41, name="Maneater Mildred", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 3382.8, "difficulty": {1: 739.72, 2: 796.62, 3: 853.53, 4: 923.56}}, 2: {"toughness": 7641.8, "difficulty": {1: 62.8, 2: 67.63, 3: 72.46, 4: 78.4}}, 3: {"toughness": 13132.8, "difficulty": {1: 40.1, 2: 43.18, 3: 46.27, 4: 50.06}}})
+Enemy(id=42, name="Marvelous Chester", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 3110, "difficulty": {1: 2327.24, 2: 2337.92, 3: 2348.6, 4: 2361.75}}, 2: {"toughness": 7095, "difficulty": {1: 248.23, 2: 249.37, 3: 250.5, 4: 251.89}}, 3: {"toughness": 11729, "difficulty": {1: 145.33, 2: 146.24, 3: 147.14, 4: 148.25}}})
+Enemy(id=43, name="Melinda the Butcher", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 4940.8, "difficulty": {1: 377.86, 2: 393.81, 3: 409.76, 4: 429.39}}, 2: {"toughness": 10224.2, "difficulty": {1: 33.38, 2: 34.89, 3: 36.39, 4: 38.24}}, 3: {"toughness": 15835.4, "difficulty": {1: 23.04, 2: 24.07, 3: 25.1, 4: 26.36}}})
+Enemy(id=44, name="Oliver the Collector", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 4210.14, "difficulty": {1: 665.69, 2: 689.38, 3: 713.07, 4: 742.23}}, 2: {"toughness": 8975.29, "difficulty": {1: 61.24, 2: 63.34, 3: 65.45, 4: 68.04}}, 3: {"toughness": 15400.29, "difficulty": {1: 35.48, 2: 36.53, 3: 37.58, 4: 38.87}}})
+Enemy(id=45, name="Paladin Leeroy", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 1734.6, "difficulty": {1: 1599.32, 2: 1705.2, 3: 1811.07, 4: 1941.38}}, 2: {"toughness": 4123.4, "difficulty": {1: 153.87, 2: 163.94, 3: 174.01, 4: 186.41}}, 3: {"toughness": 8476, "difficulty": {1: 76.14, 2: 80.84, 3: 85.54, 4: 91.32}}})
+Enemy(id=46, name="Xanthous King Jeremiah", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 6747, "difficulty": {1: 441.83, 2: 469.79, 3: 497.76, 4: 532.18}}, 2: {"toughness": 14451, "difficulty": {1: 49.74, 2: 52.88, 3: 56.03, 4: 59.9}}, 3: {"toughness": 21989, "difficulty": {1: 28.7, 2: 30.47, 3: 32.23, 4: 34.41}}})
+Enemy(id=47, name="Hungry Mimic", expansion="Explorers", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 3348, "difficulty": {1: 781.68, 2: 810.06, 3: 838.44, 4: 873.37}}, 2: {"toughness": 7510, "difficulty": {1: 75.72, 2: 78.45, 3: 81.18, 4: 84.54}}, 3: {"toughness": 12769, "difficulty": {1: 49.11, 2: 50.79, 3: 52.48, 4: 54.55}}})
+Enemy(id=48, name="Voracious Mimic", expansion="Explorers", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 1315, "difficulty": {1: 2821.53, 2: 2922.2, 3: 3022.87, 4: 3146.78}}, 2: {"toughness": 3449, "difficulty": {1: 258.77, 2: 267.96, 3: 277.14, 4: 288.44}}, 3: {"toughness": 6908, "difficulty": {1: 140.3, 2: 145.01, 3: 149.72, 4: 155.51}}})
 
 # Enemy(name="Hungry Mimic - Raking Slash", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[4], attackType=["physical"], nodeAttack=[True], dodge=1, move=[1], attackRange=[1])
 # Enemy(name="Hungry Mimic - Heavy Punch", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[5], attackType=["physical"], dodge=2, move=[1], attackRange=[1])
@@ -314,32 +379,32 @@ Enemy(id=48, name="Voracious Mimic", expansion="Explorers", enemyType="invader",
 # Enemy(name="Smelter Demon (heatup) - Flaming Overhead Chop", weakArcs=2, expansion="Iron Keep", enemyType="main boss", numberOfModels=1, health=22, armor=4, resist=3, attacks=[6], attackType=["magic"], nodeAttack=[True], attackEffect=[{"stagger",}], dodge=2, move=[1], attackRange=[2])
 # Enemy(name="Smelter Demon (heatup) - Flame Wave", expansion="Iron Keep", enemyType="main boss", numberOfModels=1, health=22, armor=4, resist=3, attacks=[5], attackType=["magic"], nodesAttacked=[6], dodge=2, move=[0], attackRange=[4])
 # Enemy(name="Smelter Demon (heatup) - Flaming Lunging Strike", expansion="Iron Keep", enemyType="main boss", numberOfModels=1, health=22, armor=4, resist=3, attacks=[0,0,7], attackType=["magic", "magic", "magic"], dodge=1, move=[-1,2,0], attackRange=[2,2,2])
-# Enemy(name="The Pursuer - Wide Blade Swing", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[4], attackType=["physical"], nodesAttacked=[10], dodge=0, move=[1], attackRange=[1])
-# Enemy(name="The Pursuer - Wide Blade Swing", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[4], attackType=["physical"], nodesAttacked=[10], dodge=0, move=[1], attackRange=[1])
-# Enemy(name="The Pursuer - Wide Blade Swing", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[4], attackType=["physical"], nodesAttacked=[10], dodge=0, move=[1], attackRange=[1])
-# Enemy(name="The Pursuer - Stabbing Strike", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], dodge=1, move=[1], attackRange=[1])
-# Enemy(name="The Pursuer - Stabbing Strike", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], dodge=1, move=[1], attackRange=[1])
-# Enemy(name="The Pursuer - Rising Blade Swing", weakArcs=2, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], nodesAttacked=[4], dodge=2, move=[0], attackRange=[1])
-# Enemy(name="The Pursuer - Overhead Cleave", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], nodesAttacked=[4], dodge=1, move=[2], attackRange=[1])
-# Enemy(name="The Pursuer - Cursed Impale", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["magic"], dodge=1, move=[1], attackRange=[1])
-# Enemy(name="The Pursuer - Back Dash", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[0], attackType=["physical"], dodge=0, move=[-2], attackRange=[2])
-# Enemy(name="The Pursuer - Forward Dash", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[0], attackType=["physical"], dodge=0, move=[2], attackRange=[0])
-# Enemy(name="The Pursuer - Dark Magic", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[4], attackType=["magic"], nodeAttack=[True], dodge=2, move=[0], attackRange=[4])
-# Enemy(name="The Pursuer - Shield Bash", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[4], attackType=["physical"], nodesAttacked=[4], dodge=2, move=[1], attackRange=[1])
-# Enemy(name="The Pursuer - Shield Smash", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[6], attackType=["physical"], dodge=1, move=[1], attackRange=[1])
-# Enemy(name="The Pursuer (heatup) - Wide Blade Swing (heat up)", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], nodesAttacked=[10], dodge=0, move=[1], attackRange=[1])
-# Enemy(name="The Pursuer (heatup) - Wide Blade Swing (heat up)", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], nodesAttacked=[10], dodge=0, move=[1], attackRange=[1])
-# Enemy(name="The Pursuer (heatup) - Wide Blade Swing (heat up)", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], nodesAttacked=[10], dodge=0, move=[1], attackRange=[1])
-# Enemy(name="The Pursuer (heatup) - Stabbing Strike (heat up)", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[6], attackType=["physical"], dodge=1, move=[1], attackRange=[1])
-# Enemy(name="The Pursuer (heatup) - Stabbing Strike (heat up)", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[6], attackType=["physical"], dodge=1, move=[1], attackRange=[1])
-# Enemy(name="The Pursuer (heatup) - Rising Blade Swing (heat up)", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[6], attackType=["physical"], nodesAttacked=[4], dodge=2, move=[0], attackRange=[1])
-# Enemy(name="The Pursuer (heatup) - Overhead Cleave (heat up)", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[6], attackType=["physical"], nodesAttacked=[4], dodge=1, move=[2], attackRange=[1])
-# Enemy(name="The Pursuer (heatup) - Cursed Impale (heat up)", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[6], attackType=["magic"], dodge=1, move=[1], attackRange=[1])
-# Enemy(name="The Pursuer (heatup) - Back Dash (heat up)", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[0], attackType=["physical"], dodge=0, move=[-2], attackRange=[2])
-# Enemy(name="The Pursuer (heatup) - Forward Dash (heat up)", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[0], attackType=["physical"], dodge=0, move=[2], attackRange=[0])
-# Enemy(name="The Pursuer (heatup) - Dark Magic (heat up)", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["magic"], nodeAttack=[True], dodge=2, move=[0], attackRange=[4])
-# Enemy(name="The Pursuer (heatup) - Shield Bash (heat up)", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], nodesAttacked=[4], dodge=2, move=[1], attackRange=[1])
-# Enemy(name="The Pursuer (heatup) - Shield Smash (heat up)", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[7], attackType=["physical"], dodge=1, move=[1], attackRange=[1])
+# Enemy(name="The Pursuer - Wide Blade Swing", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[4], attackType=["physical"], nodesAttacked=[10], dodge=0, move=[1], attackRange=[1])
+# Enemy(name="The Pursuer - Wide Blade Swing", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[4], attackType=["physical"], nodesAttacked=[10], dodge=0, move=[1], attackRange=[1])
+# Enemy(name="The Pursuer - Wide Blade Swing", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[4], attackType=["physical"], nodesAttacked=[10], dodge=0, move=[1], attackRange=[1])
+# Enemy(name="The Pursuer - Stabbing Strike", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], dodge=1, move=[1], attackRange=[1])
+# Enemy(name="The Pursuer - Stabbing Strike", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], dodge=1, move=[1], attackRange=[1])
+# Enemy(name="The Pursuer - Rising Blade Swing", skip=True, weakArcs=2, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], nodesAttacked=[4], dodge=2, move=[0], attackRange=[1])
+# Enemy(name="The Pursuer - Overhead Cleave", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], nodesAttacked=[4], dodge=1, move=[2], attackRange=[1])
+# Enemy(name="The Pursuer - Cursed Impale", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["magic"], dodge=1, move=[1], attackRange=[1])
+# Enemy(name="The Pursuer - Back Dash", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[0], attackType=["physical"], dodge=0, move=[-2], attackRange=[2])
+# Enemy(name="The Pursuer - Forward Dash", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[0], attackType=["physical"], dodge=0, move=[2], attackRange=[0])
+# Enemy(name="The Pursuer - Dark Magic", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[4], attackType=["magic"], nodeAttack=[True], dodge=2, move=[0], attackRange=[4])
+# Enemy(name="The Pursuer - Shield Bash", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[4], attackType=["physical"], nodesAttacked=[4], dodge=2, move=[1], attackRange=[1])
+# Enemy(name="The Pursuer - Shield Smash", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[6], attackType=["physical"], dodge=1, move=[1], attackRange=[1])
+# Enemy(name="The Pursuer (heatup) - Wide Blade Swing (heat up)", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], nodesAttacked=[10], dodge=0, move=[1], attackRange=[1])
+# Enemy(name="The Pursuer (heatup) - Wide Blade Swing (heat up)", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], nodesAttacked=[10], dodge=0, move=[1], attackRange=[1])
+# Enemy(name="The Pursuer (heatup) - Wide Blade Swing (heat up)", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], nodesAttacked=[10], dodge=0, move=[1], attackRange=[1])
+# Enemy(name="The Pursuer (heatup) - Stabbing Strike (heat up)", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[6], attackType=["physical"], dodge=1, move=[1], attackRange=[1])
+# Enemy(name="The Pursuer (heatup) - Stabbing Strike (heat up)", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[6], attackType=["physical"], dodge=1, move=[1], attackRange=[1])
+# Enemy(name="The Pursuer (heatup) - Rising Blade Swing (heat up)", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[6], attackType=["physical"], nodesAttacked=[4], dodge=2, move=[0], attackRange=[1])
+# Enemy(name="The Pursuer (heatup) - Overhead Cleave (heat up)", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[6], attackType=["physical"], nodesAttacked=[4], dodge=1, move=[2], attackRange=[1])
+# Enemy(name="The Pursuer (heatup) - Cursed Impale (heat up)", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[6], attackType=["magic"], dodge=1, move=[1], attackRange=[1])
+# Enemy(name="The Pursuer (heatup) - Back Dash (heat up)", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[0], attackType=["physical"], dodge=0, move=[-2], attackRange=[2])
+# Enemy(name="The Pursuer (heatup) - Forward Dash (heat up)", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[0], attackType=["physical"], dodge=0, move=[2], attackRange=[0])
+# Enemy(name="The Pursuer (heatup) - Dark Magic (heat up)", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["magic"], nodeAttack=[True], dodge=2, move=[0], attackRange=[4])
+# Enemy(name="The Pursuer (heatup) - Shield Bash (heat up)", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], nodesAttacked=[4], dodge=2, move=[1], attackRange=[1])
+# Enemy(name="The Pursuer (heatup) - Shield Smash (heat up)", skip=True, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[7], attackType=["physical"], dodge=1, move=[1], attackRange=[1])
 # Enemy(name="Crossbreed Priscilla - Icy Blast", expansion="Painted World of Ariamis", enemyType="main boss", numberOfModels=1, health=40, armor=2, resist=1, attacks=[5,0], attackType=["physical", "physical"], nodeAttack=[True, False], dodge=2, move=[0,1], attackRange=[2,2])
 # Enemy(name="Crossbreed Priscilla - Flanking Slash", expansion="Painted World of Ariamis", enemyType="main boss", numberOfModels=1, health=40, armor=2, resist=1, attacks=[5], attackType=["physical"], attackEffect=[{"bleed",}], nodesAttacked=[10], dodge=1, move=[0], attackRange=[1])
 # Enemy(name="Crossbreed Priscilla - Scything Withdrawal", expansion="Painted World of Ariamis", enemyType="main boss", numberOfModels=1, health=40, armor=2, resist=1, attacks=[5,0], attackType=["physical", "physical"], attackEffect=[{"bleed",}, set()], nodesAttacked=[10,0], dodge=2, move=[0,-1], attackRange=[1,1])
@@ -586,6 +651,14 @@ Enemy(id=48, name="Voracious Mimic", expansion="Explorers", enemyType="invader",
 # Enemy(name="Executioner's Chariot - Rearing Charge", expansion="Executioner Chariot", enemyType="mega boss", numberOfModels=1, health=24, armor=3, resist=3, attacks=[4,4,5,5], attackType=["physical", "physical", "physical", "physical"], nodeAttack=[True, True, True, True], move=[0,-1,1,1], attackRange=[0,0,0,0], weakArcs=2, dodge=2)
 # Enemy(name="Executioner's Chariot - Back Kick", expansion="Executioner Chariot", enemyType="mega boss", numberOfModels=1, health=24, armor=3, resist=3, attacks=[6,0], attackType=["physical", "physical"], nodesAttacked=[4,0], attackEffect=[{"stagger",}, set()], move=[0,1], attackRange=[1,1], dodge=3)
 # Enemy(name="Executioner's Chariot (heatup) - Merciless Charge", expansion="Executioner Chariot", enemyType="mega boss", numberOfModels=1, health=24, armor=3, resist=3, attacks=[6,6,6,6,6,6,6], attackType=["physical", "physical", "physical", "physical", "physical", "physical", "physical"], nodeAttack=[True,True,True,True,True,True,True], move=[0,1,1,1,1,1,1], attackRange=[0,0,0,0,0,0,0], dodge=1)
+
+# pursuerCombos = combinations([p for p in pursuerStuff if "heatup" not in p.name], 2)
+# pursuerCombosHeatup = combinations([p for p in pursuerStuff if "heatup" in p.name], 2)
+# for c in pursuerCombos:
+#     Enemy(c[0].name + " & " + c[1].name.replace("The Pursuer ", ""), expansion=c[0].expansion, enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=c[0].attacks + c[1].attacks, attackType=c[0].attackType + c[1].attackType, nodesAttacked=c[0].nodesAttacked + c[1].nodesAttacked, move=c[0].move + c[1].move, attackRange=c[0].attackRange + c[1].attackRange, dodge=c[0].dodge + c[1].dodge)
+    
+# for c in pursuerCombosHeatup:
+#     Enemy(c[0].name + " & " + c[1].name.replace("The Pursuer (heatup) ", ""), expansion=c[0].expansion, enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=c[0].attacks + c[1].attacks, attackType=c[0].attackType + c[1].attackType, nodesAttacked=c[0].nodesAttacked + c[1].nodesAttacked, move=c[0].move + c[1].move, attackRange=c[0].attackRange + c[1].attackRange, dodge=c[0].dodge + c[1].dodge)
 
 # vordtProduct = []
 # for v in [v for v in vordtStuff if "move" in v.name]:
