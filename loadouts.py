@@ -28,6 +28,8 @@ dodgeMod = {
     3: {}
 }
 
+loadoutLookup = {1: {}, 2: {}, 3: {}}
+x=0
 for tier in range(1, 4):
     loadoutsCombos = chain(
         product(armorTiers[tier], product([h for h in handItemTiers[tier] if h.twoHanded], [h for h in handItemTiers[tier] if h.canUseWithTwoHanded])),
@@ -46,6 +48,16 @@ for tier in range(1, 4):
             "dodgeBonus": l[0].dodgeBonus,
             "immunities": l[0].immunities | l[1][0].immunities | l[1][1].immunities
         })
+
+        block = sum([means[die] for die in l[0].block + l[1][0].block + l[1][1].block]) + sum([l[0].blockMod, l[1][0].blockMod, l[1][1].blockMod])
+        resist = sum([means[die] for die in l[0].resist + l[1][0].resist + l[1][1].resist]) + sum([l[0].resistMod, l[1][0].resistMod, l[1][1].resistMod])
+        dodge = (0,) if not all([l[0].canDodge, l[1][0].canDodge, l[1][1].canDodge]) else tuple(l[0].dodge + l[1][0].dodge + l[1][1].dodge)
+
+        if tuple([block, resist, dodge]) in loadoutLookup[tier]:
+            loadoutLookup[tier][tuple([block, resist, dodge])] += 1
+        else:
+            loadoutLookup[tier][tuple([block, resist, dodge])] = 1
+            x += 1
 
     # Overall dodge modifier for the following dodge difficulties.
     # Used for enemies that inflict Stagger or Frostbite.

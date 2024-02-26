@@ -2,7 +2,7 @@ from json import load, dump
 from os import path
 from enemies import enemies
 from attacks import attackTiers, bleedTrigger, blackKnight
-from loadouts import loadouts, dodgeMod, expectedBlock3Plus
+from loadouts import loadoutLookup, dodgeMod, expectedBlock3Plus
 from math import ceil
 from statistics import mean
 
@@ -58,8 +58,7 @@ try:
         # Second pass to get the number of deaths the attacks cause.
         print("Defense")
         for i, enemy in enumerate(enemies):
-            if i % 50 == 0 and i > 0:
-                print("\t" + str((i/len(enemies)*100))[:5] + "%")
+            print("\t" + str((i/len(enemies)*100))[:5] + "%", end="\r")
             if enemy.skip:
                 continue
 
@@ -85,7 +84,9 @@ try:
             # Abstract it out based on the tier.
             extraHealthGained = 0.0
             if "Maneater Mildred" in enemy.name:
-                block = mean([l["block"] for l in loadouts[tier]])
+                expandedBlock = [[l[0]] * loadoutLookup[tier][l] for l in loadoutLookup[tier]]
+                # Flatten it to a single list then find the mean.
+                block = mean([a for b in expandedBlock for a in b])
 
                 for i, a in enumerate(enemy.attacks[:int(len(enemy.attacks) / (2 if enemy.id else 1))]):
                     if a == 0:
