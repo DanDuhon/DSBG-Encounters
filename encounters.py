@@ -144,8 +144,8 @@ try:
         #     skip = False
         # if skip:
         #     continue
-        if ei % 2 == 1:
-            continue
+        # if ei % 2 == 0:
+        #     continue
         encounter = enc[e]
 
         for characterCount in range(1, 5):
@@ -392,7 +392,7 @@ try:
                     # We're also going to keep the same distribution of 1 health and 5+ health enemies.
                     # Otherwise this just takes a lot longer.
                     shuffle(shuffledEnemies)
-                    while sorted([enemyIds[enemy].health for enemy in shuffledEnemies[:enemyCount]], key=lambda x: enemyIds[x].health, reverse=True) != sorted(enemies, key=lambda x: enemyIds[x].health, reverse=True):
+                    while sorted([enemyIds[enemy].health >= 5 for enemy in shuffledEnemies[:enemyCount]], key=lambda x: x) != sorted([enemyIds[enemy].health >= 5 for enemy in enemies], key=lambda x: x):
                         shuffle(shuffledEnemies)
 
                     # Grab the first 50,000 combinations.

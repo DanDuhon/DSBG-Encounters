@@ -122,8 +122,6 @@ try:
         for x, loadout in enumerate(loadoutLookup[tier]):
             print(str((x/len(loadoutLookup[tier]))*100)[:6] + "%", end="\r")
             for enemy in enemies:
-                if "(" in enemy.name:
-                    pass
                 if enemy.skip:
                     continue
                 multiplier = loadoutLookup[tier][loadout]
@@ -149,9 +147,9 @@ try:
                     totalAttacks += multiplier
                     reach = reachMod["Executioner's Chariot" if "Executioner's Chariot" in enemy.name else "Old Iron King" if "Old Iron King" in enemy.name else enemy.enemyType][max([0, min([4, sum(enemy.move[:i+1]) + sum(enemy.attackRange[:i+1]) - (1 if enemy.windup else 0)])])]
                     if type(enemy.dodge) == int:
-                        dodge = 1 if loadout[2] == 0 else (1 - (sum([1 for do in product(*loadout[2]) if sum(do) >= enemy.dodge]) / len(list(product(*loadout[2])))))
+                        dodge = 1 if loadout[2] == (0,) else (1 - (sum([1 for do in product(*loadout[2]) if sum(do) >= enemy.dodge]) / len(list(product(*loadout[2])))))
                     else:
-                        dodge = 1 if loadout[2] == 0 else (1 - (sum([1 for do in product(*loadout[2]) if sum(do) >= enemy.dodge[i]]) / len(list(product(*loadout[2])))))
+                        dodge = 1 if loadout[2] == (0,) else (1 - (sum([1 for do in product(*loadout[2]) if sum(do) >= enemy.dodge[i]]) / len(list(product(*loadout[2])))))
 
                     # This is the effect of Calamity, see below for more details.
                     if "Black Dragon Kalameet" in enemy.name:
@@ -264,25 +262,52 @@ try:
         # This is the % that bleed will be procced.  The attack has
         # to be made (reach), and then do damage.
         # Only regular enemies count for this.
-        bleedProc = {
-            "regular": (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if enemy.enemyType == "regular"])) * meanReachMod,
-            "Kirk, Knight of Thorns": (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Kirk, Knight of Thorns" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Kirk, Knight of Thorns" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod,
-            "Longfinger Kirk": (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Longfinger Kirk" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Longfinger Kirk" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod,
-            "Marvelous Chester": (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Marvelous Chester" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Marvelous Chester" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod,
-            "Xanthous King Jeremiah": (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Xanthous King Jeremiah" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Xanthous King Jeremiah" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod,
-            "Crossbreed Priscilla1": (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Crossbreed Priscilla" in enemy.name]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Crossbreed Priscilla" in enemy.name])) * 0.5408653846 * 1, # Mean reach and arc attack mods for Priscilla only
-            "Crossbreed Priscilla2": (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Crossbreed Priscilla" in enemy.name]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Crossbreed Priscilla" in enemy.name])) * 0.5408653846 * 1.596153846, # Mean reach and arc attack mods for Priscilla only
-            "Crossbreed Priscilla3": (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Crossbreed Priscilla" in enemy.name]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Crossbreed Priscilla" in enemy.name])) * 0.5408653846 * 2.59375, # Mean reach and arc attack mods for Priscilla only
-            "Crossbreed Priscilla4": (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Crossbreed Priscilla" in enemy.name]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Crossbreed Priscilla" in enemy.name])) * 0.5408653846 * 3.992788462 # Mean reach and arc attack mods for Priscilla only
-            }
+        bleedProc = {}
+
+        if "regular" in set([enemy.enemyType for enemy in enemies]):
+            bleedProc["regular"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if enemy.enemyType == "regular"])) * meanReachMod
+        if "Armorer Dennis" in set([enemy.name for enemy in enemies]):
+            bleedProc["Armorer Dennis"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Armorer Dennis" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Armorer Dennis" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod
+        if "Fencer Sharron" in set([enemy.name for enemy in enemies]):
+            bleedProc["Fencer Sharron"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Fencer Sharron" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Fencer Sharron" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod
+        if "Invader Brylex" in set([enemy.name for enemy in enemies]):
+            bleedProc["Invader Brylex"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Invader Brylex" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Invader Brylex" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod
+        if "Kirk, Knight of Thorns" in set([enemy.name for enemy in enemies]):
+            bleedProc["Kirk, Knight of Thorns"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Kirk, Knight of Thorns" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Kirk, Knight of Thorns" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod
+        if "Longfinger Kirk" in set([enemy.name for enemy in enemies]):
+            bleedProc["Longfinger Kirk"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Longfinger Kirk" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Longfinger Kirk" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod
+        if "Maldron the Assassin" in set([enemy.name for enemy in enemies]):
+            bleedProc["Maldron the Assassin"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Maldron the Assassin" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Maldron the Assassin" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod
+        if "Maneater Mildred" in set([enemy.name for enemy in enemies]):
+            bleedProc["Maneater Mildred"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Maneater Mildred" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Maneater Mildred" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod
+        if "Marvelous Chester" in set([enemy.name for enemy in enemies]):
+            bleedProc["Marvelous Chester"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Marvelous Chester" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Marvelous Chester" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod
+        if "Melinda the Butcher" in set([enemy.name for enemy in enemies]):
+            bleedProc["Melinda the Butcher"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Melinda the Butcher" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Melinda the Butcher" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod
+        if "Oliver the Collector" in set([enemy.name for enemy in enemies]):
+            bleedProc["Oliver the Collector"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Oliver the Collector" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Oliver the Collector" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod
+        if "Paladin Leeroy" in set([enemy.name for enemy in enemies]):
+            bleedProc["Paladin Leeroy"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Paladin Leeroy" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Paladin Leeroy" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod
+        if "Xanthous King Jeremiah" in set([enemy.name for enemy in enemies]):
+            bleedProc["Xanthous King Jeremiah"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Xanthous King Jeremiah" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Xanthous King Jeremiah" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod
+        if "Hungry Mimic" in set([enemy.name for enemy in enemies]):
+            bleedProc["Hungry Mimic"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Hungry Mimic" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Hungry Mimic" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod
+        if "Voracious Mimic" in set([enemy.name for enemy in enemies]):
+            bleedProc["Voracious Mimic"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Voracious Mimic" in enemy.name or enemy.enemyType == "regular"]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Voracious Mimic" in enemy.name or enemy.enemyType == "regular"])) * meanReachMod
+        if "Crossbreed Priscilla" in set([enemy.name for enemy in enemies]):
+            bleedProc["Crossbreed Priscilla1"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Crossbreed Priscilla" in enemy.name]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Crossbreed Priscilla" in enemy.name])) * 0.5408653846 * 1, # Mean reach and arc attack mods for Priscilla only
+            bleedProc["Crossbreed Priscilla2"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Crossbreed Priscilla" in enemy.name]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Crossbreed Priscilla" in enemy.name])) * 0.5408653846 * 1.596153846 # Mean reach and arc attack mods for Priscilla only
+            bleedProc["Crossbreed Priscilla3"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Crossbreed Priscilla" in enemy.name]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Crossbreed Priscilla" in enemy.name])) * 0.5408653846 * 2.59375 # Mean reach and arc attack mods for Priscilla only
+            bleedProc["Crossbreed Priscilla4"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Crossbreed Priscilla" in enemy.name]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Crossbreed Priscilla" in enemy.name])) * 0.5408653846 * 3.992788462 # Mean reach and arc attack mods for Priscilla only
 
         for enemy in enemies:
             with open(baseFolder + "\\enemies\\" + enemy.name + ".json", "r") as eLoad:
                 e = load(eLoad)
-            enemy.damageDone1[tier] += enemy.bleedDamage1[tier] * bleedProc.get("Kirk, Knight of Thorns" if "Kirk, Knight of Thorns" in enemy.name else "Longfinger Kirk" if "Longfinger Kirk" in enemy.name else "Marvelous Chester" if "Marvelous Chester" in enemy.name else "Xanthous King Jeremiah" if "Xanthous King Jeremiah" in enemy.name else "Crossbreed Priscilla1" if "Crossbreed Priscilla" in enemy.name else "regular", 0)
-            enemy.damageDone2[tier] += enemy.bleedDamage2[tier] * bleedProc.get("Kirk, Knight of Thorns" if "Kirk, Knight of Thorns" in enemy.name else "Longfinger Kirk" if "Longfinger Kirk" in enemy.name else "Marvelous Chester" if "Marvelous Chester" in enemy.name else "Xanthous King Jeremiah" if "Xanthous King Jeremiah" in enemy.name else "Crossbreed Priscilla2" if "Crossbreed Priscilla" in enemy.name else "regular", 0)
-            enemy.damageDone3[tier] += enemy.bleedDamage3[tier] * bleedProc.get("Kirk, Knight of Thorns" if "Kirk, Knight of Thorns" in enemy.name else "Longfinger Kirk" if "Longfinger Kirk" in enemy.name else "Marvelous Chester" if "Marvelous Chester" in enemy.name else "Xanthous King Jeremiah" if "Xanthous King Jeremiah" in enemy.name else "Crossbreed Priscilla3" if "Crossbreed Priscilla" in enemy.name else "regular", 0)
-            enemy.damageDone4[tier] += enemy.bleedDamage4[tier] * bleedProc.get("Kirk, Knight of Thorns" if "Kirk, Knight of Thorns" in enemy.name else "Longfinger Kirk" if "Longfinger Kirk" in enemy.name else "Marvelous Chester" if "Marvelous Chester" in enemy.name else "Xanthous King Jeremiah" if "Xanthous King Jeremiah" in enemy.name else "Crossbreed Priscilla4" if "Crossbreed Priscilla" in enemy.name else "regular", 0)
+            enemyName = enemy.name[:enemy.name.index(" -")] if " -" in enemy.name else "regular"
+            enemy.damageDone1[tier] += enemy.bleedDamage1[tier] * bleedProc[enemyName]
+            enemy.damageDone2[tier] += enemy.bleedDamage2[tier] * bleedProc[enemyName]
+            enemy.damageDone3[tier] += enemy.bleedDamage3[tier] * bleedProc[enemyName]
+            enemy.damageDone4[tier] += enemy.bleedDamage4[tier] * bleedProc[enemyName]
 
             with open(baseFolder + "\\enemies\\" + enemy.name + ".json", "w") as enemyFile:
                 dump({"deaths": e["deaths"], "totalAttacks": enemy.totalAttacks, "damagingAttacks": enemy.damagingAttacks, "damageDone": {1: enemy.damageDone1, 2: enemy.damageDone2, 3: enemy.damageDone3, 4: enemy.damageDone4}, "bleedDamage": {1: enemy.bleedDamage1, 2: enemy.bleedDamage2, 3: enemy.bleedDamage3, 4: enemy.bleedDamage4}}, enemyFile)

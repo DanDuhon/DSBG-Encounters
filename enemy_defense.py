@@ -5,6 +5,7 @@ from attacks import attackTiers, bleedTrigger, blackKnight
 from loadouts import loadoutLookup, dodgeMod, expectedBlock3Plus
 from math import ceil
 from statistics import mean
+from pathlib import Path
 
 
 baseFolder = path.dirname(__file__)
@@ -71,7 +72,7 @@ try:
                 for i, a in enumerate(enemy.attacks[:int(len(enemy.attacks) / (2 if enemy.id else 1))]):
                     if a == 0 or not {"stagger", "frostbite"} & enemy.attackEffect[i]:
                         continue
-                    nums.append(round(reachMod[enemy.move[i] + enemy.attackRange[i]] * den, 0))
+                    nums.append(round(reachMod[min([4, enemy.move[i] + enemy.attackRange[i]])] * den, 0))
 
                 stage = 1
                 for n in nums:
@@ -148,11 +149,12 @@ try:
                                 currentHealth = enemy.health
 
     for enemy in enemies:
+        Path(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.index(" (")] + "\\" if enemy.modified else "")).mkdir(exist_ok=True)
         # with open(baseFolder + "\\enemies\\" + enemy.name + ".json", "r") as eLoad:
         #     e = load(eLoad)
         # with open(baseFolder + "\\enemies\\" + enemy.name + ".json", "w") as eDump:
         #     dump({"deaths": enemy.deaths, "totalAttacks": e["totalAttacks"], "damagingAttacks": e["damagingAttacks"], "damageDone": e["damageDone"], "bleedDamage": e["bleedDamage"]}, eDump)
-        with open(baseFolder + "\\enemies\\" + enemy.name + ".json", "w") as eDump:
+        with open(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.index(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json", "w") as eDump:
             dump({"deaths": enemy.deaths, "totalAttacks": {1: 0, 2: 0, 3: 0}, "damagingAttacks": {1: 0, 2: 0, 3: 0}, "damageDone": {1: {1: 0, 2: 0, 3: 0}, 2: {1: 0, 2: 0, 3: 0}, 3: {1: 0, 2: 0, 3: 0}, 4: {1: 0, 2: 0, 3: 0}}, "bleedDamage": {1: {1: 0, 2: 0, 3: 0}, 2: {1: 0, 2: 0, 3: 0}, 3: {1: 0, 2: 0, 3: 0}, 4: {1: 0, 2: 0, 3: 0}}}, eDump)
 except Exception as ex:
     input(ex)

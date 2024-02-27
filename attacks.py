@@ -26,21 +26,27 @@ bleedTrigger = {
         1: [],
         2: [],
         3: [],
-        4: []
+        4: [],
+        5: [],
+        6: []
     },
     2: {
         0: [],
         1: [],
         2: [],
         3: [],
-        4: []
+        4: [],
+        5: [],
+        6: []
     },
     3: {
         0: [],
         1: [],
         2: [],
         3: [],
-        4: []
+        4: [],
+        5: [],
+        6: []
     }
 }
 
@@ -80,16 +86,18 @@ class Attack:
             1: 0,
             2: 0,
             3: 0,
-            4: 0
+            4: 0,
+            5: 0,
+            6: 0
         }
-        for x in range(5): # defense
+        for x in range(7): # defense
             for attack in self.damage:
                 for die in attack:
                     self.expectedDamage[x] += means[die]
                 self.expectedDamage[x] = self.expectedDamage[x] + self.damageMod - (x if not self.ignoreDefense else 0)
             self.expectedDamage[x] = max([0, self.expectedDamage[x] + (1 if poison else 0)])
 
-        for x in range(5): # defense
+        for x in range(7): # defense
             for attack in self.damage:
                 combos = list(product(*attack))
                 bleedTrigger[self.tier][x].append((sum([1 for c in combos if sum(c) > x]) / len([c for c in combos]) if len([c for c in combos]) > 0 else 0))
