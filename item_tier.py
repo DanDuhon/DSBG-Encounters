@@ -96,7 +96,6 @@ itemTier = {
     "Halberd": 2,
     "Havel's Armour": 2,
     "Homing Crystal Soulmass": 2,
-    "Hornet Ring": 2,
     "Lothric Knight Greatsword": 2,
     "Magic Barrier": 2,
     "Magic Shield": 2,

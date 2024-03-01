@@ -7,7 +7,7 @@ from enemies import enemies
 baseFolder = path.dirname(__file__)
 
 for enemy in enemies:
-    with open(path.join(baseFolder + "\\enemies", enemy.name + ".json")) as efd:
+    with open(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.index(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json") as efd:
         ed = load(efd)
     enemy.deaths = ed["deaths"]
     enemy.damageDone = {1: {1: 0, 2: 0, 3: 0}, 2: {1: 0, 2: 0, 3: 0}, 3: {1: 0, 2: 0, 3: 0}, 4: {1: 0, 2: 0, 3: 0}}
@@ -20,7 +20,7 @@ for enemy in enemies:
             or enemy.name == "Phalanx" and "Hollow" in enemyFile):
             continue
         
-        with open(path.join(baseFolder + "\\enemies", enemyFile)) as ef:
+        with open(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.index(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json") as ef:
             e = load(ef)
         for tier in range(1, 4):
             enemy.damageDone[1][tier] += e["damageDone"]["1"][str(tier)]

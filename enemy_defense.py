@@ -26,8 +26,6 @@ try:
     # First pass to get how many times to apply each attack.
     for tier in range(1, 4):
         for enemy in enemies:
-            if enemy.skip:
-                continue
             for attack in attackTiers[tier]:
                 damage = attack.expectedDamage[enemy.resist if attack.magic else enemy.armor]
 
@@ -60,8 +58,6 @@ try:
         print("Defense")
         for i, enemy in enumerate(enemies):
             print("\t" + str((i/len(enemies)*100))[:5] + "%", end="\r")
-            if enemy.skip:
-                continue
 
             extraStaminaSpent = 0
             if any([{"stagger", "frostbite"} & e for e in enemy.attackEffect]):
