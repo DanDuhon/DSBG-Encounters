@@ -118,7 +118,7 @@ def arc_damage_mod(nodesAttacked, megaBoss):
 meanReachMod = 0.7714069147635578
 
 try:
-    tier = 3
+    tier = 1
 
     # Calculate enemy offense.
     print("Enemy offense tier " + str(tier))
