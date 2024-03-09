@@ -26,6 +26,9 @@ try:
     # First pass to get how many times to apply each attack.
     for tier in range(1, 4):
         for enemy in enemies:
+            if enemy.skipDefense:
+                continue
+            
             for attack in attackTiers[tier]:
                 damage = attack.expectedDamage[enemy.resist if attack.magic else enemy.armor]
 
@@ -61,6 +64,8 @@ try:
 
             extraStaminaSpent = 0
             if any([{"stagger", "frostbite"} & e for e in enemy.attackEffect]):
+                if enemy.attackEffect == [{"stagger", "frostbite"}]:
+                    pass
                 # Guess at how often this enemy will land with an attack.
                 # Used to modify Stagger and Frostbite.
                 nums = []
@@ -68,14 +73,15 @@ try:
                 for i, a in enumerate(enemy.attacks[:int(len(enemy.attacks) / (2 if enemy.id else 1))]):
                     if a == 0 or not {"stagger", "frostbite"} & enemy.attackEffect[i]:
                         continue
-                    nums.append(round(reachMod[min([4, enemy.move[i] + enemy.attackRange[i]])] * den, 0))
+                    nums.append(round(reachMod[max([0, min([4, enemy.move[i] + enemy.attackRange[i]])])] * den, 0))
 
                 stage = 1
                 for n in nums:
                     stage = stage * (den - n)
                 chance = 1 - (stage / (den ** len(nums)))
 
-                extraStaminaSpent = chance * dodgeMod[tier][enemy.dodge[0] if type(enemy.dodge) == list and len(enemy.dodge) == 1 else enemy.dodge]
+                # Double the stamina spent if both Frostbite and Stagger are applied.
+                extraStaminaSpent = chance * dodgeMod[tier][enemy.dodge[0] if type(enemy.dodge) == list and len(enemy.dodge) == 1 else enemy.dodge] * (2 if any([{"stagger",} & e for e in enemy.attackEffect]) and any([{"frostbite",} & e for e in enemy.attackEffect]) else 1)
 
             # Maneater Mildred gains health if she does damage.
             # Abstract it out based on the tier.
@@ -89,7 +95,7 @@ try:
                     if a == 0:
                         continue
                     if enemy.attacks[i] > block:
-                        extraHealthGained += (reachMod[min([4, enemy.move[i] + enemy.attackRange[i]])]
+                        extraHealthGained += (reachMod[max([0, min([4, enemy.move[i] + enemy.attackRange[i]])])]
                             * dodgeMod[tier][enemy.dodge[0] if type(enemy.dodge) == list and len(enemy.dodge) == 1 else enemy.dodge])
                     
 

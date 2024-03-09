@@ -8,29 +8,22 @@ enemies = []
 enemyIds = {}
 enemiesDict = {}
 reach = []
-vordtStuff = []
-guardianDragonStuff = []
-pursuerStuff = []
 
 newGamePlusMods = [
     "dodge1", "dodge2",
     "damage1", "damage2", "damage3", "damage4",
-    "move1",
-    "armor1", "armor2",
-    "resist1", "resist2",
+    "defense1", "defense2",
     "repeat",
     "magic",
-    "bleed1", "frostbite1", "poison1", "stagger1",
-    "bleed2", "frostbite2", "poison2", "stagger2",
-    "health1", "health2", "health3", "health4", "health5"
+    "bleed", "frostbite", "poison", "stagger"
 ]
 
 ngpc = []
-for x in range(1, 2):
+for x in range(1, 5):
     ngpc += filterfalse(lambda c: len(c) != len(set([a[:-1] for a in c])), combinations(newGamePlusMods, x))
 
 class Enemy:
-    def __init__(self, name, expansion, enemyType, numberOfModels, health, armor, resist, attacks, attackType, dodge, move, attackRange, id=None, repeat=0, initialPushDamage=False, nodeAttack=[], nodesAttacked=[], attackEffect=[], weakArcs=None, windup=False, toughness=0, moveIndex=None, skipDefense=False, difficultyTiers=0, modified=False) -> None:
+    def __init__(self, name, expansion, enemyType, numberOfModels, health, armor, resist, attacks, attackType, dodge, move, attackRange, id=None, repeat=0, initialPushDamage=False, nodeAttack=[], nodesAttacked=[], attackEffect=[], weakArcs=None, windup=False, moveIndex=None, skipDefense=False, toughness=0, difficultyTiers=0, modified=False) -> None:
         enemiesDict[name] = self
         enemies.append(self)
 
@@ -180,8 +173,10 @@ class Enemy:
         if not modified:
             for combo in ngpc:
                 if (
-                    "magic" in combo and "magic" in attackType
+                    ("magic" in combo and "magic" in attackType)
                     or any([ae & set(combo) for ae in attackEffect])
+                    or ("dodge1" in combo and dodge == 4)
+                    or ("dodge2" in combo and dodge >= 3)
                     ):
                     continue
 
@@ -190,17 +185,22 @@ class Enemy:
                     expansion,
                     enemyType,
                     numberOfModels,
-                    health=health + sum([(int(mod[-1]) if "dodge" in mod else 0) for mod in combo]),
-                    armor=armor + sum([(int(mod[-1]) if "armor" in mod else 0) for mod in combo]),
-                    resist=resist + sum([(int(mod[-1]) if "resist" in mod else 0) for mod in combo]),
-                    attacks=[attack + (sum([(int(mod[-1]) if "damage" in mod else 0) for mod in combo]) if attack > 0 else 0) for attack in attacks],
+                    health=health + (2 if "defense1" in combo else 4 if "defense2" in combo else 0),
+                    armor=armor + (1 if "defense1" in combo else 2 if "defense2" in combo else 0),
+                    resist=resist + (1 if "defense1" in combo else 2 if "defense2" in combo else 0),
+                    attacks=[attack + (1 if "damage1" in combo else 2 if "damage2" in combo else 3 if "damage3" in combo else 4 if "damage4" in combo else 0) for attack in attacks],
                     attackType=["magic" for _ in attackType] if "magic" in combo else attackType,
-                    dodge=dodge + sum([(int(mod[-1]) if "dodge" in mod else 0) for mod in combo]),
-                    move=[m + (sum([(int(mod[-1]) if "move" in mod else 0) for mod in combo]) if m > 0 else 0) for m in move],
+                    dodge=dodge + (1 if "dodge1" in combo else 0) + (2 if "dodge2" in combo else 0),
+                    move=move,
                     attackRange=attackRange,
-                    repeat=1 if "repeat" in combo else 0,
+                    repeat=repeat + (1 if "repeat" in combo else 0),
                     id=max([enemy.id for enemy in enemies]) + 1 if id else None,
-                    attackEffect=[ae | ({"bleed",} if {"bleed1", "bleed2"} & set(combo) else set()) | ({"poison",} if {"poison1", "poison2"} & set(combo) else set()) | ({"frostbite",} if {"frostbite1", "frostbite2"} & set(combo) else set()) | ({"stagger",} if {"stagger1", "stagger2"} & set(combo) else set()) for ae in attackEffect],
+                    attackEffect=[ae | ({"bleed",} if "bleed" in set(combo) else set()) | ({"poison",} if "poison" in set(combo) else set()) | ({"frostbite",} if "frostbite" in set(combo) else set()) | ({"stagger",} if "stagger" in set(combo) else set()) for ae in attackEffect],
+                    nodeAttack=nodeAttack,
+                    nodesAttacked=nodesAttacked,
+                    weakArcs=weakArcs,
+                    windup=windup,
+                    skipDefense=skipDefense,
                     modified=True)
 
 
@@ -221,8 +221,8 @@ Enemy(id=8, name="Demonic Foliage", expansion="Darkroot", enemyType="regular", n
 Enemy(id=9, name="Engorged Zombie", expansion="Painted World of Ariamis", enemyType="regular", numberOfModels=2, health=1, armor=2, resist=2, attacks=[4], attackType=["magic"], dodge=1, move=[1], attackRange=[0], difficultyTiers={1: {"toughness": 18676, "difficulty": {1: 67.79, 2: 67.79, 3: 67.79, 4: 67.79}}, 2: {"toughness": 42074, "difficulty": {1: 7.23, 2: 7.23, 3: 7.23, 4: 7.23}}, 3: {"toughness": 70007, "difficulty": {1: 2.95, 2: 2.95, 3: 2.95, 4: 2.95}}})
 Enemy(id=10, name="Falchion Skeleton", expansion="Executioner Chariot", enemyType="regular", numberOfModels=2, health=1, armor=1, resist=1, attacks=[3], attackType=["physical"], attackEffect=[{"bleed",}], dodge=1, move=[2], attackRange=[0], difficultyTiers={1: {"toughness": 37610, "difficulty": {1: 85.07, 2: 85.07, 3: 85.07, 4: 85.07}}, 2: {"toughness": 72308, "difficulty": {1: 11.4, 2: 11.4, 3: 11.4, 4: 11.4}}, 3: {"toughness": 100332, "difficulty": {1: 5.77, 2: 5.77, 3: 5.77, 4: 5.77}}})
 Enemy(id=11, name="Firebomb Hollow", expansion="Explorers", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=1, attacks=[3], attackType=["magic"], nodeAttack=[True], dodge=1, move=[1], attackRange=[2], difficultyTiers={1: {"toughness": 37610, "difficulty": {1: 26.87, 2: 28.93, 3: 31, 4: 33.54}}, 2: {"toughness": 72308, "difficulty": {1: 3.19, 2: 3.44, 3: 3.68, 4: 3.98}}, 3: {"toughness": 100332, "difficulty": {1: 1.44, 2: 1.55, 3: 1.66, 4: 1.79}}})
-Enemy(id=12, name="Giant Skeleton Archer", expansion="Tomb of Giants", enemyType="regular", numberOfModels=2, health=5, armor=1, resist=1, initialPushDamage=True, attacks=[2,5], attackType=["physical", "physical"], nodeAttack=[True, False], dodge=2, move=[0, 0], attackRange=[0, 4], difficultyTiers={1: {"toughness": 11256, "difficulty": {1: 448.46, 2: 451.29, 3: 454.11, 4: 457.59}}, 2: {"toughness": 24465, "difficulty": {1: 45.65, 2: 45.96, 3: 46.27, 4: 46.65}}, 3: {"toughness": 39922, "difficulty": {1: 32.87, 2: 33.08, 3: 33.3, 4: 33.56}}})
-Enemy(id=13, name="Giant Skeleton Soldier", expansion="Tomb of Giants", enemyType="regular", numberOfModels=2, health=5, armor=1, resist=1, initialPushDamage=True, attacks=[2,5], attackType=["physical", "physical"], nodeAttack=[True, False], dodge=1, move=[1, 1], attackRange=[0,0, 1], difficultyTiers={1: {"toughness": 11256, "difficulty": {1: 281.84, 2: 283.68, 3: 285.52, 4: 287.79}}, 2: {"toughness": 24465, "difficulty": {1: 26.27, 2: 26.41, 3: 26.54, 4: 26.71}}, 3: {"toughness": 39922, "difficulty": {1: 14.18, 2: 14.27, 3: 14.35, 4: 14.45}}})
+Enemy(id=12, name="Giant Skeleton Archer", expansion="Tomb of Giants", enemyType="regular", numberOfModels=2, health=5, armor=1, resist=1, initialPushDamage=True, attacks=[2,5], attackType=["physical", "physical"], nodeAttack=[True, False], dodge=2, move=[0, 0], attackRange=[0, 4], moveIndex=0, difficultyTiers={1: {"toughness": 11256, "difficulty": {1: 448.46, 2: 451.29, 3: 454.11, 4: 457.59}}, 2: {"toughness": 24465, "difficulty": {1: 45.65, 2: 45.96, 3: 46.27, 4: 46.65}}, 3: {"toughness": 39922, "difficulty": {1: 32.87, 2: 33.08, 3: 33.3, 4: 33.56}}})
+Enemy(id=13, name="Giant Skeleton Soldier", expansion="Tomb of Giants", enemyType="regular", numberOfModels=2, health=5, armor=1, resist=1, initialPushDamage=True, attacks=[2,5], attackType=["physical", "physical"], nodeAttack=[True, False], dodge=1, move=[1, 1], attackRange=[0, 1], difficultyTiers={1: {"toughness": 11256, "difficulty": {1: 281.84, 2: 283.68, 3: 285.52, 4: 287.79}}, 2: {"toughness": 24465, "difficulty": {1: 26.27, 2: 26.41, 3: 26.54, 4: 26.71}}, 3: {"toughness": 39922, "difficulty": {1: 14.18, 2: 14.27, 3: 14.35, 4: 14.45}}})
 Enemy(id=14, name="Hollow Soldier", expansion="Dark Souls The Board Game", enemyType="regular", numberOfModels=3, health=1, armor=1, resist=1, attacks=[4], attackType=["physical"], dodge=1, move=[1], attackRange=[0], difficultyTiers={1: {"toughness": 37610, "difficulty": {1: 31.09, 2: 31.09, 3: 31.09, 4: 31.09}}, 2: {"toughness": 72308, "difficulty": {1: 2.79, 2: 2.79, 3: 2.79, 4: 2.79}}, 3: {"toughness": 100332, "difficulty": {1: 1.84, 2: 1.84, 3: 1.84, 4: 1.84}}})
 Enemy(id=15, name="Ironclad Soldier", expansion="Iron Keep", enemyType="regular", numberOfModels=3, health=5, armor=3, resist=2, initialPushDamage=True, attacks=[5], attackType=["physical"], nodeAttack=[True], attackEffect=[{"stagger",}], dodge=2, move=[1], attackRange=[0], difficultyTiers={1: {"toughness": 1692, "difficulty": {1: 2463.41, 2: 2652.91, 3: 2842.4, 4: 3075.62}}, 2: {"toughness": 3897, "difficulty": {1: 235.17, 2: 253.26, 3: 271.35, 4: 293.61}}, 3: {"toughness": 9764, "difficulty": {1: 110.6, 2: 119.1, 3: 127.61, 4: 138.08}}})
 Enemy(id=16, name="Large Hollow Soldier", expansion="Dark Souls The Board Game", enemyType="regular", numberOfModels=2, health=5, armor=1, resist=0, initialPushDamage=True, attacks=[5], attackType=["physical"], nodeAttack=[True], dodge=1, move=[1], attackRange=[0], difficultyTiers={1: {"toughness": 13023, "difficulty": {1: 202.88, 2: 218.49, 3: 234.1, 4: 253.3}}, 2: {"toughness": 26492, "difficulty": {1: 20.6, 2: 22.19, 3: 23.77, 4: 25.72}}, 3: {"toughness": 44562, "difficulty": {1: 10.69, 2: 11.51, 3: 12.33, 4: 13.35}}})
@@ -261,85 +261,85 @@ Enemy(id=34, name="Mimic", expansion="The Sunless City", enemyType="regular", nu
 # Enemy(id=47, name="Hungry Mimic", expansion="Explorers", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 3348, "difficulty": {1: 781.68, 2: 810.06, 3: 838.44, 4: 873.37}}, 2: {"toughness": 7510, "difficulty": {1: 75.72, 2: 78.45, 3: 81.18, 4: 84.54}}, 3: {"toughness": 12769, "difficulty": {1: 49.11, 2: 50.79, 3: 52.48, 4: 54.55}}})
 # Enemy(id=48, name="Voracious Mimic", expansion="Explorers", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 1315, "difficulty": {1: 2821.53, 2: 2922.2, 3: 3022.87, 4: 3146.78}}, 2: {"toughness": 3449, "difficulty": {1: 258.77, 2: 267.96, 3: 277.14, 4: 288.44}}, 3: {"toughness": 6908, "difficulty": {1: 140.3, 2: 145.01, 3: 149.72, 4: 155.51}}})
 
-# Enemy(name="Hungry Mimic - Raking Slash", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[4], attackType=["physical"], nodeAttack=[True], dodge=1, move=[1], attackRange=[1])
-# Enemy(name="Hungry Mimic - Heavy Punch", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[5], attackType=["physical"], dodge=2, move=[1], attackRange=[1])
-# Enemy(name="Hungry Mimic - Leaping Spin Kick", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[5,5], attackType=["physical","physical"], nodeAttack=[True,True], dodge=2, move=[0,4], attackRange=[0,0])
-# Enemy(name="Hungry Mimic - Stomping Kick", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[6,6], attackType=["physical","physical"], nodeAttack=[True,True], dodge=1, move=[0,1], attackRange=[0,0])
-# Enemy(name="Hungry Mimic - Charging Chomp", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[4], attackType=["physical"], dodge=3, move=[3], attackRange=[0])
-# Enemy(name="Hungry Mimic - Vicious Chomp", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[6], attackType=["physical"], dodge=2, move=[0], attackRange=[0])
-# Enemy(name="Hungry Mimic - Aggressive Grab", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[5], attackType=["physical"], dodge=1, move=[2], attackRange=[0])
-# Enemy(name="Voracious Mimic - Raking Slash", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=2, resist=2, attacks=[5], attackType=["physical"], nodeAttack=[True], dodge=1, move=[1], attackRange=[1])
-# Enemy(name="Voracious Mimic - Heavy Punch", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=2, resist=2, attacks=[6], attackType=["physical"], dodge=2, move=[1], attackRange=[1])
-# Enemy(name="Voracious Mimic - Leaping Spin Kick", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=2, resist=2, attacks=[6,6], attackType=["physical","physical"], nodeAttack=[True,True], dodge=2, move=[0,4], attackRange=[0,0])
-# Enemy(name="Voracious Mimic - Stomping Kick", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=2, resist=2, attacks=[7,7], attackType=["physical","physical"], nodeAttack=[True,True], dodge=1, move=[0,1], attackRange=[0,0])
-# Enemy(name="Voracious Mimic - Charging Chomp", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=2, resist=2, attacks=[5], attackType=["physical"], dodge=3, move=[3], attackRange=[0])
-# Enemy(name="Voracious Mimic - Vicious Chomp", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=2, resist=2, attacks=[7], attackType=["physical"], dodge=2, move=[0], attackRange=[0])
-# Enemy(name="Voracious Mimic - Aggressive Grab", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=2, resist=2, attacks=[6], attackType=["physical"], dodge=1, move=[2], attackRange=[0])
+Enemy(name="Hungry Mimic - Raking Slash", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[4], attackType=["physical"], nodeAttack=[True], dodge=1, move=[1], attackRange=[1])
+Enemy(name="Hungry Mimic - Heavy Punch", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[5], attackType=["physical"], dodge=2, move=[1], attackRange=[1])
+Enemy(name="Hungry Mimic - Leaping Spin Kick", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[5,5], attackType=["physical","physical"], nodeAttack=[True,True], dodge=2, move=[0,4], attackRange=[0,0])
+Enemy(name="Hungry Mimic - Stomping Kick", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[6,6], attackType=["physical","physical"], nodeAttack=[True,True], dodge=1, move=[0,1], attackRange=[0,0])
+Enemy(name="Hungry Mimic - Charging Chomp", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[4], attackType=["physical"], dodge=3, move=[3], attackRange=[0])
+Enemy(name="Hungry Mimic - Vicious Chomp", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[6], attackType=["physical"], dodge=2, move=[0], attackRange=[0])
+Enemy(name="Hungry Mimic - Aggressive Grab", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[5], attackType=["physical"], dodge=1, move=[2], attackRange=[0])
+Enemy(name="Voracious Mimic - Raking Slash", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=2, resist=2, attacks=[5], attackType=["physical"], nodeAttack=[True], dodge=1, move=[1], attackRange=[1])
+Enemy(name="Voracious Mimic - Heavy Punch", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=2, resist=2, attacks=[6], attackType=["physical"], dodge=2, move=[1], attackRange=[1])
+Enemy(name="Voracious Mimic - Leaping Spin Kick", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=2, resist=2, attacks=[6,6], attackType=["physical","physical"], nodeAttack=[True,True], dodge=2, move=[0,4], attackRange=[0,0])
+Enemy(name="Voracious Mimic - Stomping Kick", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=2, resist=2, attacks=[7,7], attackType=["physical","physical"], nodeAttack=[True,True], dodge=1, move=[0,1], attackRange=[0,0])
+Enemy(name="Voracious Mimic - Charging Chomp", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=2, resist=2, attacks=[5], attackType=["physical"], dodge=3, move=[3], attackRange=[0])
+Enemy(name="Voracious Mimic - Vicious Chomp", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=2, resist=2, attacks=[7], attackType=["physical"], dodge=2, move=[0], attackRange=[0])
+Enemy(name="Voracious Mimic - Aggressive Grab", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=2, resist=2, attacks=[6], attackType=["physical"], dodge=1, move=[2], attackRange=[0])
 
-# Enemy(name="Armorer Dennis - Soul Spear Launch", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[5], attackType=["magic"], dodge=1, move=[0], attackRange=[4])
-# Enemy(name="Armorer Dennis - Soul Greatsword", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[6], attackType=["magic"], attackEffect=[{"stagger",}], nodeAttack=[True], dodge=1, move=[0], attackRange=[1])
-# Enemy(name="Armorer Dennis - Soul Vortex", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, repeat=1, attacks=[4], attackType=["magic"], nodeAttack=[True], dodge=1, move=[0], attackRange=[4])
-# Enemy(name="Armorer Dennis - Soul Flash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[4], attackType=["magic"], dodge=2, move=[2], attackRange=[0])
-# Enemy(name="Armorer Dennis - Upward Slash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[6], attackType=["physical"], attackEffect=[{"stagger",}], dodge=1, move=[1], attackRange=[0])
-# Enemy(name="Fencer Sharron - Puzzling Stone Sword Charge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=1, resist=1, attacks=[5], attackType=["physical"], dodge=2, move=[2], attackRange=[0])
-# Enemy(name="Fencer Sharron - Puzzling Stone Sword Whip", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=1, resist=1, attacks=[6,0], attackType=["physical", "physical"], dodge=1, move=[0,-1], attackRange=[1,1])
-# Enemy(name="Fencer Sharron - Spider Fang Sword Strike", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=1, resist=1, attacks=[6], attackType=["physical"], dodge=1, move=[1], attackRange=[0])
-# Enemy(name="Fencer Sharron - Spider Fang Sword Charge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=1, resist=1, attacks=[5], attackType=["physical"], dodge=2, move=[2], attackRange=[0])
-# Enemy(name="Fencer Sharron - Spider Fang Web Blast", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=1, resist=1, attacks=[5], attackType=["magic"], dodge=2, move=[0], attackRange=[4])
-# Enemy(name="Fencer Sharron - Dual Sword Assault", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=1, resist=1, repeat=1, attacks=[5], attackType=["physical"], dodge=2, move=[1], attackRange=[0])
-# Enemy(name="Fencer Sharron - Dual Sword Slash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=1, resist=1, initialPushDamage=True, attacks=[6], attackType=["physical"], attackEffect=[{"stagger",}], nodeAttack=[True], dodge=2, move=[1], attackRange=[0])
-# Enemy(name="Invader Brylex - Leaping Strike", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=2, resist=2, attacks=[7,7], attackType=["physical","physical"], nodeAttack=[True,True], dodge=1, move=[0,4], attackRange=[0,0])
-# Enemy(name="Invader Brylex - Trampling Charge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=2, resist=2, initialPushDamage=True, attacks=[4,4,4], attackType=["physical", "physical", "physical"], nodeAttack=[True, True, True], dodge=1, move=[1,1,1], attackRange=[0,0,0])
-# Enemy(name="Invader Brylex - Blade Dervish", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=2, resist=2, repeat=1, attacks=[5], attackType=["physical"], dodge=1, move=[4], attackRange=[0])
-# Enemy(name="Invader Brylex - Fire Surge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=2, resist=2, attacks=[5], attackType=["magic"], dodge=2, move=[0], attackRange=[4])
-# Enemy(name="Invader Brylex - Fire Whip", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=2, resist=2, attacks=[6], attackType=["physical"], nodeAttack=[True], dodge=1, move=[2], attackRange=[0])
-# Enemy(name="Kirk, Knight of Thorns - Forward Roll", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=12, armor=1, resist=1, initialPushDamage=True, attacks=[3,3], attackType=["physical", "physical"], nodeAttack=[True, True], attackEffect=[{"bleed",},{"bleed",}], dodge=1, move=[1,1], attackRange=[0,0])
-# Enemy(name="Kirk, Knight of Thorns - Shield Bash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=12, armor=1, resist=1, attacks=[4], attackType=["physical"], attackEffect=[{"bleed",}], dodge=2, move=[1], attackRange=[0])
-# Enemy(name="Kirk, Knight of Thorns - Shield Charge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=12, armor=1, resist=1, attacks=[4], attackType=["physical"], nodeAttack=[True], attackEffect=[{"bleed",}], dodge=1, move=[1], attackRange=[0])
-# Enemy(name="Kirk, Knight of Thorns - Overhead Chop", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=12, armor=1, resist=1, attacks=[4], attackType=["physical"], attackEffect=[{"bleed",}], dodge=1, move=[1], attackRange=[0])
-# Enemy(name="Kirk, Knight of Thorns - Barbed Sword Thrust", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=12, armor=1, resist=1, attacks=[5], attackType=["physical"], attackEffect=[{"bleed",}], dodge=1, move=[0], attackRange=[1])
-# Enemy(name="Longfinger Kirk - Rolling Barbs", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=2, initialPushDamage=True, attacks=[4,4], attackType=["physical", "physical"], nodeAttack=[True, True], attackEffect=[{"bleed",}, {"bleed",}], dodge=1, move=[1,1], attackRange=[0,0])
-# Enemy(name="Longfinger Kirk - Lunging Stab", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=2, attacks=[5], attackType=["physical"], attackEffect=[{"bleed",}], dodge=3, move=[1], attackRange=[0])
-# Enemy(name="Longfinger Kirk - Cleave", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=2, attacks=[6], attackType=["physical"], nodeAttack=[True], attackEffect=[{"bleed",}], dodge=2, move=[1], attackRange=[0])
-# Enemy(name="Longfinger Kirk - Crushing Blow", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=2, attacks=[5], attackType=["physical"], attackEffect=[{"bleed",}], dodge=3, move=[4], attackRange=[0])
-# Enemy(name="Longfinger Kirk - Barbed Sword Strikes", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=2, repeat=1, attacks=[5], attackType=["physical"], attackEffect=[{"bleed",}], dodge=2, move=[0], attackRange=[1])
-# Enemy(name="Maldron the Assassin - Greatlance Lunge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=13, armor=1, resist=1, attacks=[4,4,0], attackType=["physical","physical", "physical"], nodeAttack=[True,True,False], dodge=3, move=[0,1,-1], attackRange=[0,0,1])
-# Enemy(name="Maldron the Assassin - Double Lance Lunge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=13, armor=1, resist=1, repeat=1, attacks=[4], attackType=["physical"], dodge=2, move=[1], attackRange=[1])
-# Enemy(name="Maldron the Assassin - Leaping Lance Strike", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=13, armor=1, resist=1, attacks=[5,5,0], attackType=["physical","physical", "physical"], nodeAttack=[True,True, False], dodge=2, move=[0,4,-2], attackRange=[0,0,2])
-# Enemy(name="Maldron the Assassin - Jousting Charge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=13, armor=1, resist=1, attacks=[5], attackType=["physical"], dodge=3, move=[2], attackRange=[1])
-# Enemy(name="Maldron the Assassin - Corrosive Urn Toss", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=13, armor=1, resist=1, attacks=[3], attackType=["magic"], attackEffect=[{"poison",}], dodge=2, move=[0], attackRange=[4])
-# Enemy(name="Maneater Mildred - Death Blow", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=18, armor=0, resist=0, attacks=[5], attackType=["physical"], nodeAttack=[True], dodge=1, move=[1], attackRange=[1])
-# Enemy(name="Maneater Mildred - Executioner Strike", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=18, armor=0, resist=0, attacks=[4], attackType=["physical"], nodeAttack=[True], dodge=2, move=[2], attackRange=[0])
-# Enemy(name="Maneater Mildred - Guillotine", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=18, armor=0, resist=0, attacks=[5,5], attackType=["physical","physical"], attackEffect=[{"stagger",},{"stagger",}], nodeAttack=[True,True], dodge=1, move=[0,1], attackRange=[0,0])
-# Enemy(name="Maneater Mildred - Butcher Chop", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=18, armor=0, resist=0, attacks=[4], attackType=["physical"], attackEffect=[{"stagger",}], nodeAttack=[True], dodge=2, move=[1], attackRange=[1])
-# Enemy(name="Maneater Mildred - Butchery", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=18, armor=0, resist=0, attacks=[4], attackType=["physical"], attackEffect=[{"stagger",}], nodeAttack=[True], dodge=2, move=[2], attackRange=[0])
-# Enemy(name="Marvelous Chester - Crossbow Volley", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=17, armor=1, resist=2, repeat=1, attacks=[5], attackType=["physical"], dodge=1, move=[0], attackRange=[4])
-# Enemy(name="Marvelous Chester - Crossbow Snipe", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=17, armor=1, resist=2, attacks=[5], attackType=["physical"], dodge=4, move=[0], attackRange=[4])
-# Enemy(name="Marvelous Chester - Throwing Knife Volley", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=17, armor=1, resist=2, repeat=1, attacks=[4,0], attackType=["physical", "physical"], attackEffect=[{"bleed",}, {"bleed",}], dodge=2, move=[0,-1], attackRange=[2,2])
-# Enemy(name="Marvelous Chester - Throwing Knife Flurry", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=17, armor=1, resist=2, repeat=2, attacks=[3,0], attackType=["physical", "physical"], attackEffect=[{"bleed",}, {"bleed",}], dodge=1, move=[0,-1], attackRange=[2,2])
-# Enemy(name="Marvelous Chester - Spinning Low Kick", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=17, armor=1, resist=2, attacks=[5,0], attackType=["physical", "physical"], nodeAttack=[True, False], dodge=3, move=[1,-1], attackRange=[0,1])
-# Enemy(name="Melinda the Butcher - Double Smash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, repeat=1, attacks=[3], attackType=["physical"], dodge=2, move=[1], attackRange=[0])
-# Enemy(name="Melinda the Butcher - Cleaving Strikes", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, repeat=1, attacks=[4,0], attackType=["physical", "physical"], dodge=1, move=[0,1], attackRange=[0,0])
-# Enemy(name="Melinda the Butcher - Jumping Cleave", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, repeat=2, attacks=[3,0], attackType=["physical", "physical"], dodge=1, move=[0,4], attackRange=[0,0])
-# Enemy(name="Melinda the Butcher - Greataxe Sweep", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[5], attackType=["physical"], attackEffect=[{"stagger",}], nodeAttack=[True], dodge=2, move=[1], attackRange=[0])
-# Enemy(name="Melinda the Butcher - Sweeping Advance", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, repeat=1, attacks=[4], attackType=["physical"], nodeAttack=[True], dodge=1, move=[1], attackRange=[0])
-# Enemy(name="Oliver the Collector - Bone Fist Punches", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=1, resist=0, repeat=1, attacks=[4], attackType=["physical"], dodge=2, move=[1], attackRange=[0])
-# Enemy(name="Oliver the Collector - Minotaur Helm Charge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=1, resist=0, initialPushDamage=True, attacks=[5,5], attackType=["physical", "physical"], attackEffect=[{"stagger",},{"stagger",}], nodeAttack=[True, True], dodge=1, move=[1,1], attackRange=[0,0])
-# Enemy(name="Oliver the Collector - Puzzling Stone Sword Strike", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=1, resist=0, attacks=[4], attackType=["physical"], dodge=3, move=[1], attackRange=[0])
-# Enemy(name="Oliver the Collector - Majestic Greatsword Slash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=1, resist=0, attacks=[4,4,0], attackType=["physical","physical", "physical"], dodge=2, move=[0,1,-1], attackRange=[0,0,1])
-# Enemy(name="Oliver the Collector - Santier's Spear Lunge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=1, resist=0, attacks=[5], attackType=["physical"], attackEffect=[{"stagger",}], dodge=1, move=[1], attackRange=[1])
-# Enemy(name="Oliver the Collector - Smelter Hammer Whirlwind", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=1, resist=0, repeat=2, attacks=[4], attackType=["physical"], nodeAttack=[True], dodge=1, move=[0], attackRange=[1])
-# Enemy(name="Oliver the Collector - Ricard's Rapier Thrust", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=1, resist=0, attacks=[4,0], attackType=["physical", "physical"], dodge=2, move=[0,-1], attackRange=[1,1])
-# Enemy(name="Paladin Leeroy - Advancing Grant Slam", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=2, resist=1, attacks=[6], attackType=["physical"], attackEffect=[{"stagger",}], nodeAttack=[True], dodge=1, move=[1], attackRange=[1])
-# Enemy(name="Paladin Leeroy - Grant Slam Withdrawal", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=2, resist=1, attacks=[6,0], attackType=["physical", "physical"], attackEffect=[{"stagger",}, {"stagger",}], nodeAttack=[True, False], dodge=1, move=[0,-1], attackRange=[1,1])
-# Enemy(name="Paladin Leeroy - Sanctus Shield Slam", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=2, resist=1, attacks=[5], attackType=["physical"], dodge=3, move=[1], attackRange=[0])
-# Enemy(name="Paladin Leeroy - Sanctus Shield Dash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=2, resist=1, initialPushDamage=True, attacks=[4,4], attackType=["physical", "physical"], nodeAttack=[True,True], dodge=2, move=[1,1], attackRange=[0,0])
-# Enemy(name="Paladin Leeroy - Wrath of the Gods", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=2, resist=1, attacks=[5], attackType=["magic"], nodeAttack=[True], dodge=2, move=[0], attackRange=[1])
-# Enemy(name="Xanthous King Jeremiah - Great Chaos Fireball", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=0, resist=1, attacks=[5], attackType=["magic"], nodeAttack=[True], dodge=1, move=[0], attackRange=[4])
-# Enemy(name="Xanthous King Jeremiah - Chaos Fire Whip", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=0, resist=1, attacks=[4], attackType=["magic"], dodge=2, move=[1], attackRange=[1])
-# Enemy(name="Xanthous King Jeremiah - Chaos Storm", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=0, resist=1, repeat=1, attacks=[3], attackType=["magic"], nodeAttack=[True], dodge=2, move=[0], attackRange=[4])
-# Enemy(name="Xanthous King Jeremiah - Firey Retreat", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=0, resist=1, attacks=[4], attackType=["magic"], nodeAttack=[True], dodge=2, move=[0], attackRange=[4])
-# Enemy(name="Xanthous King Jeremiah - Whiplash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=0, resist=1, attacks=[4], attackType=["physical"], attackEffect=[{"bleed",}], nodeAttack=[True], dodge=1, move=[2], attackRange=[0])
+Enemy(name="Armorer Dennis - Soul Spear Launch", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[5], attackType=["magic"], dodge=1, move=[0], attackRange=[4])
+Enemy(name="Armorer Dennis - Soul Greatsword", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[6], attackType=["magic"], attackEffect=[{"stagger",}], nodeAttack=[True], dodge=1, move=[0], attackRange=[1])
+Enemy(name="Armorer Dennis - Soul Vortex", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, repeat=1, attacks=[4], attackType=["magic"], nodeAttack=[True], dodge=1, move=[0], attackRange=[4])
+Enemy(name="Armorer Dennis - Soul Flash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[4], attackType=["magic"], dodge=2, move=[2], attackRange=[0])
+Enemy(name="Armorer Dennis - Upward Slash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=1, resist=2, attacks=[6], attackType=["physical"], attackEffect=[{"stagger",}], dodge=1, move=[1], attackRange=[0])
+Enemy(name="Fencer Sharron - Puzzling Stone Sword Charge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=1, resist=1, attacks=[5], attackType=["physical"], dodge=2, move=[2], attackRange=[0])
+Enemy(name="Fencer Sharron - Puzzling Stone Sword Whip", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=1, resist=1, attacks=[6,0], attackType=["physical", "physical"], dodge=1, move=[0,-1], attackRange=[1,1])
+Enemy(name="Fencer Sharron - Spider Fang Sword Strike", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=1, resist=1, attacks=[6], attackType=["physical"], dodge=1, move=[1], attackRange=[0])
+Enemy(name="Fencer Sharron - Spider Fang Sword Charge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=1, resist=1, attacks=[5], attackType=["physical"], dodge=2, move=[2], attackRange=[0])
+Enemy(name="Fencer Sharron - Spider Fang Web Blast", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=1, resist=1, attacks=[5], attackType=["magic"], dodge=2, move=[0], attackRange=[4])
+Enemy(name="Fencer Sharron - Dual Sword Assault", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=1, resist=1, repeat=1, attacks=[5], attackType=["physical"], dodge=2, move=[1], attackRange=[0])
+Enemy(name="Fencer Sharron - Dual Sword Slash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=1, resist=1, initialPushDamage=True, attacks=[6], attackType=["physical"], attackEffect=[{"stagger",}], nodeAttack=[True], dodge=2, move=[1], attackRange=[0])
+Enemy(name="Invader Brylex - Leaping Strike", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=2, resist=2, attacks=[7,7], attackType=["physical","physical"], nodeAttack=[True,True], dodge=1, move=[0,4], attackRange=[0,0])
+Enemy(name="Invader Brylex - Trampling Charge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=2, resist=2, initialPushDamage=True, attacks=[4,4,4], attackType=["physical", "physical", "physical"], nodeAttack=[True, True, True], dodge=1, move=[1,1,1], attackRange=[0,0,0])
+Enemy(name="Invader Brylex - Blade Dervish", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=2, resist=2, repeat=1, attacks=[5], attackType=["physical"], dodge=1, move=[4], attackRange=[0])
+Enemy(name="Invader Brylex - Fire Surge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=2, resist=2, attacks=[5], attackType=["magic"], dodge=2, move=[0], attackRange=[4])
+Enemy(name="Invader Brylex - Fire Whip", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=2, resist=2, attacks=[6], attackType=["physical"], nodeAttack=[True], dodge=1, move=[2], attackRange=[0])
+Enemy(name="Kirk, Knight of Thorns - Forward Roll", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=12, armor=1, resist=1, initialPushDamage=True, attacks=[3,3], attackType=["physical", "physical"], nodeAttack=[True, True], attackEffect=[{"bleed",},{"bleed",}], dodge=1, move=[1,1], attackRange=[0,0])
+Enemy(name="Kirk, Knight of Thorns - Shield Bash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=12, armor=1, resist=1, attacks=[4], attackType=["physical"], attackEffect=[{"bleed",}], dodge=2, move=[1], attackRange=[0])
+Enemy(name="Kirk, Knight of Thorns - Shield Charge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=12, armor=1, resist=1, attacks=[4], attackType=["physical"], nodeAttack=[True], attackEffect=[{"bleed",}], dodge=1, move=[1], attackRange=[0])
+Enemy(name="Kirk, Knight of Thorns - Overhead Chop", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=12, armor=1, resist=1, attacks=[4], attackType=["physical"], attackEffect=[{"bleed",}], dodge=1, move=[1], attackRange=[0])
+Enemy(name="Kirk, Knight of Thorns - Barbed Sword Thrust", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=12, armor=1, resist=1, attacks=[5], attackType=["physical"], attackEffect=[{"bleed",}], dodge=1, move=[0], attackRange=[1])
+Enemy(name="Longfinger Kirk - Rolling Barbs", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=2, initialPushDamage=True, attacks=[4,4], attackType=["physical", "physical"], nodeAttack=[True, True], attackEffect=[{"bleed",}, {"bleed",}], dodge=1, move=[1,1], attackRange=[0,0])
+Enemy(name="Longfinger Kirk - Lunging Stab", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=2, attacks=[5], attackType=["physical"], attackEffect=[{"bleed",}], dodge=3, move=[1], attackRange=[0])
+Enemy(name="Longfinger Kirk - Cleave", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=2, attacks=[6], attackType=["physical"], nodeAttack=[True], attackEffect=[{"bleed",}], dodge=2, move=[1], attackRange=[0])
+Enemy(name="Longfinger Kirk - Crushing Blow", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=2, attacks=[5], attackType=["physical"], attackEffect=[{"bleed",}], dodge=3, move=[4], attackRange=[0])
+Enemy(name="Longfinger Kirk - Barbed Sword Strikes", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=2, repeat=1, attacks=[5], attackType=["physical"], attackEffect=[{"bleed",}], dodge=2, move=[0], attackRange=[1])
+Enemy(name="Maldron the Assassin - Greatlance Lunge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=13, armor=1, resist=1, attacks=[4,4,0], attackType=["physical","physical", "physical"], nodeAttack=[True,True,False], dodge=3, move=[0,1,-1], attackRange=[0,0,1])
+Enemy(name="Maldron the Assassin - Double Lance Lunge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=13, armor=1, resist=1, repeat=1, attacks=[4], attackType=["physical"], dodge=2, move=[1], attackRange=[1])
+Enemy(name="Maldron the Assassin - Leaping Lance Strike", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=13, armor=1, resist=1, attacks=[5,5,0], attackType=["physical","physical", "physical"], nodeAttack=[True,True, False], dodge=2, move=[0,4,-2], attackRange=[0,0,2])
+Enemy(name="Maldron the Assassin - Jousting Charge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=13, armor=1, resist=1, attacks=[5], attackType=["physical"], dodge=3, move=[2], attackRange=[1])
+Enemy(name="Maldron the Assassin - Corrosive Urn Toss", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=13, armor=1, resist=1, attacks=[3], attackType=["magic"], attackEffect=[{"poison",}], dodge=2, move=[0], attackRange=[4])
+Enemy(name="Maneater Mildred - Death Blow", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=18, armor=0, resist=0, attacks=[5], attackType=["physical"], nodeAttack=[True], dodge=1, move=[1], attackRange=[1])
+Enemy(name="Maneater Mildred - Executioner Strike", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=18, armor=0, resist=0, attacks=[4], attackType=["physical"], nodeAttack=[True], dodge=2, move=[2], attackRange=[0])
+Enemy(name="Maneater Mildred - Guillotine", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=18, armor=0, resist=0, attacks=[5,5], attackType=["physical","physical"], attackEffect=[{"stagger",},{"stagger",}], nodeAttack=[True,True], dodge=1, move=[0,1], attackRange=[0,0])
+Enemy(name="Maneater Mildred - Butcher Chop", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=18, armor=0, resist=0, attacks=[4], attackType=["physical"], attackEffect=[{"stagger",}], nodeAttack=[True], dodge=2, move=[1], attackRange=[1])
+Enemy(name="Maneater Mildred - Butchery", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=18, armor=0, resist=0, attacks=[4], attackType=["physical"], attackEffect=[{"stagger",}], nodeAttack=[True], dodge=2, move=[2], attackRange=[0])
+Enemy(name="Marvelous Chester - Crossbow Volley", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=17, armor=1, resist=2, repeat=1, attacks=[5], attackType=["physical"], dodge=1, move=[0], attackRange=[4])
+Enemy(name="Marvelous Chester - Crossbow Snipe", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=17, armor=1, resist=2, attacks=[5], attackType=["physical"], dodge=4, move=[0], attackRange=[4])
+Enemy(name="Marvelous Chester - Throwing Knife Volley", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=17, armor=1, resist=2, repeat=1, attacks=[4,0], attackType=["physical", "physical"], attackEffect=[{"bleed",}, {"bleed",}], dodge=2, move=[0,-1], attackRange=[2,2])
+Enemy(name="Marvelous Chester - Throwing Knife Flurry", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=17, armor=1, resist=2, repeat=2, attacks=[3,0], attackType=["physical", "physical"], attackEffect=[{"bleed",}, {"bleed",}], dodge=1, move=[0,-1], attackRange=[2,2])
+Enemy(name="Marvelous Chester - Spinning Low Kick", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=17, armor=1, resist=2, attacks=[5,0], attackType=["physical", "physical"], nodeAttack=[True, False], dodge=3, move=[1,-1], attackRange=[0,1])
+Enemy(name="Melinda the Butcher - Double Smash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, repeat=1, attacks=[3], attackType=["physical"], dodge=2, move=[1], attackRange=[0])
+Enemy(name="Melinda the Butcher - Cleaving Strikes", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, repeat=1, attacks=[4,0], attackType=["physical", "physical"], dodge=1, move=[0,1], attackRange=[0,0])
+Enemy(name="Melinda the Butcher - Jumping Cleave", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, repeat=2, attacks=[3,0], attackType=["physical", "physical"], dodge=1, move=[0,4], attackRange=[0,0])
+Enemy(name="Melinda the Butcher - Greataxe Sweep", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[5], attackType=["physical"], attackEffect=[{"stagger",}], nodeAttack=[True], dodge=2, move=[1], attackRange=[0])
+Enemy(name="Melinda the Butcher - Sweeping Advance", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, repeat=1, attacks=[4], attackType=["physical"], nodeAttack=[True], dodge=1, move=[1], attackRange=[0])
+Enemy(name="Oliver the Collector - Bone Fist Punches", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=1, resist=0, repeat=1, attacks=[4], attackType=["physical"], dodge=2, move=[1], attackRange=[0])
+Enemy(name="Oliver the Collector - Minotaur Helm Charge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=1, resist=0, initialPushDamage=True, attacks=[5,5], attackType=["physical", "physical"], attackEffect=[{"stagger",},{"stagger",}], nodeAttack=[True, True], dodge=1, move=[1,1], attackRange=[0,0])
+Enemy(name="Oliver the Collector - Puzzling Stone Sword Strike", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=1, resist=0, attacks=[4], attackType=["physical"], dodge=3, move=[1], attackRange=[0])
+Enemy(name="Oliver the Collector - Majestic Greatsword Slash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=1, resist=0, attacks=[4,4,0], attackType=["physical","physical", "physical"], dodge=2, move=[0,1,-1], attackRange=[0,0,1])
+Enemy(name="Oliver the Collector - Santier's Spear Lunge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=1, resist=0, attacks=[5], attackType=["physical"], attackEffect=[{"stagger",}], dodge=1, move=[1], attackRange=[1])
+Enemy(name="Oliver the Collector - Smelter Hammer Whirlwind", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=1, resist=0, repeat=2, attacks=[4], attackType=["physical"], nodeAttack=[True], dodge=1, move=[0], attackRange=[1])
+Enemy(name="Oliver the Collector - Ricard's Rapier Thrust", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=1, resist=0, attacks=[4,0], attackType=["physical", "physical"], dodge=2, move=[0,-1], attackRange=[1,1])
+Enemy(name="Paladin Leeroy - Advancing Grant Slam", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=2, resist=1, attacks=[6], attackType=["physical"], attackEffect=[{"stagger",}], nodeAttack=[True], dodge=1, move=[1], attackRange=[1])
+Enemy(name="Paladin Leeroy - Grant Slam Withdrawal", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=2, resist=1, attacks=[6,0], attackType=["physical", "physical"], attackEffect=[{"stagger",}, {"stagger",}], nodeAttack=[True, False], dodge=1, move=[0,-1], attackRange=[1,1])
+Enemy(name="Paladin Leeroy - Sanctus Shield Slam", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=2, resist=1, attacks=[5], attackType=["physical"], dodge=3, move=[1], attackRange=[0])
+Enemy(name="Paladin Leeroy - Sanctus Shield Dash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=2, resist=1, initialPushDamage=True, attacks=[4,4], attackType=["physical", "physical"], nodeAttack=[True,True], dodge=2, move=[1,1], attackRange=[0,0])
+Enemy(name="Paladin Leeroy - Wrath of the Gods", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=2, resist=1, attacks=[5], attackType=["magic"], nodeAttack=[True], dodge=2, move=[0], attackRange=[1])
+Enemy(name="Xanthous King Jeremiah - Great Chaos Fireball", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=0, resist=1, attacks=[5], attackType=["magic"], nodeAttack=[True], dodge=1, move=[0], attackRange=[4])
+Enemy(name="Xanthous King Jeremiah - Chaos Fire Whip", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=0, resist=1, attacks=[4], attackType=["magic"], dodge=2, move=[1], attackRange=[1])
+Enemy(name="Xanthous King Jeremiah - Chaos Storm", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=0, resist=1, repeat=1, attacks=[3], attackType=["magic"], nodeAttack=[True], dodge=2, move=[0], attackRange=[4])
+Enemy(name="Xanthous King Jeremiah - Fiery Retreat", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=0, resist=1, attacks=[4], attackType=["magic"], nodeAttack=[True], dodge=2, move=[0], attackRange=[4])
+Enemy(name="Xanthous King Jeremiah - Whiplash", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=0, resist=1, attacks=[4], attackType=["physical"], attackEffect=[{"bleed",}], nodeAttack=[True], dodge=1, move=[2], attackRange=[0])
 
 # Mini Bosses
 # Enemy(name="Old Dragonslayer - Darkness Bolt", expansion="Explorers", enemyType="mini boss", numberOfModels=1, health=20, armor=2, resist=2, attacks=[4], attackType=["magic"], dodge=3, move=[0], attackRange=[3])
@@ -432,8 +432,6 @@ Enemy(id=34, name="Mimic", expansion="The Sunless City", enemyType="regular", nu
 # Enemy(name="The Pursuer - Rising Blade Swing", weakArcs=2, expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], nodesAttacked=[4], dodge=2, move=[0], attackRange=[1])
 # Enemy(name="The Pursuer - Overhead Cleave", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["physical"], nodesAttacked=[4], dodge=1, move=[2], attackRange=[1])
 # Enemy(name="The Pursuer - Cursed Impale", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[5], attackType=["magic"], dodge=1, move=[1], attackRange=[1])
-# Enemy(name="The Pursuer - Back Dash", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[0], attackType=["physical"], dodge=0, move=[-2], attackRange=[2])
-# Enemy(name="The Pursuer - Forward Dash", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[0], attackType=["physical"], dodge=0, move=[2], attackRange=[0])
 # Enemy(name="The Pursuer - Dark Magic", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[4], attackType=["magic"], nodeAttack=[True], dodge=2, move=[0], attackRange=[4])
 # Enemy(name="The Pursuer - Shield Bash", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[4], attackType=["physical"], nodesAttacked=[4], dodge=2, move=[1], attackRange=[1])
 # Enemy(name="The Pursuer - Shield Smash", expansion="Explorers", enemyType="main boss", numberOfModels=1, health=28, armor=3, resist=2, attacks=[6], attackType=["physical"], dodge=1, move=[1], attackRange=[1])
