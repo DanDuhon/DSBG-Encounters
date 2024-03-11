@@ -9,9 +9,11 @@ enemyPath = Path(baseFolder + "\\enemies")
 enemies = {}
 baselineDiff = {}
 allEnemies = []
+baseNames = set()
 
 for enemy in enemyPath.glob("**/*.json"):
     baseName = enemy.stem[:enemy.stem.index(" (") if " (" in enemy.stem else len(enemy.stem)]
+    baseNames.add(baseName)
     if baseName not in enemies:
         enemies[baseName] = {1: {}, 2: {}, 3: {}, 4: {}}
     with open(enemy) as ef:
@@ -26,15 +28,16 @@ for enemy in enemyPath.glob("**/*.json"):
                 #enemies[baseName].add(enemy.stem + "_" + str(charCnt) + "_" + str(tier) + "_" + str(diff) +  "_1.0")
                 #allEnemies.append(enemy.stem + "\t" + str(charCnt) + "\t" + str(tier) + "\t" + str(diff) +  "\t1.0")
             else:
-                if diff/baselineDiff[(baseName, charCnt, tier)] > 10:
+                if round(diff/baselineDiff[(baseName, charCnt, tier)], 2) > 10:
                     continue
-                if diff/baselineDiff[(baseName, charCnt, tier)] not in enemies[baseName][charCnt]:
-                    enemies[baseName][charCnt][diff/baselineDiff[(baseName, charCnt, tier)]] = [tuple(enemy.name.replace(baseName, "").replace(" ('", "").replace("')", "").replace(".json", "").split("', '"))]
+                if round(diff/baselineDiff[(baseName, charCnt, tier)], 2) not in enemies[baseName][charCnt]:
+                    enemies[baseName][charCnt][round(diff/baselineDiff[(baseName, charCnt, tier)], 2)] = [tuple(enemy.name.replace(baseName, "").replace(" ('", "").replace("')", "").replace(".json", "").split("', '"))]
                 else:
-                    enemies[baseName][charCnt][diff/baselineDiff[(baseName, charCnt, tier)]].append(tuple(enemy.name.replace(baseName, "").replace(" ('", "").replace("')", "").replace(".json", "").split("', '")))
-                #enemies[baseName].add(enemy.stem + "_" + str(charCnt) + "_" + str(tier) + "_" + str(diff) + "_" + str(diff/baselineDiff[(baseName, charCnt, tier)]))
-                #allEnemies.append(enemy.stem + "\t" + str(charCnt) + "\t" + str(tier) + "\t" + str(diff) + "\t" + str(diff/baselineDiff[(baseName, charCnt, tier)]))
+                    enemies[baseName][charCnt][round(diff/baselineDiff[(baseName, charCnt, tier)], 2)].append(tuple(enemy.name.replace(baseName, "").replace(" ('", "").replace("')", "").replace(".json", "").split("', '")))
+                #enemies[baseName].add(enemy.stem + "_" + str(charCnt) + "_" + str(tier) + "_" + str(diff) + "_" + str(round(diff/baselineDiff[(baseName, charCnt, tier)], 2)))
+                #allEnemies.append(enemy.stem + "\t" + str(charCnt) + "\t" + str(tier) + "\t" + str(diff) + "\t" + str(round(diff/baselineDiff[(baseName, charCnt, tier)], 2)))
 
+for baseName in list(baseNames):
     with open(baseFolder + "\\enemy_variants\\" + baseName + ".json", "w") as enemyFile:
         dump(enemies[baseName], enemyFile)
 
