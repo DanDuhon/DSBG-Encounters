@@ -26,7 +26,7 @@ try:
     # First pass to get how many times to apply each attack.
     for tier in range(1, 4):
         for enemy in enemies:
-            if enemy.skipDefense:
+            if enemy.skipDefense or (tier < 3 and enemy.modified):
                 continue
             
             for attack in attackTiers[tier]:
@@ -60,6 +60,9 @@ try:
         # Second pass to get the number of deaths the attacks cause.
         print("Defense")
         for i, enemy in enumerate(enemies):
+            if enemy.skipDefense or (tier < 3 and enemy.modified):
+                continue
+            
             print("\t" + str((i/len(enemies)*100))[:5] + "%", end="\r")
 
             extraStaminaSpent = 0

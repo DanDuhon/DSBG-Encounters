@@ -128,6 +128,8 @@ try:
         resist = loadout[1]
         multiplier = loadoutLookup[tier][loadout]
         for enemy in enemies:
+            if tier < 3 and enemy.modified:
+                continue
             totalAttacks = 0
             damagingAttacks = 0
             bleedDamage1 = 0
@@ -259,9 +261,6 @@ try:
             enemy.bleedDamage2[tier] += bleedDamage2 / (2 if enemy.id else 1)
             enemy.bleedDamage3[tier] += bleedDamage3 / (2 if enemy.id else 1)
             enemy.bleedDamage4[tier] += bleedDamage4 / (2 if enemy.id else 1)
-
-    if not enemy.totalAttacks[tier]:
-        raise
             
     # (Damaging attacks / total attacks) * average enemy reach
     # This is the % that bleed will be procced.  The attack has
