@@ -26,7 +26,7 @@ try:
     # First pass to get how many times to apply each attack.
     for tier in range(1, 4):
         for enemy in enemies:
-            if enemy.skipDefense or (tier < 3 and enemy.modified):
+            if tier < 3 and enemy.modified:
                 continue
             
             for attack in attackTiers[tier]:
@@ -60,7 +60,7 @@ try:
         # Second pass to get the number of deaths the attacks cause.
         print("Defense")
         for i, enemy in enumerate(enemies):
-            if enemy.skipDefense or (tier < 3 and enemy.modified):
+            if tier < 3 and enemy.modified:
                 continue
             
             print("\t" + str((i/len(enemies)*100))[:5] + "%", end="\r")
@@ -84,7 +84,7 @@ try:
                 chance = 1 - (stage / (den ** len(nums)))
 
                 # Double the stamina spent if both Frostbite and Stagger are applied.
-                extraStaminaSpent = chance * dodgeMod[tier][enemy.dodge[0] if type(enemy.dodge) == list and len(enemy.dodge) == 1 else enemy.dodge] * (2 if any([{"stagger",} & e for e in enemy.attackEffect]) and any([{"frostbite",} & e for e in enemy.attackEffect]) else 1)
+                extraStaminaSpent = chance * dodgeMod[tier][enemy.dodge] * (2 if any([{"stagger",} & e for e in enemy.attackEffect]) and any([{"frostbite",} & e for e in enemy.attackEffect]) else 1)
 
             # Maneater Mildred gains health if she does damage.
             # Abstract it out based on the tier.
@@ -99,7 +99,7 @@ try:
                         continue
                     if enemy.attacks[i] > block:
                         extraHealthGained += (reachMod[max([0, min([4, enemy.move[i] + enemy.attackRange[i]])])]
-                            * dodgeMod[tier][enemy.dodge[0] if type(enemy.dodge) == list and len(enemy.dodge) == 1 else enemy.dodge])
+                            * dodgeMod[tier][enemy.dodge])
                     
 
             for attack in attackTiers[tier]:
@@ -154,7 +154,7 @@ try:
                                 currentHealth = enemy.health
 
     for enemy in enemies:
-        Path(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.index(" (")] + "\\" if enemy.modified else "")).mkdir(exist_ok=True)
+        Path(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.rfind(" (")] + "\\" if enemy.modified else "")).mkdir(exist_ok=True)
         # with open(baseFolder + "\\enemies\\" + enemy.name + ".json", "r") as eLoad:
         #     e = load(eLoad)
         # with open(baseFolder + "\\enemies\\" + enemy.name + ".json", "w") as eDump:

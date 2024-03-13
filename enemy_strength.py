@@ -444,10 +444,10 @@ try:
         with open(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.index(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json", "r") as eLoad:
             e = load(eLoad)
         enemyName = enemy.name[:enemy.name.index(" -")] if " -" in enemy.name else "regular"
-        enemy.damageDone1[tier] += enemy.bleedDamage1[tier] * bleedProc[enemyName[:enemyName.index(" -") if " -" in enemyName else enemyName.index(" (") if " (" in enemyName else len(enemyName)]]
-        enemy.damageDone2[tier] += enemy.bleedDamage2[tier] * bleedProc[enemyName[:enemyName.index(" -") if " -" in enemyName else enemyName.index(" (") if " (" in enemyName else len(enemyName)]]
-        enemy.damageDone3[tier] += enemy.bleedDamage3[tier] * bleedProc[enemyName[:enemyName.index(" -") if " -" in enemyName else enemyName.index(" (") if " (" in enemyName else len(enemyName)]]
-        enemy.damageDone4[tier] += enemy.bleedDamage4[tier] * bleedProc[enemyName[:enemyName.index(" -") if " -" in enemyName else enemyName.index(" (") if " (" in enemyName else len(enemyName)]]
+        enemy.damageDone1[tier] += enemy.bleedDamage1[tier] * bleedProc[enemyName[:enemyName.index(" -") if " -" in enemyName else enemyName.index(" (") if " (" in enemyName else len(enemyName)] + ("1" if "boss" in enemy.enemyType else "")]
+        enemy.damageDone2[tier] += enemy.bleedDamage2[tier] * bleedProc[enemyName[:enemyName.index(" -") if " -" in enemyName else enemyName.index(" (") if " (" in enemyName else len(enemyName)] + ("2" if "boss" in enemy.enemyType else "")]
+        enemy.damageDone3[tier] += enemy.bleedDamage3[tier] * bleedProc[enemyName[:enemyName.index(" -") if " -" in enemyName else enemyName.index(" (") if " (" in enemyName else len(enemyName)] + ("3" if "boss" in enemy.enemyType else "")]
+        enemy.damageDone4[tier] += enemy.bleedDamage4[tier] * bleedProc[enemyName[:enemyName.index(" -") if " -" in enemyName else enemyName.index(" (") if " (" in enemyName else len(enemyName)] + ("4" if "boss" in enemy.enemyType else "")]
         for t in range(1, 4):
             if t == tier:
                 continue

@@ -62,6 +62,7 @@ for tier in range(1, 4):
     # Overall dodge modifier for the following dodge difficulties.
     # Used for enemies that inflict Stagger or Frostbite.
     dodgeMod[tier] = {
+        0: 1,
         1: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 1]) / len(list(product(*l["dodge"]))))) for l in loadouts[tier]]),
         2: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 2]) / len(list(product(*l["dodge"]))))) for l in loadouts[tier]]),
         3: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 3]) / len(list(product(*l["dodge"]))))) for l in loadouts[tier]]),
