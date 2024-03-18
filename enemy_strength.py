@@ -439,9 +439,9 @@ try:
         bleedProc["Executioner's Chariot4"] = (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Executioner's Chariot" in enemy.name]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if "Executioner's Chariot" in enemy.name])) * 0.508857346356197 * 2.24597723704866 # Mean reach and arc attack mods for Executioner's Chariot
 
     for enemy in enemies:
-        while not path.isfile(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.index(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json"):
+        while not path.isfile(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.rfind(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json"):
             sleep(60)
-        with open(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.index(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json", "r") as eLoad:
+        with open(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.rfind(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json", "r") as eLoad:
             e = load(eLoad)
         enemyName = enemy.name[:enemy.name.index(" -")] if " -" in enemy.name else "regular"
         enemy.damageDone1[tier] += enemy.bleedDamage1[tier] * bleedProc[enemyName[:enemyName.index(" -") if " -" in enemyName else enemyName.index(" (") if " (" in enemyName else len(enemyName)] + ("1" if "boss" in enemy.enemyType else "")]
@@ -462,7 +462,7 @@ try:
             enemy.bleedDamage3[t] = e["bleedDamage"]["3"][str(t)] / (2 if enemy.enemyType == "regular" else 1)
             enemy.bleedDamage4[t] = e["bleedDamage"]["4"][str(t)] / (2 if enemy.enemyType == "regular" else 1)
 
-        with open(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.index(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json", "w") as enemyFile:
+        with open(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.rfind(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json", "w") as enemyFile:
                 dump({"deaths": e["deaths"], "totalAttacks": enemy.totalAttacks, "damagingAttacks": enemy.damagingAttacks, "damageDone": {1: enemy.damageDone1, 2: enemy.damageDone2, 3: enemy.damageDone3, 4: enemy.damageDone4}, "bleedDamage": {1: enemy.bleedDamage1, 2: enemy.bleedDamage2, 3: enemy.bleedDamage3, 4: enemy.bleedDamage4}}, enemyFile)
 
 except Exception as ex:
