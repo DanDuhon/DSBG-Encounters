@@ -1,6 +1,7 @@
 from json import load, dump
 from os import path
 from pathlib import Path
+from math import ceil
 
 
 baseFolder = path.dirname(__file__)
@@ -28,17 +29,20 @@ try:
                     continue
 
                 diff = (e["damageDone"][str(charCnt)][str(tier)] + e["bleedDamage"][str(charCnt)][str(tier)]) / e["deaths"][str(tier)]
-                
-                if round(diff/baselineDiff[(baseName, charCnt, tier)], 1) <= 1.0:
-                    continue
 
                 if (baseName, charCnt, tier) not in baselineDiff:
                     baselineDiff[(baseName, charCnt, tier)] = diff
                 else:
-                    if round(diff/baselineDiff[(baseName, charCnt, tier)], 1) not in enemies[baseName][charCnt]:
-                        enemies[baseName][charCnt][round(diff/baselineDiff[(baseName, charCnt, tier)], 1)] = [tuple(enemy.name.replace(baseName, "").replace(" ('", "").replace("')", "").replace("',)", "").replace(".json", "").split("', '"))]
+                    # I want to group everything in groups of 20%, so round up to the nearest even tenth.
+                    diffChange = (ceil((round(diff/baselineDiff[(baseName, charCnt, tier)], 1) * 10) / 2.0) * 2) / 10
+
+                    if diffChange <= 1.0:
+                        continue
+
+                    if diffChange not in enemies[baseName][charCnt]:
+                        enemies[baseName][charCnt][diffChange] = [tuple(enemy.name.replace(baseName, "").replace(" ('", "").replace("')", "").replace("',)", "").replace(".json", "").split("', '"))]
                     else:
-                        enemies[baseName][charCnt][round(diff/baselineDiff[(baseName, charCnt, tier)], 1)].append(tuple(enemy.name.replace(baseName, "").replace(" ('", "").replace("')", "").replace("',)", "").replace(".json", "").split("', '")))
+                        enemies[baseName][charCnt][diffChange].append(tuple(enemy.name.replace(baseName, "").replace(" ('", "").replace("')", "").replace("',)", "").replace(".json", "").split("', '")))
 
     for baseName in list(baseNames):
         with open(baseFolder + "\\enemy_variants\\" + baseName + ".json", "w") as enemyFile:
