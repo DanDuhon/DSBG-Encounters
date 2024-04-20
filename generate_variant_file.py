@@ -21,8 +21,6 @@ behaviorCount = {
     "Boreal Outrider Knight": 8,
     "Crossbreed Priscilla": 13,
     "Dancer of the Boreal Valley": 13,
-    "Dragonslayer Ornstein": 10,
-    "Executioner Smough": 10,
     "Executioner's Chariot": 13,
     "Fencer Sharron": 7,
     "Gaping Dragon": 13,
@@ -43,6 +41,7 @@ behaviorCount = {
     "Old Dragonslayer": 8,
     "Old Iron King": 12,
     "Oliver the Collector": 7,
+    "Ornstein & Smough": 20,
     "Paladin Leeroy": 5,
     "Sir Alonne": 13,
     "Smelter Demon": 13,
@@ -93,7 +92,10 @@ try:
         with open(enemy) as ef:
             e = load(ef)
 
-        if " - " in enemy.stem:
+        if "Ornstein" in enemy.stem or "Smough" in enemy.stem:
+            baseName = "Ornstein & Smough"
+            behaviorName = enemy.stem[enemy.stem.index(" - ")+3:]
+        elif " - " in enemy.stem:
             baseName = enemy.stem[:enemy.stem.index(" - ")]
             behaviorName = enemy.stem[enemy.stem.index(" - ")+3:]
         else:
@@ -148,8 +150,9 @@ try:
 
     print("")
 
-    with open(baseFolder + "\\enemy_variants\\dsbg_shuffle_difficulty.json", "w") as enemyFile:
-        dump(behaviorExport, enemyFile)
+    for key in behaviorExport:
+        with open(baseFolder + "\\enemy_variants\\dsbg_shuffle_difficulty_" + key + ".json", "w") as enemyFile:
+            dump(behaviorExport[key], enemyFile)
 
 except Exception as ex:
     input(ex)
