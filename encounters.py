@@ -139,7 +139,7 @@ def check_if_valid(encounter, level, combo, difficulty, rangedCount, toughnessSo
 try:
     # skip = True
     for ei, e in enumerate(enc):
-        # if e != "Deathly Freeze":
+        # if e not in toughnessSortedEncounters:
         #     continue
         #     skip = False
         # if skip:
@@ -514,7 +514,7 @@ try:
                     for alt in alternatives["alternatives"][expansionCombo]:
                         newAlt = []
                         if e in toughnessSortedEncounters:
-                            altDifficulty = sorted(alt, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]))
+                            altDifficulty = sorted(alt, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]))
                             for ord in enc[e]["difficultyOrder"][str(characterCount)]:
                                 newAlt.append(altDifficulty[ord])
                         else:
