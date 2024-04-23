@@ -25,7 +25,7 @@ for x in range(1, 5):
     ngpc += filterfalse(lambda c: len(c) != len(set([a[:-1] for a in c])) or len(set(c) & {"bleed", "frostbite", "poison", "stagger"}) > 2, combinations(newGamePlusMods, x))
 
 class Enemy:
-    def __init__(self, name, expansion, enemyType, numberOfModels, health, armor, resist, attacks, attackType, dodge, move, attackRange, openSlots=1, id=None, repeat=0, initialPushDamage=False, nodeAttack=[], nodesAttacked=[], attackEffect=[], weakArcs=None, windup=False, moveIndex=None, skipDefense=False, toughness=0, difficultyTiers=0, noExtraConditions=False, moveAttack=[], modified=False) -> None:
+    def __init__(self, name, expansion, enemyType, numberOfModels, health, armor, resist, attacks, attackType, dodge, move, attackRange, openSlots=1, id=None, repeat=0, initialPushDamage=False, nodeAttack=[], nodesAttacked=[], attackEffect=[], weakArcs=None, windup=False, moveIndex=None, skipDefense=False, difficultyTiers=0, noExtraConditions=False, moveAttack=[], modified=False) -> None:
         enemiesDict[name] = self
         enemies.append(self)
 
@@ -93,8 +93,6 @@ class Enemy:
         self.windup = windup
         self.difficultyTiers = difficultyTiers
         self.modified = modified
-        # Lower is better
-        self.toughness = toughness
 
         check = set()
         check.add(len(self.attacks))

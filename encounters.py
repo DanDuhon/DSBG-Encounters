@@ -26,6 +26,7 @@ silverKnightSpearman = enemiesDict["Silver Knight Spearman"].id
 silverKnightGreatbowman = enemiesDict["Silver Knight Greatbowman"].id
 skeletonArcher = enemiesDict["Skeleton Archer"].id
 skeletonSoldier = enemiesDict["Skeleton Soldier"].id
+kirks = {enemiesDict["Kirk, Knight of Thorns"].id, enemiesDict["Longfinger Kirk"].id}
 
 skeletons = set([enemiesDict[e].id for e in enemiesDict if "Skeleton" in enemiesDict[e].name])
 invaders = set()
@@ -133,6 +134,8 @@ def check_if_valid(encounter, level, combo, difficulty, rangedCount, toughnessSo
         and comboHigherHealthCount == higherHealthCount
         # Can't have more enemies than available models and Phalanx is 3 Phalanx Hollows shoved together
         and ((3 if phalanx in combo else 0) + combo.count(phalanxHollow) < 6 or encounter == "Eye of the Storm")
+        # Make sure we're not putting both Kirk enemies in the same encounter
+        and len(set(combo) & kirks) < 2
         # Black Hollow Mages need to be with at least one "skeleton" enemy
         and (blackHollowMage not in combo or set(combo) & skeletons))
 
@@ -304,13 +307,13 @@ try:
                         # No more than one of the two strongest enemies
                         and (e != "Trecherous Tower" or (s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 1 and s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[1]) == 1))
                         # One of the toughest enemy
-                        and (e != "Cold Snap" or s.count(sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]) == 1)
+                        and (e != "Cold Snap" or s.count(sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]) == 1)
                         # Two of the toughest enemy
-                        and (e != "Corrupted Hovel" or s.count(sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]) == 2)
+                        and (e != "Corrupted Hovel" or s.count(sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]) == 2)
                         # One of the weakest enemy and one of the strongest
                         and (e != "Gleaming Silver" or (s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 1 and s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount])[0]) == 1))
                         # One of the toughest enemy
-                        and (e != "No Safe Haven" or s.count(sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]) == 1)
+                        and (e != "No Safe Haven" or s.count(sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]) == 1)
                         # Two of the strongest enemy
                         and (e != "Skeletal Spokes" or s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 2)
                         # The strongest enemy must have more than 1 health
@@ -358,7 +361,7 @@ try:
                                 and (e != "Frozen Revolutions" or s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 2)
                                 # Two of the toughest single target melee enemy and that enemy isn't in the blacklist
                                 and (e != "Deathly Freeze" or (
-                                    sum([1 for enemy in s if enemy not in deathlyFreezeEnemyBlacklist and (max(enemyIds[enemy].attackRange) < 2 or True not in set(enemyIds[enemy].nodeAttack)) and enemy == sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]]) == 2))
+                                    sum([1 for enemy in s if enemy not in deathlyFreezeEnemyBlacklist and (max(enemyIds[enemy].attackRange) < 2 or True not in set(enemyIds[enemy].nodeAttack)) and enemy == sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]]) == 2))
                                 # One of the strongest enemy and either two of the second strongest or two that are the second and third strongest
                                 and (e != "Trophy Room" or (
                                     (
@@ -402,7 +405,7 @@ try:
                                 and (e != "Frozen Revolutions" or s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 2)
                                 # Two of the toughest single target melee enemy and that enemy isn't in the blacklist
                                 and (e != "Deathly Freeze" or (
-                                    sum([1 for enemy in s if enemy not in deathlyFreezeEnemyBlacklist and (max(enemyIds[enemy].attackRange) < 2 or True not in set(enemyIds[enemy].nodeAttack)) and enemy == sorted(s, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]]) == 2))
+                                    sum([1 for enemy in s if enemy not in deathlyFreezeEnemyBlacklist and (max(enemyIds[enemy].attackRange) < 2 or True not in set(enemyIds[enemy].nodeAttack)) and enemy == sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]]) == 2))
                                 # One of the strongest enemy and either two of the second strongest or two that are the second and third strongest
                                 and (e != "Trophy Room" or (
                                     (
