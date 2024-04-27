@@ -1,7 +1,7 @@
 from json import load, dump
 from os import path
 from enemies import enemies
-from loadouts import loadoutLookup
+from loadouts import expectedBlock, expectedResist, loadoutLookup
 from itertools import product
 from statistics import mean
 from time import sleep
@@ -243,10 +243,11 @@ try:
                     * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[4] if enemy.nodesAttacked[i] > 0 else 1)
                     ) + poison4) * multiplier
                 
-                if loadout[0] < 3 and any([expectedDamage1 == 0.0, expectedDamage2 == 0.0, expectedDamage3 == 0.0, expectedDamage4 == 0.0]):
-                    pass
-
-                damagingAttacks += dodge * multiplier
+                # Attacks that aren't dodged and aren't fully blocked/resisted.
+                m = 1 - dodge
+                if "Executioner's Chariot" in enemy.name and enemy.attacks[i] > 0:
+                    (expectedBlock if enemy.attackType[i] == "physical" else expectedResist)[tier][max([0, enemy.attacks[i]])]
+                damagingAttacks += m * multiplier
                     
                 damageDone1.append(expectedDamage1)
                 damageDone2.append(expectedDamage2)

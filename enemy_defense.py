@@ -2,7 +2,7 @@ from json import load, dump
 from os import path
 from enemies import enemies
 from attacks import attackTiers, bleedTrigger, blackKnight
-from loadouts import loadoutLookup, dodgeMod, expectedBlock3Plus
+from loadouts import loadoutLookup, dodgeMod, expectedBlock
 from math import ceil
 from statistics import mean
 from pathlib import Path
@@ -133,7 +133,7 @@ try:
                         staminaSpent += attack.staminaCost + extraStaminaSpent
 
                         if "Winged Knight" in enemy.name:
-                            staminaSpent += expectedBlock3Plus[tier]
+                            staminaSpent += expectedBlock[3][tier]
                         elif "Black Knight" in enemy.name:
                             staminaSpent += blackKnight[tier]
                         elif "Heavy Knight" in enemy.name:
