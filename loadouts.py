@@ -74,13 +74,13 @@ for tier in range(1, 4):
 # Winged Knight gets a bonus against blocks of 3 or higher.
 expectedBlock = {}
 expectedResist = {}
-for x in range(2, 10):
+for x in range(2, 14):
     expectedBlock[x] = {
         1: sum([1 for l in loadouts[1] if l["block"] >= x]) / len(loadouts[1]),
         2: sum([1 for l in loadouts[2] if l["block"] >= x]) / len(loadouts[2]),
         3: sum([1 for l in loadouts[3] if l["block"] >= x]) / len(loadouts[3])
         }
-    expectedResist = {
+    expectedResist[x] = {
         1: sum([1 for l in loadouts[1] if l["resist"] >= x]) / len(loadouts[1]),
         2: sum([1 for l in loadouts[2] if l["resist"] >= x]) / len(loadouts[2]),
         3: sum([1 for l in loadouts[3] if l["resist"] >= x]) / len(loadouts[3])

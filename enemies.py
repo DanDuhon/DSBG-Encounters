@@ -25,7 +25,7 @@ for x in range(1, 5):
     ngpc += filterfalse(lambda c: len(c) != len(set([a[:-1] for a in c])) or len(set(c) & {"bleed", "frostbite", "poison", "stagger"}) > 2, combinations(newGamePlusMods, x))
 
 class Enemy:
-    def __init__(self, name, expansion, enemyType, numberOfModels, health, armor, resist, attacks, attackType, dodge, move, attackRange, openSlots=1, id=None, repeat=0, initialPushDamage=False, nodeAttack=[], nodesAttacked=[], attackEffect=[], weakArcs=None, windup=False, moveIndex=None, skipDefense=False, difficultyTiers=0, noExtraConditions=False, moveAttack=[], modified=False) -> None:
+    def __init__(self, name, expansion, enemyType, numberOfModels, health, armor,resist, attacks, attackType, dodge, move, attackRange, openSlots=1, id=None, repeat=0, initialPushDamage=False, nodeAttack=[], nodesAttacked=[], attackEffect=[], weakArcs=None, windup=False, moveIndex=None, skipDefense=False, difficultyTiers=0, noExtraConditions=False, moveAttack=[], modified=False, comboSet=frozenset()) -> None:
         enemiesDict[name] = self
         enemies.append(self)
 
@@ -93,6 +93,7 @@ class Enemy:
         self.windup = windup
         self.difficultyTiers = difficultyTiers
         self.modified = modified
+        self.comboSet = comboSet
 
         check = set()
         check.add(len(self.attacks))
@@ -179,7 +180,7 @@ class Enemy:
 
         if not modified:
             for combo in ngpc:
-                comboSet = set(combo)
+                comboSet = frozenset(combo)
                 if (
                     ("magic" in comboSet and "physical" not in attackType)
                     or ("physical" in comboSet and "magic" not in attackType)
@@ -204,7 +205,7 @@ class Enemy:
                     health=health + (1 if "health1" in combo else 2 if "health2" in combo else 3 if "health3" in combo else 4 if "health4" in combo else 0),
                     armor=armor + (1 if "armor1" in combo else 2 if "armor2" in combo else 0),
                     resist=resist + (1 if "resist1" in combo else 2 if "resist2" in combo else 0),
-                    attacks=[attack + (1 if "damage1" in combo else 2 if "damage2" in combo else 3 if "damage3" in combo else 4 if "damage4" in combo else 0) for attack in attacks],
+                    attacks=[attack + (0 if attack == 0 else 1 if "damage1" in combo else 2 if "damage2" in combo else 3 if "damage3" in combo else 4 if "damage4" in combo else 0) for attack in attacks],
                     attackType=["magic" if "magic" in combo and not moveAttack[i] else "physical" if "physical" in combo or moveAttack[i] else at for i, at in enumerate(attackType)],
                     dodge=dodge + (1 if "dodge1" in combo else 0) + (2 if "dodge2" in combo else 0),
                     move=move,
@@ -217,7 +218,8 @@ class Enemy:
                     weakArcs=weakArcs,
                     windup=windup,
                     skipDefense=skipDefense,
-                    modified=True)
+                    modified=True,
+                    comboSet=comboSet)
 
 
     def reset(self):
@@ -417,14 +419,14 @@ Enemy(name="Xanthous King Jeremiah - Whiplash", expansion="Phantoms", enemyType=
 # Enemy(name="Titanite Demon - Sweeping Strike", expansion="Dark Souls The Board Game", enemyType="mini boss", numberOfModels=1, health=22, armor=3, resist=2, attacks=[6], attackType=["physical"], nodesAttacked=[14], dodge=1, move=[-2], attackRange=[2])
 # Enemy(name="Titanite Demon - Vaulting Slam", moveAttack=[True], weakArcs=0, expansion="Dark Souls The Board Game", enemyType="mini boss", numberOfModels=1, health=22, armor=3, resist=2, initialPushDamage=True, attacks=[6], attackType=["physical"], nodeAttack=[True], dodge=2, move=[4], attackRange=[0])
 # Enemy(name="Titanite Demon - Double Pole Crush", weakArcs=0, expansion="Dark Souls The Board Game", enemyType="mini boss", numberOfModels=1, health=22, armor=3, resist=2, repeat=1, attacks=[5,0], attackType=["physical", "physical"], nodesAttacked=[4,0], dodge=1, move=[0,-1], attackRange=[2,2])
-# Enemy(name="Gargoyle - Sweeping Strike", expansion="Dark Souls The Board Game", enemyType="main boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[5], attackType=["physical"], nodesAttacked=[10], dodge=1, move=[1], attackRange=[1])
-# Enemy(name="Gargoyle - Halberd Thrust", expansion="Dark Souls The Board Game", enemyType="main boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[6], attackType=["physical"], dodge=1, move=[1], attackRange=[1])
-# Enemy(name="Gargoyle - Tail Sweep", expansion="Dark Souls The Board Game", enemyType="main boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[4], attackType=["physical"], nodesAttacked=[7], dodge=2, move=[1], attackRange=[1])
-# Enemy(name="Gargoyle - Tail Whip", expansion="Dark Souls The Board Game", enemyType="main boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[4,0], attackType=["physical", "physical"], nodesAttacked=[7,0], dodge=2, move=[0,-1], attackRange=[1,1])
-# Enemy(name="Gargoyle - Electric Breath", expansion="Dark Souls The Board Game", enemyType="main boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[4], attackType=["magic"], nodesAttacked=[4], dodge=2, move=[0], attackRange=[1])
-# Enemy(name="Gargoyle - Flying Tail Whip", weakArcs=0, expansion="Dark Souls The Board Game", enemyType="main boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[6], attackType=["physical"], nodesAttacked=[10], dodge=1, move=[1], attackRange=[1])
-# Enemy(name="Gargoyle - Swooping Cleave", weakArcs=0, expansion="Dark Souls The Board Game", enemyType="main boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[6], attackType=["physical"], nodeAttack=[True], dodge=2, move=[2], attackRange=[1])
-# Enemy(name="Gargoyle - Aerial Electric Breath", weakArcs=0, expansion="Dark Souls The Board Game", enemyType="main boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[5], attackType=["magic"], nodesAttacked=[6], dodge=2, move=[0], attackRange=[2])
+# Enemy(name="Gargoyle - Sweeping Strike", expansion="Dark Souls The Board Game", enemyType="mini boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[5], attackType=["physical"], nodesAttacked=[10], dodge=1, move=[1], attackRange=[1])
+# Enemy(name="Gargoyle - Halberd Thrust", expansion="Dark Souls The Board Game", enemyType="mini boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[6], attackType=["physical"], dodge=1, move=[1], attackRange=[1])
+# Enemy(name="Gargoyle - Tail Sweep", expansion="Dark Souls The Board Game", enemyType="mini boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[4], attackType=["physical"], nodesAttacked=[7], dodge=2, move=[1], attackRange=[1])
+# Enemy(name="Gargoyle - Tail Whip", expansion="Dark Souls The Board Game", enemyType="mini boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[4,0], attackType=["physical", "physical"], nodesAttacked=[7,0], dodge=2, move=[0,-1], attackRange=[1,1])
+# Enemy(name="Gargoyle - Electric Breath", expansion="Dark Souls The Board Game", enemyType="mini boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[4], attackType=["magic"], nodesAttacked=[4], dodge=2, move=[0], attackRange=[1])
+# Enemy(name="Gargoyle - Flying Tail Whip", weakArcs=0, expansion="Dark Souls The Board Game", enemyType="mini boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[6], attackType=["physical"], nodesAttacked=[10], dodge=1, move=[1], attackRange=[1])
+# Enemy(name="Gargoyle - Swooping Cleave", weakArcs=0, expansion="Dark Souls The Board Game", enemyType="mini boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[6], attackType=["physical"], nodeAttack=[True], dodge=2, move=[2], attackRange=[1])
+# Enemy(name="Gargoyle - Aerial Electric Breath", weakArcs=0, expansion="Dark Souls The Board Game", enemyType="mini boss", numberOfModels=1, health=26, armor=2, resist=1, attacks=[5], attackType=["magic"], nodesAttacked=[6], dodge=2, move=[0], attackRange=[2])
 
 # Main bosses
 # Enemy(name="Smelter Demon - Double Sweep", expansion="Iron Keep", enemyType="main boss", numberOfModels=1, health=22, armor=4, resist=3, repeat=1, attacks=[6,0], attackType=["physical", "physical"], nodesAttacked=[7,0], dodge=1, move=[0,-1], attackRange=[1,1])
