@@ -7,27 +7,31 @@ from enemies import enemiesDict, enemyIds, enemies
 baseFolder = path.dirname(__file__)
 
 
-def calculate_rank(l, sortByToughness=False):
+def calculate_rank(l, level, sortByToughness=False):
     diff = {}
+
+    # We're not treating level 4s different from level 3s in the difficulty tier.
+    if level == 4:
+        level = 3
     
     if sortByToughness:
         for d in range(1, 5):
             a = {}
-            for i, num in enumerate(sorted(l, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[d]))):
+            for i, num in enumerate(sorted(l, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][d]))):
                 if num not in a:
-                    a[num] = [sum([1 for e in sorted(l, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[d]))[:i] if enemyIds[e].toughness >= enemyIds[num].toughness])]
+                    a[num] = [sum([1 for e in sorted(l, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][d]))[:i] if enemyIds[e].difficultyTiers[level]["toughness"] >= enemyIds[num].difficultyTiers[level]["toughness"]])]
                 else:
-                    a[num].append(sum([1 for e in sorted(l, key=lambda x: (-enemyIds[x].toughness, enemyIds[x].difficulty[d]))[:i] if enemyIds[e].toughness >= enemyIds[num].toughness]))
+                    a[num].append(sum([1 for e in sorted(l, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][d]))[:i] if enemyIds[e].difficultyTiers[level]["toughness"] >= enemyIds[num].difficultyTiers[level]["toughness"]]))
 
             diff[d] = [a[e][l[:i].count(e)] for i, e in enumerate(l)]
     else:
         for d in range(1, 5):
             a = {}
-            for i, num in enumerate(sorted(l, key=lambda x: enemyIds[x].difficulty[d])):
+            for i, num in enumerate(sorted(l, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][d])):
                 if num not in a:
-                    a[num] = [sum([1 for e in sorted(l, key=lambda x: enemyIds[x].difficulty[d])[:i] if enemyIds[e].difficulty[d] <= enemyIds[num].difficulty[d]])]
+                    a[num] = [sum([1 for e in sorted(l, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][d])[:i] if enemyIds[e].difficultyTiers[level]["difficulty"][d] <= enemyIds[num].difficultyTiers[level]["difficulty"][d]])]
                 else:
-                    a[num].append(sum([1 for e in sorted(l, key=lambda x: enemyIds[x].difficulty[d])[:i] if enemyIds[e].difficulty[d] <= enemyIds[num].difficulty[d]]))
+                    a[num].append(sum([1 for e in sorted(l, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][d])[:i] if enemyIds[e].difficultyTiers[level]["difficulty"][d] <= enemyIds[num].difficultyTiers[level]["difficulty"][d]]))
 
             diff[d] = [a[e][l[:i].count(e)] for i, e in enumerate(l)]
 
@@ -377,7 +381,7 @@ for encounter in encounters:
             "expansion": encounters[encounter]["expansion"],
             "level": encounters[encounter]["level"],
             "tiles": {"1": {"enemies": [], "spawns": []}, "2": {"enemies": [], "spawns": []}, "3": {"enemies": [], "spawns": []}},
-            "difficultyOrder": {"1": calculate_rank(encounters[encounter]["enemies"][0] + encounters[encounter]["spawns"][0]), "2": calculate_rank(encounters[encounter]["enemies"][1] + encounters[encounter]["spawns"][1]), "3": calculate_rank(encounters[encounter]["enemies"][2] + encounters[encounter]["spawns"][2])}
+            "difficultyOrder": {"1": calculate_rank(encounters[encounter]["enemies"][0] + encounters[encounter]["spawns"][0], encounters[encounter]["level"]), "2": calculate_rank(encounters[encounter]["enemies"][1] + encounters[encounter]["spawns"][1], encounters[encounter]["level"]), "3": calculate_rank(encounters[encounter]["enemies"][2] + encounters[encounter]["spawns"][2], encounters[encounter]["level"])}
         }
     else:
         allEncounters[encounter] = {
@@ -385,7 +389,7 @@ for encounter in encounters:
             "expansion": encounters[encounter]["expansion"],
             "level": encounters[encounter]["level"],
             "tiles": {"1": {"enemies": [], "spawns": []}, "2": {"enemies": [], "spawns": []}, "3": {"enemies": [], "spawns": []}},
-            "difficultyOrder": calculate_rank(encounterEnemies, sortByToughness=encounter in toughnessSortedEncounters)
+            "difficultyOrder": calculate_rank(encounterEnemies, encounters[encounter]["level"], sortByToughness=encounter in toughnessSortedEncounters)
         }
 
     for i in range(1, 4):
@@ -401,7 +405,7 @@ for encounter in encounters:
     if encounter == "Lakeview Refuge":
         for i in range(1, 5):
             encounterEnemies.extend([ss])
-            allEncounters[encounter]["difficultyOrder"][i] = calculate_rank(encounterEnemies)[i]
+            allEncounters[encounter]["difficultyOrder"][i] = calculate_rank(encounterEnemies, encounters[encounter]["level"])[i]
 
 with open(baseFolder + "\\encounters\\all_encounters.json", "w") as file:
     dump(allEncounters, file)
