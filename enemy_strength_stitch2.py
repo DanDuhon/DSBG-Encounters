@@ -31,6 +31,8 @@ try:
                     continue
 
                 diff = (e["damageDone"][str(charCnt)][str(tier)] + e["bleedDamage"][str(charCnt)][str(tier)]) / e["deaths"][str(tier)]
+                if diff == 0:
+                    continue
 
                 if (baseName, charCnt, tier) not in baselineDiff:
                     baselineDiff[(baseName, charCnt, tier)] = diff
@@ -61,5 +63,6 @@ try:
     #     out.write("\n".join(allEnemies))
 
 except Exception as ex:
+    print(enemy)
     input(ex)
     raise

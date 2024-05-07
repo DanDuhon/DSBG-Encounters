@@ -117,7 +117,7 @@ def add_to_bleed_proc_dict_reg(name):
 
 def add_to_bleed_proc_dict_boss(name, reachMod, arcMod1, arcMod2, arcMod3, arcMod4):
     if name in set([enemy.name[:enemy.name.index(" -") if " -" in enemy.name else len(enemy.name)] for enemy in enemies]):
-        print("")
+        print(name)
         if name + "1" not in bleedProc:
             bleedProc[name + "1"] = {}
             bleedProc[name + "2"] = {}
@@ -368,11 +368,19 @@ try:
 
         enemyName = enemy.name[:enemy.name.index(" -")] if " -" in enemy.name else "regular"
         bleedProcName = enemyName[:enemyName.index(" -") if " -" in enemyName else enemyName.index(" (") if " (" in enemyName else len(enemyName)]
-        for c in list(set([enemy.comboSet for enemy in enemies if bleedProcName in enemy.name])):
-            enemy.damageDone1[tier] += enemy.bleedDamage1[tier] * bleedProc[bleedProcName][c]
-            enemy.damageDone2[tier] += enemy.bleedDamage2[tier] * bleedProc[bleedProcName][c]
-            enemy.damageDone3[tier] += enemy.bleedDamage3[tier] * bleedProc[bleedProcName][c]
-            enemy.damageDone4[tier] += enemy.bleedDamage4[tier] * bleedProc[bleedProcName][c]
+
+        if "boss" in enemy.enemyType:
+            for c in list(set([enemy.comboSet for enemy in enemies if bleedProcName in enemy.name])):
+                enemy.damageDone1[tier] += enemy.bleedDamage1[tier] * bleedProc[bleedProcName + "1"][c]
+                enemy.damageDone2[tier] += enemy.bleedDamage2[tier] * bleedProc[bleedProcName + "2"][c]
+                enemy.damageDone3[tier] += enemy.bleedDamage3[tier] * bleedProc[bleedProcName + "3"][c]
+                enemy.damageDone4[tier] += enemy.bleedDamage4[tier] * bleedProc[bleedProcName + "4"][c]
+        else:
+            for c in list(set([enemy.comboSet for enemy in enemies if bleedProcName in enemy.name])):
+                enemy.damageDone1[tier] += enemy.bleedDamage1[tier] * bleedProc[bleedProcName][c]
+                enemy.damageDone2[tier] += enemy.bleedDamage2[tier] * bleedProc[bleedProcName][c]
+                enemy.damageDone3[tier] += enemy.bleedDamage3[tier] * bleedProc[bleedProcName][c]
+                enemy.damageDone4[tier] += enemy.bleedDamage4[tier] * bleedProc[bleedProcName][c]
 
         for t in range(1, 4):
             if t == tier:

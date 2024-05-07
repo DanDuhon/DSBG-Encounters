@@ -77,7 +77,10 @@ modIdLookup = {
     "frostbite": 18,
     "poison": 19,
     "stagger": 20,
-    "physical": 21
+    "physical": 21,
+    "armor resist1": 22,
+    "damage health1": 23,
+    "damage health2": 24
 }
 
 try:
