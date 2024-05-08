@@ -16,8 +16,8 @@ try:
     a = len((list(enemyPath.glob("**/*.json"))))
 
     for i, enemy in enumerate(enemyPath.glob("**/*.json")):
-        # if "Great Grey Wolf Sif - Feral Onslaught" not in enemy.stem and "Great Grey Wolf Sif - Savage Retreat" not in enemy.stem:
-        #     continue
+        if "The Four Kings" not in enemy.stem:
+            continue
         print(str((i/a)*100)[:6] + "%", end="\r")
         baseName = enemy.stem[:enemy.stem.rfind(" (") if " (" in enemy.stem else len(enemy.stem)]
         baseNames.add(baseName)
