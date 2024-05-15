@@ -12,6 +12,9 @@ for enemy in enemies:
     enemy.deaths = ed["deaths"]
     enemy.damageDone = {1: {1: 0, 2: 0, 3: 0}, 2: {1: 0, 2: 0, 3: 0}, 3: {1: 0, 2: 0, 3: 0}, 4: {1: 0, 2: 0, 3: 0}}
     for enemyFile in listdir(baseFolder + "\\enemies"):
+        if ".json" not in enemyFile:
+            continue
+
         if (enemy.name not in enemyFile
             or enemy.name == "Mimic" and ("Voracious" in enemyFile or "Hungry" in enemyFile)
             or enemy.name == "Hollow Soldier" and "Large" in enemyFile

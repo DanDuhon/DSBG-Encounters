@@ -99,20 +99,31 @@ def arc_damage_mod(nodesAttacked, megaBoss):
 
 
 def add_to_bleed_proc_dict_reg(name):
-    if (
-        (name == "regular" and "regular" in set([enemy.enemyType for enemy in enemies]))
-        or name in set([enemy.name[:enemy.name.index(" -") if " -" in enemy.name else len(enemy.name)] for enemy in enemies])
-        ):
+    if name == "regular" and "regular" in set([enemy.enemyType for enemy in enemies]):
         print(name)
         if name not in bleedProc:
             bleedProc[name] = {}
-        l = len(set([enemy.comboSet for enemy in enemies if name in enemy.name or enemy.enemyType == "regular"]))
-        for x, c in enumerate(list(set([enemy.comboSet for enemy in enemies if name in enemy.name or enemy.enemyType == "regular"]))):
+        l = len(set([enemy.comboSet for enemy in enemies if enemy.enemyType == "regular"]))
+        for x, c in enumerate(list(set([enemy.comboSet for enemy in enemies if enemy.enemyType == "regular"]))):
             print(str((x/l)*100)[:6] + "%", end="\r")
             if c not in bleedProc[name]:
                 bleedProc[name][c] = 0
             if sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if enemy.comboSet == c]):
                 bleedProc[name][c] += (sum([enemy.damagingAttacks[tier] * enemy.numberOfModels for enemy in enemies if enemy.comboSet == c]) / sum([enemy.totalAttacks[tier] * enemy.numberOfModels for enemy in enemies if enemy.comboSet == c])) * meanReachMod
+
+
+def add_to_bleed_proc_dict_invader(name):
+    if name in set([enemy.name[:enemy.name.index(" -") if " -" in enemy.name else len(enemy.name)] for enemy in enemies]):
+        print(name)
+        if name not in bleedProc:
+            bleedProc[name] = {}
+        l = len(set([enemy.comboSet for enemy in enemies if name in enemy.name]))
+        for x, c in enumerate(list(set([enemy.comboSet for enemy in enemies if name in enemy.name]))):
+            print(str((x/l)*100)[:6] + "%", end="\r")
+            if c not in bleedProc[name]:
+                bleedProc[name][c] = 0
+            if sum([enemy.totalAttacks[tier] for enemy in enemies if enemy.comboSet == c]):
+                bleedProc[name][c] += (sum([enemy.damagingAttacks[tier] for enemy in enemies if enemy.comboSet == c]) / sum([enemy.totalAttacks[tier] for enemy in enemies if enemy.comboSet == c])) * meanReachMod
 
 
 def add_to_bleed_proc_dict_boss(name, reachMod, arcMod1, arcMod2, arcMod3, arcMod4):
@@ -290,7 +301,7 @@ try:
                 m = 0
                 if enemy.attacks[i] > 0 and "Executioner's Chariot" not in enemy.name and (poisonAdded2 or "poison" not in enemy.attackEffect[i]):
                     m = (expectedBlock if enemy.attackType[i] == "physical" else expectedResist)[int(max([0, enemy.attacks[i]]))][tier]
-                damagingAttacks += (dodge - m) * multiplier
+                damagingAttacks += (dodge * m) * multiplier
                 
                 if poison1 > 0.0 or poison2 or poison3 > 0.0 or poison4 > 0.0:
                     poisonAdded2 = True
@@ -318,20 +329,20 @@ try:
     # to be made (reach), and then do damage.
     bleedProc = {}
     add_to_bleed_proc_dict_reg("regular")
-    add_to_bleed_proc_dict_reg("Armorer Dennis")
-    add_to_bleed_proc_dict_reg("Fencer Sharron")
-    add_to_bleed_proc_dict_reg("Invader Brylex")
-    add_to_bleed_proc_dict_reg("Kirk, Knight of Thorns")
-    add_to_bleed_proc_dict_reg("Longfinger Kirk")
-    add_to_bleed_proc_dict_reg("Maldron the Assassin")
-    add_to_bleed_proc_dict_reg("Maneater Mildred")
-    add_to_bleed_proc_dict_reg("Marvelous Chester")
-    add_to_bleed_proc_dict_reg("Melinda the Butcher")
-    add_to_bleed_proc_dict_reg("Oliver the Collector")
-    add_to_bleed_proc_dict_reg("Paladin Leeroy")
-    add_to_bleed_proc_dict_reg("Xanthous King Jeremiah")
-    add_to_bleed_proc_dict_reg("Hungry Mimic")
-    add_to_bleed_proc_dict_reg("Voracious Mimic")
+    add_to_bleed_proc_dict_invader("Armorer Dennis")
+    add_to_bleed_proc_dict_invader("Fencer Sharron")
+    add_to_bleed_proc_dict_invader("Invader Brylex")
+    add_to_bleed_proc_dict_invader("Kirk, Knight of Thorns")
+    add_to_bleed_proc_dict_invader("Longfinger Kirk")
+    add_to_bleed_proc_dict_invader("Maldron the Assassin")
+    add_to_bleed_proc_dict_invader("Maneater Mildred")
+    add_to_bleed_proc_dict_invader("Marvelous Chester")
+    add_to_bleed_proc_dict_invader("Melinda the Butcher")
+    add_to_bleed_proc_dict_invader("Oliver the Collector")
+    add_to_bleed_proc_dict_invader("Paladin Leeroy")
+    add_to_bleed_proc_dict_invader("Xanthous King Jeremiah")
+    add_to_bleed_proc_dict_invader("Hungry Mimic")
+    add_to_bleed_proc_dict_invader("Voracious Mimic")
     add_to_bleed_proc_dict_boss("Old Dragonslayer", 0.845044378698225, 1, 1.296875, 1.794921875, 2.494140625)
     add_to_bleed_proc_dict_boss("Asylum Demon", 0.527284681130835, 1, 1.28472222222222, 1.75911458333333, 2.42317708333333)
     add_to_bleed_proc_dict_boss("Boreal Outrider Knight", 0.736316568047337, 1, 1.3515625, 1.88037109375, 2.58642578125)
@@ -360,7 +371,10 @@ try:
     add_to_bleed_proc_dict_boss("Old Iron King", 0.516959064327485, 1, 1.24841269840793, 1.58441987905037, 2.00802154192732)
     add_to_bleed_proc_dict_boss("Executioner's Chariot", 0.508857346356197, 1, 1.27197802197802, 1.68730376766091, 2.24597723704866)
 
-    for enemy in enemies:
+    l = len(enemies)
+    print("Saving ")
+    for i, enemy in enumerate(enemies):
+        print(str((i/l)*100)[:6] + "%", end="\r")
         while not path.isfile(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.rfind(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json"):
             sleep(60)
         with open(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.rfind(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json", "r") as eLoad:
@@ -370,17 +384,15 @@ try:
         bleedProcName = enemyName[:enemyName.index(" -") if " -" in enemyName else enemyName.index(" (") if " (" in enemyName else len(enemyName)]
 
         if "boss" in enemy.enemyType:
-            for c in list(set([enemy.comboSet for enemy in enemies if bleedProcName in enemy.name])):
-                enemy.damageDone1[tier] += enemy.bleedDamage1[tier] * bleedProc[bleedProcName + "1"][c]
-                enemy.damageDone2[tier] += enemy.bleedDamage2[tier] * bleedProc[bleedProcName + "2"][c]
-                enemy.damageDone3[tier] += enemy.bleedDamage3[tier] * bleedProc[bleedProcName + "3"][c]
-                enemy.damageDone4[tier] += enemy.bleedDamage4[tier] * bleedProc[bleedProcName + "4"][c]
+            enemy.damageDone1[tier] += enemy.bleedDamage1[tier] * bleedProc[bleedProcName + "1"][enemy.comboSet]
+            enemy.damageDone2[tier] += enemy.bleedDamage2[tier] * bleedProc[bleedProcName + "2"][enemy.comboSet]
+            enemy.damageDone3[tier] += enemy.bleedDamage3[tier] * bleedProc[bleedProcName + "3"][enemy.comboSet]
+            enemy.damageDone4[tier] += enemy.bleedDamage4[tier] * bleedProc[bleedProcName + "4"][enemy.comboSet]
         else:
-            for c in list(set([enemy.comboSet for enemy in enemies if bleedProcName in enemy.name])):
-                enemy.damageDone1[tier] += enemy.bleedDamage1[tier] * bleedProc[bleedProcName][c]
-                enemy.damageDone2[tier] += enemy.bleedDamage2[tier] * bleedProc[bleedProcName][c]
-                enemy.damageDone3[tier] += enemy.bleedDamage3[tier] * bleedProc[bleedProcName][c]
-                enemy.damageDone4[tier] += enemy.bleedDamage4[tier] * bleedProc[bleedProcName][c]
+            enemy.damageDone1[tier] += enemy.bleedDamage1[tier] * bleedProc[bleedProcName][enemy.comboSet]
+            enemy.damageDone2[tier] += enemy.bleedDamage2[tier] * bleedProc[bleedProcName][enemy.comboSet]
+            enemy.damageDone3[tier] += enemy.bleedDamage3[tier] * bleedProc[bleedProcName][enemy.comboSet]
+            enemy.damageDone4[tier] += enemy.bleedDamage4[tier] * bleedProc[bleedProcName][enemy.comboSet]
 
         for t in range(1, 4):
             if t == tier:

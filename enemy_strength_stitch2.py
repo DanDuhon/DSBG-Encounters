@@ -30,7 +30,7 @@ try:
                 if " (" in enemy.stem and tier < 3:
                     continue
 
-                diff = (e["damageDone"][str(charCnt)][str(tier)] + e["bleedDamage"][str(charCnt)][str(tier)]) / e["deaths"][str(tier)]
+                diff = e["damageDone"][str(charCnt)][str(tier)] / e["deaths"][str(tier)]
                 if diff == 0:
                     continue
 

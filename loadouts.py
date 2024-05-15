@@ -76,12 +76,12 @@ expectedBlock = {}
 expectedResist = {}
 for x in range(2, 14):
     expectedBlock[x] = {
-        1: sum([1 for l in loadouts[1] if l["block"] >= x]) / len(loadouts[1]),
-        2: sum([1 for l in loadouts[2] if l["block"] >= x]) / len(loadouts[2]),
-        3: sum([1 for l in loadouts[3] if l["block"] >= x]) / len(loadouts[3])
+        1: 1 - (sum([1 for l in loadouts[1] if l["block"] >= x]) / len(loadouts[1])),
+        2: 1 - (sum([1 for l in loadouts[2] if l["block"] >= x]) / len(loadouts[2])),
+        3: 1 - (sum([1 for l in loadouts[3] if l["block"] >= x]) / len(loadouts[3]))
         }
     expectedResist[x] = {
-        1: sum([1 for l in loadouts[1] if l["resist"] >= x]) / len(loadouts[1]),
-        2: sum([1 for l in loadouts[2] if l["resist"] >= x]) / len(loadouts[2]),
-        3: sum([1 for l in loadouts[3] if l["resist"] >= x]) / len(loadouts[3])
+        1: 1 - (sum([1 for l in loadouts[1] if l["resist"] >= x]) / len(loadouts[1])),
+        2: 1 - (sum([1 for l in loadouts[2] if l["resist"] >= x]) / len(loadouts[2])),
+        3: 1 - (sum([1 for l in loadouts[3] if l["resist"] >= x]) / len(loadouts[3]))
         }
