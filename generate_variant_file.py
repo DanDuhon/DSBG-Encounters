@@ -132,9 +132,9 @@ try:
             for key in behaviorExport[baseName][charCnt]:
                 for defKeyJson in behaviorExport[baseName][charCnt][key]:
                     if (
-                        len(behaviorExport[baseName][charCnt].get(str(float(key)-0.1), {}).get(defKeyJson, {}))
+                        len(behaviorExport[baseName][charCnt].get(str(float(key)-0.05), {}).get(defKeyJson, {}))
                         + len(behaviorExport[baseName][charCnt][key][defKeyJson])
-                        + len(behaviorExport[baseName][charCnt].get(str(float(key)+0.1), {}).get(defKeyJson, {}))
+                        + len(behaviorExport[baseName][charCnt].get(str(float(key)+0.05), {}).get(defKeyJson, {}))
                         ) != behaviorCount.get(baseName, 1):
                         keysToDelete.append((baseName, charCnt, key, defKeyJson))
 

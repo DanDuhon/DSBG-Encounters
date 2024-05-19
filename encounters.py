@@ -81,21 +81,6 @@ toughnessSortedEncounters = {
     "No Safe Haven"
 }
 
-# Encounters in which you have to kill all enemies on a tile in order
-# to leave that tile, therefore normal encounter model limits do not apply.
-# These encounters will be generated one tile at a time, and the app
-# will mix and match them.
-# Some of these have funky settings in all_encounters.json to increase
-# variety.
-# Eye of the Storm is not included here because it only has 6 enemies
-# to begin with and it works better when not generated at the tile level.
-modelLimitBreaks = {
-    "Central Plaza",
-    "Death's Precipice",
-    "Lost Chapel",
-    "The Grand Hall"
-}
-
 # These are enemies that shouldn't be the target for the special rules
 # in Deathly Freeze (increases range to 1 and adds node attack) because
 # these enemies attack as part of their movement and the rule interaction
@@ -142,7 +127,7 @@ def check_if_valid(encounter, level, combo, difficulty, rangedCount, toughnessSo
 try:
     # skip = True
     for ei, e in enumerate(enc):
-        # if e not in toughnessSortedEncounters:
+        # if e not in {"Central Plaza", "Death's Precipice", "Lost Chapel"}:
         #     continue
         #     skip = False
         # if skip:
@@ -267,37 +252,6 @@ try:
 
                 combosDict = defaultdict(set)
                 [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set())].add(combo) for combo in allCombos]
-            # Encounters that can break model limits because characters can't enter certain tiles until enemies are killed.
-            # These have a flag that marks these encounters.
-            # Enemies are generated at the tile level and saved that way.
-            # Then DSBG-Shuffle will stitch them together when needed.
-            elif e in modelLimitBreaks:
-                combosDict = {}
-
-                for tile in encounter["tiles"]:
-                    enemies = encounter["tiles"][tile]["enemies"] + encounter["tiles"][tile]["spawns"]
-                    enemyCount = len(enemies)
-                    invaderCount = sum([1 for enemy in enemies if enemy in invaders])
-                    rangedCount = sum([1 for enemy in enemies if max(enemyIds[enemy].attackRange) > 1])
-                    higherHealthCount = sum([1 for enemy in enemies if enemyIds[enemy].health >= 5])
-                    difficulty = sum([enemyIds[enemy].difficultyTiers[level]["difficulty"][characterCount] * enemies.count(enemy) for enemy in enemyIds if enemy in enemies])
-                    combosDict[tile] = defaultdict(set)
-
-                    # Generate all combinations of enemies.
-                    allCombos = list(set(filterfalse(lambda s: not check_if_valid(e, level, s, difficulty, rangedCount, e in toughnessSortedEncounters), combinations(allEnemies, enemyCount))))
-
-                    # Create a dictionary of alternatives, put into keys that are the
-                    # sets in which those enemies are found.
-                    # Encounters with Crystal Lizards always require Iron Keep.
-                    # Black Hollow Mage increases the difficulty of skeleton enemies since
-                    # they resurrect defeated skeletons.
-                    comboSet = [tuple(combo) for combo in allCombos]
-            
-                    tileCombosDict = defaultdict(set)
-
-                    [tileCombosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set())].add(combo) for combo in comboSet]
-                    
-                    combosDict[tile] = tileCombosDict
             elif enemyCount < 7:
                 # Generate all combinations of enemies.
                 allCombos = list(set(filterfalse(lambda s: not (
@@ -449,109 +403,59 @@ try:
                 
             # For each key in the dictionary, shuffle the enemy combos,
             # then trim it down so we keep at most 50000 values per encounter.
-            if e in modelLimitBreaks:
-                # For these ones, we don't need to keep nearly as many since the tiles get combined.
-                alternatives["alternatives"] = dict()
+            alts = min([50000, sum([len(combosDict[combo]) for combo in combosDict])])
+            if alts >=0:
+                keys = len(combosDict)
+                numToKeep = int(alts / keys)
+                for expansionCombo in combosDict:
+                    combosDict[expansionCombo] = list(combosDict[expansionCombo])
+                    shuffle(combosDict[expansionCombo])
+                    combosDict[expansionCombo] = combosDict[expansionCombo][:min([len(combosDict[expansionCombo]), numToKeep])]
 
-                for tile in combosDict:
-                    for expansionCombo in combosDict[tile]:
-                        combosDict[tile][expansionCombo] = list(combosDict[tile][expansionCombo])
-                        shuffle(combosDict[tile][expansionCombo])
-                        combosDict[tile][expansionCombo] = combosDict[tile][expansionCombo][:min([len(combosDict[tile][expansionCombo]), 200])]
-
-                    # Put the alternative enemies in the same difficulty order as the
-                    # original enemies. This way I can just iterate through the list
-                    # when we load the encounter and take the enemies in order.
-                    alternatives["alternatives"][tile] = {",".join([k for k in key]): list(value) for key, value in combosDict[tile].items()}
-                    for expansionCombo in alternatives["alternatives"][tile]:
-                        newAlts = []
-                        for alt in alternatives["alternatives"][tile][expansionCombo]:
-                            newAlt = []
-                            altDifficulty = sorted(alt, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount])
-                            for ord in enc[e]["difficultyOrder"][tile][str(characterCount)]:
-                                newAlt.append(altDifficulty[ord])
-                            if newAlt not in newAlts:
-                                newAlts.append(newAlt)
-                        alternatives["alternatives"][tile][expansionCombo] = newAlts
-
-                    # Account for duplicate enemies in the newer core sets that are essentially redoing the older stuff.
-                    # The Sunless City
-                    for combo in [c for c in alternatives["alternatives"][tile] if "Dark Souls The Board Game" in c and not "The Sunless City" in c]:
-                        toAdd = []
-                        for alt in alternatives["alternatives"][tile][combo]:
-                            if (alt.count(crossbowHollow) <= 3
-                                and alt.count(hollowSoldier) <= 3
-                                and alt.count(silverKnightGreatbowman) <= 2
-                                and alt.count(silverKnightSwordsman) <= 2
-                                and alt.count(phalanx) <= 1):
-                                toAdd.append(alt)
-                            
-                        if toAdd:
-                            alternatives["alternatives"][tile][combo.replace("Dark Souls The Board Game", "The Sunless City")] = toAdd
-
-                    if e not in encMain:
-                        encMain[e] = {
-                            "name": enc[e]["name"],
-                            "expansion": enc[e]["expansion"],
-                            "level": enc[e]["level"],
-                            "expansionCombos": {tile: [str(k).split(",") for k in alternatives["alternatives"][tile].keys()]}
-                            }
+            # Put the alternative enemies in the same difficulty order as the
+            # original enemies. This way I can just iterate through the list
+            # when we load the encounter and take the enemies in order.
+            alternatives["alternatives"] = {",".join([k for k in key]): list(value) for key, value in combosDict.items()}
+            for expansionCombo in alternatives["alternatives"]:
+                newAlts = []
+                for alt in alternatives["alternatives"][expansionCombo]:
+                    newAlt = []
+                    if e in toughnessSortedEncounters:
+                        altDifficulty = sorted(alt, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]))
+                        for ord in enc[e]["difficultyOrder"][str(characterCount)]:
+                            newAlt.append(altDifficulty[ord])
                     else:
-                        encMain[e]["expansionCombos"][tile] = [str(k).split(",") for k in alternatives["alternatives"][tile].keys()] if [str(k).split(",") for k in alternatives["alternatives"][tile].keys()] else []
-            else:
-                alts = min([50000, sum([len(combosDict[combo]) for combo in combosDict])])
-                if alts >=0:#== 50000:
-                    keys = len(combosDict)
-                    numToKeep = int(alts / keys)
-                    for expansionCombo in combosDict:
-                        combosDict[expansionCombo] = list(combosDict[expansionCombo])
-                        shuffle(combosDict[expansionCombo])
-                        combosDict[expansionCombo] = combosDict[expansionCombo][:min([len(combosDict[expansionCombo]), numToKeep])]
+                        altDifficulty = sorted(alt, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount])
+                        for ord in enc[e]["difficultyOrder"][str(characterCount)]:
+                            newAlt.append(altDifficulty[ord])
+                    if newAlt not in newAlts:
+                        newAlts.append(newAlt)
+                alternatives["alternatives"][expansionCombo] = newAlts
 
-                # Put the alternative enemies in the same difficulty order as the
-                # original enemies. This way I can just iterate through the list
-                # when we load the encounter and take the enemies in order.
-                alternatives["alternatives"] = {",".join([k for k in key]): list(value) for key, value in combosDict.items()}
-                for expansionCombo in alternatives["alternatives"]:
-                    newAlts = []
-                    for alt in alternatives["alternatives"][expansionCombo]:
-                        newAlt = []
-                        if e in toughnessSortedEncounters:
-                            altDifficulty = sorted(alt, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]))
-                            for ord in enc[e]["difficultyOrder"][str(characterCount)]:
-                                newAlt.append(altDifficulty[ord])
-                        else:
-                            altDifficulty = sorted(alt, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount])
-                            for ord in enc[e]["difficultyOrder"][str(characterCount)]:
-                                newAlt.append(altDifficulty[ord])
-                        if newAlt not in newAlts:
-                            newAlts.append(newAlt)
-                    alternatives["alternatives"][expansionCombo] = newAlts
-
-                # Account for duplicate enemies in the newer core sets that are essentially redoing the older stuff.
-                # The Sunless City
-                for combo in [c for c in alternatives["alternatives"] if "Dark Souls The Board Game" in c and not "The Sunless City" in c]:
-                    toAdd = []
-                    for alt in alternatives["alternatives"][combo]:
-                        if (alt.count(crossbowHollow) <= 3
-                            and alt.count(hollowSoldier) <= 3
-                            and alt.count(silverKnightGreatbowman) <= 2
-                            and alt.count(silverKnightSwordsman) <= 2
-                            and alt.count(phalanx) <= 1):
-                            toAdd.append(alt)
-                        
-                    if toAdd:
-                        alternatives["alternatives"][combo.replace("Dark Souls The Board Game", "The Sunless City")] = toAdd
-
-                if e not in encMain:
-                    encMain[e] = {
-                        "name": enc[e]["name"],
-                        "expansion": enc[e]["expansion"],
-                        "level": enc[e]["level"],
-                        "expansionCombos": {1: [], 2: [], 3: [], 4: []}
-                        }
+            # Account for duplicate enemies in the newer core sets that are essentially redoing the older stuff.
+            # The Sunless City
+            for combo in [c for c in alternatives["alternatives"] if "Dark Souls The Board Game" in c and not "The Sunless City" in c]:
+                toAdd = []
+                for alt in alternatives["alternatives"][combo]:
+                    if e == "The Grand Hall" or (alt.count(crossbowHollow) <= 3
+                        and alt.count(hollowSoldier) <= 3
+                        and alt.count(silverKnightGreatbowman) <= 2
+                        and alt.count(silverKnightSwordsman) <= 2
+                        and alt.count(sentinel) <= 1):
+                        toAdd.append(alt)
                     
-                encMain[e]["expansionCombos"][characterCount] = [str(k).split(",") for k in alternatives["alternatives"].keys()]
+                if toAdd:
+                    alternatives["alternatives"][combo.replace("Dark Souls The Board Game", "The Sunless City")] = toAdd
+
+            if e not in encMain:
+                encMain[e] = {
+                    "name": enc[e]["name"],
+                    "expansion": enc[e]["expansion"],
+                    "level": enc[e]["level"],
+                    "expansionCombos": {1: [], 2: [], 3: [], 4: []}
+                    }
+                
+            encMain[e]["expansionCombos"][characterCount] = [str(k).split(",") for k in alternatives["alternatives"].keys()]
                     
             with open(baseFolder + "\\encounters\\" + e + str(characterCount) + ".json", "w") as encountersFile:
                 dump(alternatives, encountersFile)

@@ -16,8 +16,8 @@ try:
     a = len((list(enemyPath.glob("**/*.json"))))
 
     for i, enemy in enumerate(enemyPath.glob("**/*.json")):
-        if "The Four Kings" not in enemy.stem:
-            continue
+        # if "Gaping Dragon" not in enemy.stem:
+        #     continue
         print(str((i/a)*100)[:6] + "%", end="\r")
         baseName = enemy.stem[:enemy.stem.rfind(" (") if " (" in enemy.stem else len(enemy.stem)]
         baseNames.add(baseName)
@@ -38,7 +38,9 @@ try:
                     baselineDiff[(baseName, charCnt, tier)] = diff
                 else:
                     # I want to group everything in groups of 20%, so round up to the nearest even tenth.
-                    diffChange = (ceil((round(diff/baselineDiff[(baseName, charCnt, tier)], 1) * 10) / 2.0) * 2) / 10
+                    #diffChange = (ceil((round(diff/baselineDiff[(baseName, charCnt, tier)], 1) * 10) / 2.0) * 2) / 10
+                    # I want to group everything in groups of 10%, so round up to the nearest tenth.
+                    diffChange = ceil((round(diff/baselineDiff[(baseName, charCnt, tier)], 1) * 10)) / 10
 
                     if diffChange <= 1.0:
                         continue

@@ -38,13 +38,6 @@ def calculate_rank(l, level, sortByToughness=False):
     return diff
 
 
-modelLimitBreaks = {
-    "Central Plaza",
-    "Death's Precipice",
-    "Lost Chapel",
-    "The Grand Hall"
-}
-
 abk = enemiesDict["Alonne Bow Knight"].id
 akc = enemiesDict["Alonne Knight Captain"].id
 ask = enemiesDict["Alonne Sword Knight"].id
@@ -375,22 +368,13 @@ for encounter in encounters:
     if encounters[encounter]["level"] < 4 and encounters[encounter]["expansion"] not in set([e.expansion for e in enemies]):
         pass
     
-    if encounter in modelLimitBreaks:
-        allEncounters[encounter] = {
-            "name": encounter,
-            "expansion": encounters[encounter]["expansion"],
-            "level": encounters[encounter]["level"],
-            "tiles": {"1": {"enemies": [], "spawns": []}, "2": {"enemies": [], "spawns": []}, "3": {"enemies": [], "spawns": []}},
-            "difficultyOrder": {"1": calculate_rank(encounters[encounter]["enemies"][0] + encounters[encounter]["spawns"][0], encounters[encounter]["level"]), "2": calculate_rank(encounters[encounter]["enemies"][1] + encounters[encounter]["spawns"][1], encounters[encounter]["level"]), "3": calculate_rank(encounters[encounter]["enemies"][2] + encounters[encounter]["spawns"][2], encounters[encounter]["level"])}
-        }
-    else:
-        allEncounters[encounter] = {
-            "name": encounter,
-            "expansion": encounters[encounter]["expansion"],
-            "level": encounters[encounter]["level"],
-            "tiles": {"1": {"enemies": [], "spawns": []}, "2": {"enemies": [], "spawns": []}, "3": {"enemies": [], "spawns": []}},
-            "difficultyOrder": calculate_rank(encounterEnemies, encounters[encounter]["level"], sortByToughness=encounter in toughnessSortedEncounters)
-        }
+    allEncounters[encounter] = {
+        "name": encounter,
+        "expansion": encounters[encounter]["expansion"],
+        "level": encounters[encounter]["level"],
+        "tiles": {"1": {"enemies": [], "spawns": []}, "2": {"enemies": [], "spawns": []}, "3": {"enemies": [], "spawns": []}},
+        "difficultyOrder": calculate_rank(encounterEnemies, encounters[encounter]["level"], sortByToughness=encounter in toughnessSortedEncounters)
+    }
 
     for i in range(1, 4):
         if (encounters[encounter]["enemies"][i-1]
