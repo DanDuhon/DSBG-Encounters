@@ -27,6 +27,7 @@ silverKnightGreatbowman = enemiesDict["Silver Knight Greatbowman"].id
 skeletonArcher = enemiesDict["Skeleton Archer"].id
 skeletonSoldier = enemiesDict["Skeleton Soldier"].id
 kirks = {enemiesDict["Kirk, Knight of Thorns"].id, enemiesDict["Longfinger Kirk"].id}
+mimics = {enemiesDict["Mimic"].id, enemiesDict["Hungry Mimic"].id, enemiesDict["Voracious Mimic"].id}
 
 skeletons = set([enemiesDict[e].id for e in enemiesDict if "Skeleton" in enemiesDict[e].name])
 invaders = set()
@@ -121,13 +122,15 @@ def check_if_valid(encounter, level, combo, difficulty, rangedCount, toughnessSo
         and ((3 if phalanx in combo else 0) + combo.count(phalanxHollow) < 6 or encounter == "Eye of the Storm")
         # Make sure we're not putting both Kirk enemies in the same encounter
         and len(set(combo) & kirks) < 2
+        # Make sure we only have one Mimic model
+        and len(set(combo) & mimics) < 2
         # Black Hollow Mages need to be with at least one "skeleton" enemy
         and (blackHollowMage not in combo or set(combo) & skeletons))
 
 try:
     # skip = True
     for ei, e in enumerate(enc):
-        # if e not in {"Central Plaza", "Death's Precipice", "Lost Chapel"}:
+        # if e not in {"Lost Chapel"}:
         #     continue
         #     skip = False
         # if skip:
@@ -452,10 +455,10 @@ try:
                     "name": enc[e]["name"],
                     "expansion": enc[e]["expansion"],
                     "level": enc[e]["level"],
-                    "expansionCombos": {1: [], 2: [], 3: [], 4: []}
+                    "expansionCombos": []
                     }
                 
-            encMain[e]["expansionCombos"][characterCount] = [str(k).split(",") for k in alternatives["alternatives"].keys()]
+            encMain[e]["expansionCombos"] = [str(k).split(",") for k in alternatives["alternatives"].keys()]
                     
             with open(baseFolder + "\\encounters\\" + e + str(characterCount) + ".json", "w") as encountersFile:
                 dump(alternatives, encountersFile)
