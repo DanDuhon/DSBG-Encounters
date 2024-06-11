@@ -60,8 +60,6 @@ try:
         # Second pass to get the number of deaths the attacks cause.
         print("Defense")
         for i, enemy in enumerate(enemies):
-            if "Marvelous Chester" not in enemy.name:
-                continue
             if tier < 3 and enemy.modified:
                 continue
             
@@ -156,8 +154,6 @@ try:
                                 currentHealth = enemy.health
 
     for enemy in enemies:
-        if "Marvelous Chester" not in enemy.name:
-            continue
         Path(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.rfind(" (")] + "\\" if enemy.modified else "")).mkdir(exist_ok=True)
         # with open(baseFolder + "\\enemies\\" + enemy.name + ".json", "r") as eLoad:
         #     e = load(eLoad)

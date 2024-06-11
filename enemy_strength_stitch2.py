@@ -37,8 +37,6 @@ try:
                 if (baseName, charCnt, tier) not in baselineDiff:
                     baselineDiff[(baseName, charCnt, tier)] = diff
                 else:
-                    # I want to group everything in groups of 20%, so round up to the nearest even tenth.
-                    #diffChange = (ceil((round(diff/baselineDiff[(baseName, charCnt, tier)], 1) * 10) / 2.0) * 2) / 10
                     # I want to group everything in groups of 10%, so round up to the nearest tenth.
                     diffChange = ceil((round(diff/baselineDiff[(baseName, charCnt, tier)], 1) * 10)) / 10
 
@@ -57,12 +55,6 @@ try:
                 "2": dict(sorted(enemies[baseName][2].items())),
                 "3": dict(sorted(enemies[baseName][3].items())),
                 "4": dict(sorted(enemies[baseName][4].items()))}, enemyFile)
-
-        # with open(baseFolder + "\\enemies_output\\" + baseName + ".txt", "w") as out:
-        #     out.write("\n".join(enemies[baseName]))
-
-    # with open(baseFolder + "\\enemies_output\\allEnemies.txt", "w") as out:
-    #     out.write("\n".join(allEnemies))
 
 except Exception as ex:
     print(enemy)

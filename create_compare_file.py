@@ -31,8 +31,8 @@ try:
             if (baseName, charCnt, 3) not in baselineDiff:
                 baselineDiff[(baseName, charCnt, 3)] = diff
             else:
-                # I want to group everything in groups of 20%, so round up to the nearest even tenth.
-                diffChange = (ceil((round(diff/baselineDiff[(baseName, charCnt, 3)], 1) * 10) / 2.0) * 2) / 10
+                # I want to group everything in groups of 10%, so round up to the nearest tenth.
+                diffChange = ceil((round(diff/baselineDiff[(baseName, charCnt, 3)], 1) * 10)) / 10
 
                 if diffChange <= 1.0:
                     continue
@@ -46,92 +46,40 @@ try:
     with open(baseFolder + "\\enemy_compare.json", "w") as out:
         dump(compare, out)
 
-    compareOut = "|  | " + " | ".join(e for e in compare) + " |\n|" + (" :---: |" * (len(compare) + 1))
+    compareOut = "\t" + "\t".join(e for e in compare)
     for e in compare:
-        compareOut += "\n| " + e + " | "
+        compareOut += "\n" + e + "\t"
         for ee in compare[e]:
-            compareOut += (
-                (str(int(round((compare[e][ee][1] - 1) * 100))) if compare[e][ee][1] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][2] - 1) * 100))) if compare[e][ee][2] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][3] - 1) * 100))) if compare[e][ee][3] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][4] - 1) * 100))) if compare[e][ee][4] - 1 > 0 else "") + " | ")
+            compareOut += (str(int(round((compare[e][ee][1] - 1) * 100))) if compare[e][ee][1] - 1 > 0 else "") + "\t"
 
-    with open(baseFolder + "\\enemy_compare_wiki_all.json", "w") as out:
+    with open(baseFolder + "\\enemy_compare_wiki_all1.json", "w") as out:
         out.write(compareOut)
 
-    compareOut = "|  | " + " | ".join(e for e in compare if enemiesDict[e].expansion in {"Dark Souls The Board Game", "The Sunless City"}) + " |\n|" + (" :---: |" * (len([e for e in compare if enemiesDict[e].expansion in {"Dark Souls The Board Game", "The Sunless City"}]) + 1))
-    for e in [e for e in compare if enemiesDict[e].expansion in {"Dark Souls The Board Game", "The Sunless City"}]:
-        compareOut += "\n| " + e + " | "
+    compareOut = "\t" + "\t".join(e for e in compare)
+    for e in compare:
+        compareOut += "\n" + e + "\t"
         for ee in compare[e]:
-            if enemiesDict[ee].expansion not in {"Dark Souls The Board Game", "The Sunless City"}:
-                continue
-            compareOut += (
-                (str(int(round((compare[e][ee][1] - 1) * 100))) if compare[e][ee][1] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][2] - 1) * 100))) if compare[e][ee][2] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][3] - 1) * 100))) if compare[e][ee][3] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][4] - 1) * 100))) if compare[e][ee][4] - 1 > 0 else "") + " | ")
+            compareOut += (str(int(round((compare[e][ee][2] - 1) * 100))) if compare[e][ee][2] - 1 > 0 else "") + "\t"
 
-    with open(baseFolder + "\\enemy_compare_wiki_tsc.json", "w") as out:
+    with open(baseFolder + "\\enemy_compare_wiki_all2.json", "w") as out:
         out.write(compareOut)
 
-    compareOut = "|  | " + " | ".join(e for e in compare if enemiesDict[e].expansion == "Painted World of Ariamis") + " |\n|" + (" :---: |" * (len([e for e in compare if enemiesDict[e].expansion == "Painted World of Ariamis"]) + 1))
-    for e in [e for e in compare if enemiesDict[e].expansion == "Painted World of Ariamis"]:
-        compareOut += "\n| " + e + " | "
+    compareOut = "\t" + "\t".join(e for e in compare)
+    for e in compare:
+        compareOut += "\n" + e + "\t"
         for ee in compare[e]:
-            if enemiesDict[ee].expansion != "Painted World of Ariamis":
-                continue
-            compareOut += (
-                (str(int(round((compare[e][ee][1] - 1) * 100))) if compare[e][ee][1] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][2] - 1) * 100))) if compare[e][ee][2] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][3] - 1) * 100))) if compare[e][ee][3] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][4] - 1) * 100))) if compare[e][ee][4] - 1 > 0 else "") + " | ")
+            compareOut += (str(int(round((compare[e][ee][3] - 1) * 100))) if compare[e][ee][3] - 1 > 0 else "") + "\t"
 
-    with open(baseFolder + "\\enemy_compare_wiki_pwa.json", "w") as out:
+    with open(baseFolder + "\\enemy_compare_wiki_all3.json", "w") as out:
         out.write(compareOut)
 
-    compareOut = "|  | " + " | ".join(e for e in compare if enemiesDict[e].expansion == "Tomb of Giants") + " |\n|" + (" :---: |" * (len([e for e in compare if enemiesDict[e].expansion == "Tomb of Giants"]) + 1))
-    for e in [e for e in compare if enemiesDict[e].expansion == "Tomb of Giants"]:
-        compareOut += "\n| " + e + " | "
+    compareOut = "\t" + "\t".join(e for e in compare)
+    for e in compare:
+        compareOut += "\n" + e + "\t"
         for ee in compare[e]:
-            if enemiesDict[ee].expansion != "Tomb of Giants":
-                continue
-            compareOut += (
-                (str(int(round((compare[e][ee][1] - 1) * 100))) if compare[e][ee][1] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][2] - 1) * 100))) if compare[e][ee][2] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][3] - 1) * 100))) if compare[e][ee][3] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][4] - 1) * 100))) if compare[e][ee][4] - 1 > 0 else "") + " | ")
+            compareOut += (str(int(round((compare[e][ee][4] - 1) * 100))) if compare[e][ee][4] - 1 > 0 else "") + "\t"
 
-    with open(baseFolder + "\\enemy_compare_wiki_tog.json", "w") as out:
-        out.write(compareOut)
-
-    compareOut = "|  | " + " | ".join(e for e in compare if enemiesDict[e].expansion == "Darkroot") + " |\n|" + (" :---: |" * (len([e for e in compare if enemiesDict[e].expansion == "Darkroot"]) + 1))
-    for e in [e for e in compare if enemiesDict[e].expansion == "Darkroot"]:
-        compareOut += "\n| " + e + " | "
-        for ee in compare[e]:
-            if enemiesDict[ee].expansion != "Darkroot":
-                continue
-            compareOut += (
-                (str(int(round((compare[e][ee][1] - 1) * 100))) if compare[e][ee][1] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][2] - 1) * 100))) if compare[e][ee][2] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][3] - 1) * 100))) if compare[e][ee][3] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][4] - 1) * 100))) if compare[e][ee][4] - 1 > 0 else "") + " | ")
-
-    with open(baseFolder + "\\enemy_compare_wiki_dr.json", "w") as out:
-        out.write(compareOut)
-
-    compareOut = "|  | " + " | ".join(e for e in compare if enemiesDict[e].expansion == "Iron Keep") + " |\n|" + (" :---: |" * (len([e for e in compare if enemiesDict[e].expansion == "Iron Keep"]) + 1))
-    for e in [e for e in compare if enemiesDict[e].expansion == "Iron Keep"]:
-        compareOut += "\n| " + e + " | "
-        for ee in compare[e]:
-            if enemiesDict[ee].expansion != "Iron Keep":
-                continue
-            compareOut += (
-                (str(int(round((compare[e][ee][1] - 1) * 100))) if compare[e][ee][1] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][2] - 1) * 100))) if compare[e][ee][2] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][3] - 1) * 100))) if compare[e][ee][3] - 1 > 0 else "")
-                + ("/" + str(int(round((compare[e][ee][4] - 1) * 100))) if compare[e][ee][4] - 1 > 0 else "") + " | ")
-
-    with open(baseFolder + "\\enemy_compare_wiki_ik.json", "w") as out:
+    with open(baseFolder + "\\enemy_compare_wiki_all4.json", "w") as out:
         out.write(compareOut)
 
 except Exception as ex:
