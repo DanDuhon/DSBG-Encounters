@@ -10,7 +10,7 @@ enemies = {}
 enemyDiffs = {}
 enemyExport = {}
 behaviorExport = {}
-defenses = {"armor1", "armor2", "resist1", "resist2", "health1", "health2", "health3", "health4"}
+defenses = {"armor1", "armor2", "resist1", "resist2", "health1", "health2", "health3", "health4", "armor resist1", "damage health1", "damage health2"}
 
 behaviorCount = {
     "Armorer Dennis": 5,
@@ -132,9 +132,9 @@ try:
             for key in behaviorExport[baseName][charCnt]:
                 for defKeyJson in behaviorExport[baseName][charCnt][key]:
                     if (
-                        len(behaviorExport[baseName][charCnt].get(str(float(key)-0.05), {}).get(defKeyJson, {}))
+                        len(behaviorExport[baseName][charCnt].get(str(float(key)-0.1), {}).get(defKeyJson, {}))
                         + len(behaviorExport[baseName][charCnt][key][defKeyJson])
-                        + len(behaviorExport[baseName][charCnt].get(str(float(key)+0.05), {}).get(defKeyJson, {}))
+                        + len(behaviorExport[baseName][charCnt].get(str(float(key)+0.1), {}).get(defKeyJson, {}))
                         ) != behaviorCount.get(baseName, 1):
                         keysToDelete.append((baseName, charCnt, key, defKeyJson))
 

@@ -1,7 +1,6 @@
 from json import load, dump
 from os import path
 from pathlib import Path
-from math import ceil
 
 
 baseFolder = path.dirname(__file__)
@@ -12,11 +11,55 @@ baselineDiff = {}
 allEnemies = []
 baseNames = set()
 
+behaviorCount = {
+    "Armorer Dennis": 5,
+    "Artorias": 13,
+    "Asylum Demon": 9,
+    "Black Dragon Kalameet": 13,
+    "Black Knight": 9,
+    "Boreal Outrider Knight": 8,
+    "Crossbreed Priscilla": 13,
+    "Dancer of the Boreal Valley": 13,
+    "Executioner's Chariot": 13,
+    "Fencer Sharron": 7,
+    "Gaping Dragon": 13,
+    "Gargoyle": 8,
+    "Gravelord Nito": 13,
+    "Great Grey Wolf Sif": 14,
+    "Guardian Dragon": 10,
+    "Heavy Knight": 9,
+    "Hungry Mimic": 7,
+    "Invader Brylex": 5,
+    "Kirk, Knight of Thorns": 5,
+    "Longfinger Kirk": 5,
+    "Maldron the Assassin": 5,
+    "Maneater Mildred": 5,
+    "Manus, Father of the Abyss": 14,
+    "Marvelous Chester": 5,
+    "Melinda the Butcher": 5,
+    "Old Dragonslayer": 8,
+    "Old Iron King": 12,
+    "Oliver the Collector": 7,
+    "Ornstein & Smough": 20,
+    "Paladin Leeroy": 5,
+    "Sir Alonne": 13,
+    "Smelter Demon": 13,
+    "Stray Demon": 13,
+    "The Four Kings": 20,
+    "The Last Giant": 16,
+    "The Pursuer": 8,
+    "Titanite Demon": 8,
+    "Voracious Mimic": 7,
+    "Vordt of the Boreal Valley": 17,
+    "Winged Knight": 8,
+    "Xanthous King Jeremiah": 5
+}
+
 try:
     a = len((list(enemyPath.glob("**/*.json"))))
 
     for i, enemy in enumerate(enemyPath.glob("**/*.json")):
-        # if "Gaping Dragon" not in enemy.stem:
+        # if "Asylum Demon" not in enemy.stem:
         #     continue
         print(str((i/a)*100)[:6] + "%", end="\r")
         baseName = enemy.stem[:enemy.stem.rfind(" (") if " (" in enemy.stem else len(enemy.stem)]
@@ -37,8 +80,9 @@ try:
                 if (baseName, charCnt, tier) not in baselineDiff:
                     baselineDiff[(baseName, charCnt, tier)] = diff
                 else:
-                    # I want to group everything in groups of 10%, so round up to the nearest tenth.
-                    diffChange = ceil((round(diff/baselineDiff[(baseName, charCnt, tier)], 1) * 10)) / 10
+                    roundTarget = 5 + behaviorCount.get(baseName, 0)
+                    d = round((diff/baselineDiff[(baseName, charCnt, tier)]) * 10)
+                    diffChange = (roundTarget * round(d / roundTarget)) / 10
 
                     if diffChange <= 1.0:
                         continue
