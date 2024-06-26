@@ -208,14 +208,25 @@ class Enemy:
                     expansion,
                     enemyType,
                     numberOfModels,
-                    health=health + ceil((
-                        1 if {"health1", "damage health1"} & comboSet else
-                        2 if {"health2", "damage health2"} & comboSet else
-                        3 if "health3" in combo else
-                        4 if "health4" in combo else 0)
-                        * (1.5 if enemyType in {"invader", "mini boss"} else
-                           2 if enemyType == "main boss" else
-                           3 if enemyType == "mega boss" else 1)),
+                    health=(
+                        health + (
+                            1 if health == 1 and {"health1", "damage health1"} & comboSet
+                            else 2 if health == 1 and {"health2", "damage health2"} & comboSet
+                            else 3 if health == 1 and {"health3", "damage health3"} & comboSet
+                            else 4 if health == 1 and {"health4", "damage health4"} & comboSet
+                            else 2 if health == 5 and {"health1", "damage health1"} & comboSet
+                            else 3 if health == 5 and {"health2", "damage health2"} & comboSet
+                            else 5 if health == 5 and {"health3", "damage health3"} & comboSet
+                            else 6 if health == 5 and {"health4", "damage health4"} & comboSet
+                            else 2 if health == 10 and {"health1", "damage health1"} & comboSet
+                            else 4 if health == 10 and {"health2", "damage health2"} & comboSet
+                            else 6 if health == 10 and {"health3", "damage health3"} & comboSet
+                            else 8 if health == 10 and {"health4", "damage health4"} & comboSet
+                            else ceil(health * 0.1) if {"health1", "damage health1"} & comboSet
+                            else ceil(health * 0.2) if {"health2", "damage health2"} & comboSet
+                            else ceil(health * 0.3) if {"health3", "damage health3"} & comboSet
+                            else ceil(health * 0.4) if {"health4", "damage health4"} & comboSet
+                            else 0)),
                     armor=armor + (1 if "armor1" in combo or "armor resist1" in combo else 2 if "armor2" in combo else 0),
                     resist=resist + (1 if "resist1" in combo or "armor resist1" in combo else 2 if "resist2" in combo else 0),
                     attacks=[attack + (0 if attack == 0 else 1 if {"damage1", "damage health1"} & comboSet else 2 if {"damage2", "damage health2"} & comboSet else 3 if "damage3" in combo else 4 if "damage4" in combo else 0) for attack in attacks],
@@ -329,11 +340,11 @@ Enemy(name="Longfinger Kirk - Lunging Stab", expansion="Phantoms", enemyType="in
 Enemy(name="Longfinger Kirk - Cleave", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=2, attacks=[6], attackType=["physical"], nodeAttack=[True], attackEffect=[{"bleed",}], dodge=2, move=[1], attackRange=[0])
 Enemy(name="Longfinger Kirk - Crushing Blow", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=2, attacks=[5], attackType=["physical"], attackEffect=[{"bleed",}], dodge=3, move=[4], attackRange=[0])
 Enemy(name="Longfinger Kirk - Barbed Sword Strikes", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=2, repeat=1, attacks=[5], attackType=["physical"], attackEffect=[{"bleed",}], dodge=2, move=[0], attackRange=[1])
-Enemy(name="Maldron the Assassin - Greatlance Lunge", moveAttack=[True,True], expansion="Phantoms", enemyType="invader", numberOfModels=1, health=13, armor=1, resist=1, attacks=[4,0], attackType=["physical","physical"], nodeAttack=[True,False], dodge=3, move=[1,-1], attackRange=[0,1], initialPushDamage=True)
-Enemy(name="Maldron the Assassin - Double Lance Lunge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=13, armor=1, resist=1, repeat=1, attacks=[4], attackType=["physical"], dodge=2, move=[1], attackRange=[1])
-Enemy(name="Maldron the Assassin - Leaping Lance Strike", moveAttack=[True,True], expansion="Phantoms", enemyType="invader", numberOfModels=1, health=13, armor=1, resist=1, attacks=[5,0], attackType=["physical","physical"], nodeAttack=[True,False], dodge=2, move=[4,-2], attackRange=[0,2], initialPushDamage=True)
-Enemy(name="Maldron the Assassin - Jousting Charge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=13, armor=1, resist=1, attacks=[5], attackType=["physical"], dodge=3, move=[2], attackRange=[1])
-Enemy(name="Maldron the Assassin - Corrosive Urn Toss", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=13, armor=1, resist=1, attacks=[3], attackType=["magic"], attackEffect=[{"poison",}], dodge=2, move=[0], attackRange=[4])
+Enemy(name="Maldron the Assassin - Greatlance Lunge", moveAttack=[True,True], expansion="Phantoms", enemyType="invader", numberOfModels=1, health=8, armor=1, resist=1, attacks=[4,0], attackType=["physical","physical"], nodeAttack=[True,False], dodge=3, move=[1,-1], attackRange=[0,1], initialPushDamage=True)
+Enemy(name="Maldron the Assassin - Double Lance Lunge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=8, armor=1, resist=1, repeat=1, attacks=[4], attackType=["physical"], dodge=2, move=[1], attackRange=[1])
+Enemy(name="Maldron the Assassin - Leaping Lance Strike", moveAttack=[True,True], expansion="Phantoms", enemyType="invader", numberOfModels=1, health=8, armor=1, resist=1, attacks=[5,0], attackType=["physical","physical"], nodeAttack=[True,False], dodge=2, move=[4,-2], attackRange=[0,2], initialPushDamage=True)
+Enemy(name="Maldron the Assassin - Jousting Charge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=8, armor=1, resist=1, attacks=[5], attackType=["physical"], dodge=3, move=[2], attackRange=[1])
+Enemy(name="Maldron the Assassin - Corrosive Urn Toss", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=8, armor=1, resist=1, attacks=[3], attackType=["magic"], attackEffect=[{"poison",}], dodge=2, move=[0], attackRange=[4])
 Enemy(name="Maneater Mildred - Death Blow", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=18, armor=0, resist=0, attacks=[5], attackType=["physical"], nodeAttack=[True], dodge=1, move=[1], attackRange=[1])
 Enemy(name="Maneater Mildred - Executioner Strike", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=18, armor=0, resist=0, attacks=[4], attackType=["physical"], nodeAttack=[True], dodge=2, move=[2], attackRange=[0])
 Enemy(name="Maneater Mildred - Guillotine", moveAttack=[True], expansion="Phantoms", enemyType="invader", numberOfModels=1, health=18, armor=0, resist=0, attacks=[5], attackType=["physical"], attackEffect=[{"stagger",}], nodeAttack=[True], dodge=1, move=[1], attackRange=[0])
@@ -356,11 +367,11 @@ Enemy(name="Oliver the Collector - Majestic Greatsword Slash", moveAttack=[True,
 Enemy(name="Oliver the Collector - Santier's Spear Lunge", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=1, resist=0, attacks=[5], attackType=["physical"], attackEffect=[{"stagger",}], dodge=1, move=[1], attackRange=[1])
 Enemy(name="Oliver the Collector - Smelter Hammer Whirlwind", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=1, resist=0, repeat=2, attacks=[4], attackType=["physical"], nodeAttack=[True], dodge=1, move=[0], attackRange=[1])
 Enemy(name="Oliver the Collector - Ricard's Rapier Thrust", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=15, armor=1, resist=0, attacks=[4,0], attackType=["physical", "physical"], dodge=2, move=[0,-1], attackRange=[1,1])
-Enemy(name="Paladin Leeroy - Advancing Grant Slam", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=2, resist=1, attacks=[6], attackType=["physical"], attackEffect=[{"stagger",}], nodeAttack=[True], dodge=1, move=[1], attackRange=[1])
-Enemy(name="Paladin Leeroy - Grant Slam Withdrawal", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=2, resist=1, attacks=[6,0], attackType=["physical", "physical"], attackEffect=[{"stagger",},{"stagger",}], nodeAttack=[True, False], dodge=1, move=[0,-1], attackRange=[1,1])
-Enemy(name="Paladin Leeroy - Sanctus Shield Slam", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=2, resist=1, attacks=[5], attackType=["physical"], dodge=3, move=[1], attackRange=[0])
-Enemy(name="Paladin Leeroy - Sanctus Shield Dash", moveAttack=[True,True], expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=2, resist=1, initialPushDamage=True, attacks=[4,4], attackType=["physical","physical"], nodeAttack=[True,True], dodge=2, move=[1,1], attackRange=[0,0])
-Enemy(name="Paladin Leeroy - Wrath of the Gods", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=16, armor=2, resist=1, attacks=[5], attackType=["magic"], nodeAttack=[True], dodge=2, move=[0], attackRange=[1])
+Enemy(name="Paladin Leeroy - Advancing Grant Slam", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=1, attacks=[6], attackType=["physical"], attackEffect=[{"stagger",}], nodeAttack=[True], dodge=1, move=[1], attackRange=[1])
+Enemy(name="Paladin Leeroy - Grant Slam Withdrawal", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=1, attacks=[6,0], attackType=["physical", "physical"], attackEffect=[{"stagger",},{"stagger",}], nodeAttack=[True, False], dodge=1, move=[0,-1], attackRange=[1,1])
+Enemy(name="Paladin Leeroy - Sanctus Shield Slam", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=1, attacks=[5], attackType=["physical"], dodge=3, move=[1], attackRange=[0])
+Enemy(name="Paladin Leeroy - Sanctus Shield Dash", moveAttack=[True,True], expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=1, initialPushDamage=True, attacks=[4,4], attackType=["physical","physical"], nodeAttack=[True,True], dodge=2, move=[1,1], attackRange=[0,0])
+Enemy(name="Paladin Leeroy - Wrath of the Gods", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=2, resist=1, attacks=[5], attackType=["magic"], nodeAttack=[True], dodge=2, move=[0], attackRange=[1])
 Enemy(name="Xanthous King Jeremiah - Great Chaos Fireball", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=0, resist=1, attacks=[5], attackType=["magic"], nodeAttack=[True], dodge=1, move=[0], attackRange=[4])
 Enemy(name="Xanthous King Jeremiah - Chaos Fire Whip", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=0, resist=1, attacks=[4], attackType=["magic"], dodge=2, move=[1], attackRange=[1])
 Enemy(name="Xanthous King Jeremiah - Chaos Storm", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=14, armor=0, resist=1, repeat=1, attacks=[3], attackType=["magic"], nodeAttack=[True], dodge=2, move=[0], attackRange=[4])

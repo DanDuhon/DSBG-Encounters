@@ -65,6 +65,11 @@ try:
             
             print("\t" + str((i/len(enemies)*100))[:5] + "%", end="\r")
 
+            if "Maldron" in enemy.name:
+                enemy.health += 5
+            elif "Leeroy" in enemy.name:
+                enemy.health += 2
+
             extraStaminaSpent = 0
             if any([{"stagger", "frostbite"} & e for e in enemy.attackEffect]):
                 if enemy.attackEffect == [{"stagger", "frostbite"}]:
@@ -124,11 +129,6 @@ try:
                             currentHealth += extraHealthGained
                             if currentHealth > enemy.health:
                                 currentHealth = enemy.health
-                        # The Pursuer has some 0 dodge attacks that I'm going to assume will
-                        # still require stamina to be spent even in v2 rules.
-                        elif "The Pursuer" in enemy.name and enemy.dodge == 0:
-                            for i, a in enumerate(enemy.attacks):
-                                staminaSpent += reachMod[min([4, enemy.move[i] + enemy.attackRange[i]])]
 
                         staminaSpent += attack.staminaCost + extraStaminaSpent
 
@@ -160,7 +160,7 @@ try:
         # with open(baseFolder + "\\enemies\\" + enemy.name + ".json", "w") as eDump:
         #     dump({"deaths": enemy.deaths, "totalAttacks": e["totalAttacks"], "damagingAttacks": e["damagingAttacks"], "damageDone": e["damageDone"], "bleedDamage": e["bleedDamage"]}, eDump)
         with open(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.rfind(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json", "w") as eDump:
-            dump({"deaths": enemy.deaths, "totalAttacks": {1: 0, 2: 0, 3: 0}, "damagingAttacks": {1: 0, 2: 0, 3: 0}, "damageDone": {1: {1: 0, 2: 0, 3: 0}, 2: {1: 0, 2: 0, 3: 0}, 3: {1: 0, 2: 0, 3: 0}, 4: {1: 0, 2: 0, 3: 0}}, "bleedDamage": {1: {1: 0, 2: 0, 3: 0}, 2: {1: 0, 2: 0, 3: 0}, 3: {1: 0, 2: 0, 3: 0}, 4: {1: 0, 2: 0, 3: 0}}}, eDump)
+            dump({"health": enemy.health, "deaths": enemy.deaths, "totalAttacks": {1: 0, 2: 0, 3: 0}, "damagingAttacks": {1: 0, 2: 0, 3: 0}, "damageDone": {1: {1: 0, 2: 0, 3: 0}, 2: {1: 0, 2: 0, 3: 0}, 3: {1: 0, 2: 0, 3: 0}, 4: {1: 0, 2: 0, 3: 0}}, "bleedDamage": {1: {1: 0, 2: 0, 3: 0}, 2: {1: 0, 2: 0, 3: 0}, 3: {1: 0, 2: 0, 3: 0}, 4: {1: 0, 2: 0, 3: 0}}}, eDump)
 except Exception as ex:
     input(ex)
     raise
