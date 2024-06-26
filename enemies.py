@@ -203,30 +203,31 @@ class Enemy:
                     ):
                     continue
 
+                healthBonus = (
+                    1 if health == 1 and {"health1", "damage health1"} & comboSet
+                    else 2 if health == 1 and {"health2", "damage health2"} & comboSet
+                    else 3 if health == 1 and {"health3", "damage health3"} & comboSet
+                    else 4 if health == 1 and {"health4", "damage health4"} & comboSet
+                    else 2 if health == 5 and {"health1", "damage health1"} & comboSet
+                    else 3 if health == 5 and {"health2", "damage health2"} & comboSet
+                    else 5 if health == 5 and {"health3", "damage health3"} & comboSet
+                    else 6 if health == 5 and {"health4", "damage health4"} & comboSet
+                    else 2 if health == 10 and {"health1", "damage health1"} & comboSet
+                    else 4 if health == 10 and {"health2", "damage health2"} & comboSet
+                    else 6 if health == 10 and {"health3", "damage health3"} & comboSet
+                    else 8 if health == 10 and {"health4", "damage health4"} & comboSet
+                    else ceil(health * 0.1) if {"health1", "damage health1"} & comboSet
+                    else ceil(health * 0.2) if {"health2", "damage health2"} & comboSet
+                    else ceil(health * 0.3) if {"health3", "damage health3"} & comboSet
+                    else ceil(health * 0.4) if {"health4", "damage health4"} & comboSet
+                    else 0)
+
                 Enemy(
                     name + " " + str(combo),
                     expansion,
                     enemyType,
                     numberOfModels,
-                    health=(
-                        health + (
-                            1 if health == 1 and {"health1", "damage health1"} & comboSet
-                            else 2 if health == 1 and {"health2", "damage health2"} & comboSet
-                            else 3 if health == 1 and {"health3", "damage health3"} & comboSet
-                            else 4 if health == 1 and {"health4", "damage health4"} & comboSet
-                            else 2 if health == 5 and {"health1", "damage health1"} & comboSet
-                            else 3 if health == 5 and {"health2", "damage health2"} & comboSet
-                            else 5 if health == 5 and {"health3", "damage health3"} & comboSet
-                            else 6 if health == 5 and {"health4", "damage health4"} & comboSet
-                            else 2 if health == 10 and {"health1", "damage health1"} & comboSet
-                            else 4 if health == 10 and {"health2", "damage health2"} & comboSet
-                            else 6 if health == 10 and {"health3", "damage health3"} & comboSet
-                            else 8 if health == 10 and {"health4", "damage health4"} & comboSet
-                            else ceil(health * 0.1) if {"health1", "damage health1"} & comboSet
-                            else ceil(health * 0.2) if {"health2", "damage health2"} & comboSet
-                            else ceil(health * 0.3) if {"health3", "damage health3"} & comboSet
-                            else ceil(health * 0.4) if {"health4", "damage health4"} & comboSet
-                            else 0)),
+                    health=health + healthBonus,
                     armor=armor + (1 if "armor1" in combo or "armor resist1" in combo else 2 if "armor2" in combo else 0),
                     resist=resist + (1 if "resist1" in combo or "armor resist1" in combo else 2 if "resist2" in combo else 0),
                     attacks=[attack + (0 if attack == 0 else 1 if {"damage1", "damage health1"} & comboSet else 2 if {"damage2", "damage health2"} & comboSet else 3 if "damage3" in combo else 4 if "damage4" in combo else 0) for attack in attacks],
