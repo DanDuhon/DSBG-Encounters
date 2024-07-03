@@ -73,6 +73,16 @@ gangEncounters = {
     "Twilight Falls"
 }
 
+respawnEncounters = {
+    "Altar of Bones",
+    "Bridge Too Far",
+    "Broken Passageway",
+    "Central Plaza (TSC)",
+    "Deathly Tolls",
+    "Last Rites",
+    "The Mass Grave"
+}
+
 # For these encounters, it made more sense to sort the enemies
 # by toughness rather than difficulty.
 toughnessSortedEncounters = {
@@ -220,21 +230,25 @@ try:
                     + [enemiesDict["Stone Knight"].id] * 2
                     + [enemiesDict["Necromancer"].id] * 2
                     + [enemiesDict["Black Hollow Mage"].id] * 2
-                    + [enemiesDict["Armorer Dennis"].id]
-                    + [enemiesDict["Fencer Sharron"].id]
-                    + [enemiesDict["Invader Brylex"].id]
-                    + [enemiesDict["Kirk, Knight of Thorns"].id]
-                    + [enemiesDict["Longfinger Kirk"].id]
-                    + [enemiesDict["Maldron the Assassin"].id]
-                    + [enemiesDict["Maneater Mildred"].id]
-                    + [enemiesDict["Marvelous Chester"].id]
-                    + [enemiesDict["Melinda the Butcher"].id]
-                    + [enemiesDict["Oliver the Collector"].id]
-                    + [enemiesDict["Paladin Leeroy"].id]
-                    + [enemiesDict["Xanthous King Jeremiah"].id]
-                    + [enemiesDict["Hungry Mimic"].id]
-                    + [enemiesDict["Voracious Mimic"].id]
                 )
+
+                if e not in respawnEncounters:
+                    higherHealthEnemies += (
+                        + [enemiesDict["Armorer Dennis"].id]
+                        + [enemiesDict["Fencer Sharron"].id]
+                        + [enemiesDict["Invader Brylex"].id]
+                        + [enemiesDict["Kirk, Knight of Thorns"].id]
+                        + [enemiesDict["Longfinger Kirk"].id]
+                        + [enemiesDict["Maldron the Assassin"].id]
+                        + [enemiesDict["Maneater Mildred"].id]
+                        + [enemiesDict["Marvelous Chester"].id]
+                        + [enemiesDict["Melinda the Butcher"].id]
+                        + [enemiesDict["Oliver the Collector"].id]
+                        + [enemiesDict["Paladin Leeroy"].id]
+                        + [enemiesDict["Xanthous King Jeremiah"].id]
+                        + [enemiesDict["Hungry Mimic"].id]
+                        + [enemiesDict["Voracious Mimic"].id]
+                    )
 
                 higherHealthCombos = set(combinations([enemyIds[en].id for en in higherHealthEnemies], higherHealthCount))
                 nonGangCombos = set(combinations([enemyIds[en].id for en in nonGangs], nonGangCount))
@@ -259,6 +273,8 @@ try:
                 # Generate all combinations of enemies.
                 allCombos = list(set(filterfalse(lambda s: not (
                         check_if_valid(e, level, s, difficulty, rangedCount, e in toughnessSortedEncounters)
+                        # Don't put invaders in encounters that respawn enemies
+                        and (e not in respawnEncounters or invaderCount == 0)
                         # Enemies must be different
                         and (e not in set(["Abandoned and Forgotten", "The First Bastion"]) or len(s) == len(set(s)))
                         # No more than one of the two strongest enemies
@@ -314,6 +330,8 @@ try:
                         # Generate all combinations of enemies.
                         allCombos = list(set(filterfalse(lambda s: not (
                                 check_if_valid(e, level, s, difficulty, rangedCount, e in toughnessSortedEncounters)
+                                # Don't put invaders in encounters that respawn enemies
+                                and (e not in respawnEncounters or invaderCount == 0)
                                 # Two of the strongest enemy
                                 and (e != "Frozen Revolutions" or s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 2)
                                 # Two of the toughest single target melee enemy and that enemy isn't in the blacklist
@@ -358,6 +376,8 @@ try:
                     # Grab the first 50,000 combinations.
                     allCombos = list(filterfalse(lambda s: not (
                                 check_if_valid(e, level, s, difficulty, rangedCount, e in toughnessSortedEncounters)
+                                # Don't put invaders in encounters that respawn enemies
+                                and (e not in respawnEncounters or invaderCount == 0)
                                 # Two of the strongest enemy
                                 and (e != "Frozen Revolutions" or s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 2)
                                 # Two of the toughest single target melee enemy and that enemy isn't in the blacklist
