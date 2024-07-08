@@ -76,7 +76,7 @@ gangEncounters = {
 respawnEncounters = {
     "Altar of Bones",
     "Bridge Too Far",
-    "Broken Passageway",
+    "Broken Passageway (TSC)",
     "Central Plaza (TSC)",
     "Deathly Tolls",
     "Last Rites",
@@ -274,7 +274,7 @@ try:
                 allCombos = list(set(filterfalse(lambda s: not (
                         check_if_valid(e, level, s, difficulty, rangedCount, e in toughnessSortedEncounters)
                         # Don't put invaders in encounters that respawn enemies
-                        and (e not in respawnEncounters or invaderCount == 0)
+                        and (e not in respawnEncounters or sum(1 for x in s if enemyIds[x].expansion == "Phantoms") == 0)
                         # Enemies must be different
                         and (e not in set(["Abandoned and Forgotten", "The First Bastion"]) or len(s) == len(set(s)))
                         # No more than one of the two strongest enemies
@@ -331,7 +331,7 @@ try:
                         allCombos = list(set(filterfalse(lambda s: not (
                                 check_if_valid(e, level, s, difficulty, rangedCount, e in toughnessSortedEncounters)
                                 # Don't put invaders in encounters that respawn enemies
-                                and (e not in respawnEncounters or invaderCount == 0)
+                                and (e not in respawnEncounters or sum(1 for x in s if enemyIds[x].expansion == "Phantoms") == 0)
                                 # Two of the strongest enemy
                                 and (e != "Frozen Revolutions" or s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 2)
                                 # Two of the toughest single target melee enemy and that enemy isn't in the blacklist
@@ -377,7 +377,7 @@ try:
                     allCombos = list(filterfalse(lambda s: not (
                                 check_if_valid(e, level, s, difficulty, rangedCount, e in toughnessSortedEncounters)
                                 # Don't put invaders in encounters that respawn enemies
-                                and (e not in respawnEncounters or invaderCount == 0)
+                                and (e not in respawnEncounters or sum(1 for x in s if enemyIds[x].expansion == "Phantoms") == 0)
                                 # Two of the strongest enemy
                                 and (e != "Frozen Revolutions" or s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 2)
                                 # Two of the toughest single target melee enemy and that enemy isn't in the blacklist
