@@ -181,73 +181,73 @@ class Enemy:
         for i, m in enumerate(self.move):
             reach.append(min([4, max([0, m + self.attackRange[i]])]))
 
-        # if not modified:
-        #     for combo in ngpc:
-        #         comboSet = frozenset(combo)
-        #         if (
-        #             ("magic" in comboSet and "physical" not in attackType)
-        #             or ("physical" in comboSet and "magic" not in attackType)
-        #             or ("magic" in comboSet and not any([("physical", False) in set(zip(attackType, moveAttack))]))
-        #             or any([ae & comboSet for ae in attackEffect])
-        #             or (noExtraConditions and {"bleed", "frostbite", "poison", "stagger"} & comboSet)
-        #             or any([len(ae | ({"bleed", "frostbite", "poison", "stagger"} & comboSet)) > 2 for ae in attackEffect])
-        #             or ({"damage health1", "damage health2", "armor resist1"} & comboSet and len(comboSet) < 4)
-        #             or ("armor resist1" in comboSet and {"armor1", "armor2", "resist1", "resist2"} & comboSet)
-        #             or ({"damage health1", "damage health2"} & comboSet and {"health1", "health2", "health3", "health4", "damage1", "damage2", "damage3", "damage4"} & comboSet)
-        #             or ("dodge1" in comboSet and dodge == 4)
-        #             or ("dodge2" in comboSet and dodge >= 3)
-        #             or (enemyType == "regular" and openSlots == 0 and comboSet & {"bleed", "frostbite", "poison", "stagger"} and not any([ae for ae in attackEffect]))
-        #             or (enemyType == "regular" and openSlots == 0 and "repeat" in comboSet and repeat == 0)
-        #             or (enemyType == "regular" and openSlots == 1 and comboSet & {"bleed", "frostbite", "poison", "stagger"} and not any([ae for ae in attackEffect]) and "repeat" in comboSet and repeat == 0)
-        #             or (name == "Executioner's Chariot - Death Race" and "repeat" in comboSet)
-        #             ):
-        #             continue
+        if not modified:
+            for combo in ngpc:
+                comboSet = frozenset(combo)
+                if (
+                    ("magic" in comboSet and "physical" not in attackType)
+                    or ("physical" in comboSet and "magic" not in attackType)
+                    or ("magic" in comboSet and not any([("physical", False) in set(zip(attackType, moveAttack))]))
+                    or any([ae & comboSet for ae in attackEffect])
+                    or (noExtraConditions and {"bleed", "frostbite", "poison", "stagger"} & comboSet)
+                    or any([len(ae | ({"bleed", "frostbite", "poison", "stagger"} & comboSet)) > 2 for ae in attackEffect])
+                    or ({"damage health1", "damage health2", "armor resist1"} & comboSet and len(comboSet) < 4)
+                    or ("armor resist1" in comboSet and {"armor1", "armor2", "resist1", "resist2"} & comboSet)
+                    or ({"damage health1", "damage health2"} & comboSet and {"health1", "health2", "health3", "health4", "damage1", "damage2", "damage3", "damage4"} & comboSet)
+                    or ("dodge1" in comboSet and dodge == 4)
+                    or ("dodge2" in comboSet and dodge >= 3)
+                    or (enemyType == "regular" and openSlots == 0 and comboSet & {"bleed", "frostbite", "poison", "stagger"} and not any([ae for ae in attackEffect]))
+                    or (enemyType == "regular" and openSlots == 0 and "repeat" in comboSet and repeat == 0)
+                    or (enemyType == "regular" and openSlots == 1 and comboSet & {"bleed", "frostbite", "poison", "stagger"} and not any([ae for ae in attackEffect]) and "repeat" in comboSet and repeat == 0)
+                    or (name == "Executioner's Chariot - Death Race" and "repeat" in comboSet)
+                    ):
+                    continue
 
-        #         healthBonus = (
-        #             1 if health == 1 and {"health1", "damage health1"} & comboSet
-        #             else 2 if health == 1 and {"health2", "damage health2"} & comboSet
-        #             else 3 if health == 1 and {"health3", "damage health3"} & comboSet
-        #             else 4 if health == 1 and {"health4", "damage health4"} & comboSet
-        #             else 2 if health == 5 and {"health1", "damage health1"} & comboSet
-        #             else 3 if health == 5 and {"health2", "damage health2"} & comboSet
-        #             else 5 if health == 5 and {"health3", "damage health3"} & comboSet
-        #             else 6 if health == 5 and {"health4", "damage health4"} & comboSet
-        #             else 2 if health == 10 and {"health1", "damage health1"} & comboSet
-        #             else 4 if health == 10 and {"health2", "damage health2"} & comboSet
-        #             else 6 if health == 10 and {"health3", "damage health3"} & comboSet
-        #             else 8 if health == 10 and {"health4", "damage health4"} & comboSet
-        #             else ceil(health * 0.1) if {"health1", "damage health1"} & comboSet
-        #             else ceil(health * 0.2) if {"health2", "damage health2"} & comboSet
-        #             else ceil(health * 0.3) if {"health3", "damage health3"} & comboSet
-        #             else ceil(health * 0.4) if {"health4", "damage health4"} & comboSet
-        #             else 0)
+                healthBonus = (
+                    1 if health == 1 and {"health1", "damage health1"} & comboSet
+                    else 2 if health == 1 and {"health2", "damage health2"} & comboSet
+                    else 3 if health == 1 and {"health3", "damage health3"} & comboSet
+                    else 4 if health == 1 and {"health4", "damage health4"} & comboSet
+                    else 2 if health == 5 and {"health1", "damage health1"} & comboSet
+                    else 3 if health == 5 and {"health2", "damage health2"} & comboSet
+                    else 5 if health == 5 and {"health3", "damage health3"} & comboSet
+                    else 6 if health == 5 and {"health4", "damage health4"} & comboSet
+                    else 2 if health == 10 and {"health1", "damage health1"} & comboSet
+                    else 4 if health == 10 and {"health2", "damage health2"} & comboSet
+                    else 6 if health == 10 and {"health3", "damage health3"} & comboSet
+                    else 8 if health == 10 and {"health4", "damage health4"} & comboSet
+                    else ceil(health * 0.1) if {"health1", "damage health1"} & comboSet
+                    else ceil(health * 0.2) if {"health2", "damage health2"} & comboSet
+                    else ceil(health * 0.3) if {"health3", "damage health3"} & comboSet
+                    else ceil(health * 0.4) if {"health4", "damage health4"} & comboSet
+                    else 0)
                 
-        #         if "Four Kings" in name:
-        #             healthBonus = ceil(healthBonus / 2)
+                if "Four Kings" in name:
+                    healthBonus = ceil(healthBonus / 2)
 
-        #         Enemy(
-        #             name + " " + str(combo),
-        #             expansion,
-        #             enemyType,
-        #             numberOfModels,
-        #             health=health + healthBonus,
-        #             armor=armor + (1 if "armor1" in combo or "armor resist1" in combo else 2 if "armor2" in combo else 0),
-        #             resist=resist + (1 if "resist1" in combo or "armor resist1" in combo else 2 if "resist2" in combo else 0),
-        #             attacks=[attack + (0 if attack == 0 else 1 if {"damage1", "damage health1"} & comboSet else 2 if {"damage2", "damage health2"} & comboSet else 3 if "damage3" in combo else 4 if "damage4" in combo else 0) for attack in attacks],
-        #             attackType=["magic" if "magic" in combo and not moveAttack[i] else "physical" if "physical" in combo or moveAttack[i] else at for i, at in enumerate(attackType)],
-        #             dodge=dodge + (1 if "dodge1" in combo else 0) + (2 if "dodge2" in combo else 0),
-        #             move=move,
-        #             attackRange=attackRange,
-        #             repeat=repeat + (1 if "repeat" in combo else 0),
-        #             id=max([enemy.id for enemy in enemies]) + 1 if id else None,
-        #             attackEffect=[ae | ({"bleed",} if "bleed" in set(combo) else set()) | ({"poison",} if "poison" in set(combo) else set()) | ({"frostbite",} if "frostbite" in set(combo) else set()) | ({"stagger",} if "stagger" in set(combo) else set()) for ae in attackEffect],
-        #             nodeAttack=nodeAttack,
-        #             nodesAttacked=nodesAttacked,
-        #             weakArcs=weakArcs,
-        #             windup=windup,
-        #             skipDefense=skipDefense,
-        #             modified=True,
-        #             comboSet=comboSet)
+                Enemy(
+                    name + " " + str(combo),
+                    expansion,
+                    enemyType,
+                    numberOfModels,
+                    health=health + healthBonus,
+                    armor=armor + (1 if "armor1" in combo or "armor resist1" in combo else 2 if "armor2" in combo else 0),
+                    resist=resist + (1 if "resist1" in combo or "armor resist1" in combo else 2 if "resist2" in combo else 0),
+                    attacks=[attack + (0 if attack == 0 else 1 if {"damage1", "damage health1"} & comboSet else 2 if {"damage2", "damage health2"} & comboSet else 3 if "damage3" in combo else 4 if "damage4" in combo else 0) for attack in attacks],
+                    attackType=["magic" if "magic" in combo and not moveAttack[i] else "physical" if "physical" in combo or moveAttack[i] else at for i, at in enumerate(attackType)],
+                    dodge=dodge + (1 if "dodge1" in combo else 0) + (2 if "dodge2" in combo else 0),
+                    move=move,
+                    attackRange=attackRange,
+                    repeat=repeat + (1 if "repeat" in combo else 0),
+                    id=max([enemy.id for enemy in enemies]) + 1 if id else None,
+                    attackEffect=[ae | ({"bleed",} if "bleed" in set(combo) else set()) | ({"poison",} if "poison" in set(combo) else set()) | ({"frostbite",} if "frostbite" in set(combo) else set()) | ({"stagger",} if "stagger" in set(combo) else set()) for ae in attackEffect],
+                    nodeAttack=nodeAttack,
+                    nodesAttacked=nodesAttacked,
+                    weakArcs=weakArcs,
+                    windup=windup,
+                    skipDefense=skipDefense,
+                    modified=True,
+                    comboSet=comboSet)
 
 
 # Regular enemies
