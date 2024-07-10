@@ -71,7 +71,7 @@ class HandItem:
 
 
 class Upgrade:
-    def __init__(self, name, character, tier, type, block=[], resist=[], dodge=[], damage=[[]], damageMod=0, attackRangeMod=0, magic=False, turnHeal=0, turnStamina=0, dodgeMoveBonus=0, multiAttackStamina=0) -> None:
+    def __init__(self, name, character, tier, type, block=[], resist=[], dodge=[], damage=[[]], rerollDefense=False, staminaGainFromDamage=99, dodgeMod=0, dodgeModRange=0, damageMod=0, attackRangeMod=0, attackRangeLimit=set(), magic=False, turnHeal=0, turnStamina=0, dodgeMoveBonus=0, multiAttackStamina=0) -> None:
         self.name = name
         self.character = character
         self.tier = tier
@@ -87,13 +87,17 @@ class Upgrade:
         self.turnStamina = turnStamina
         self.dodgeMoveBonus = dodgeMoveBonus
         self.multiAttackStamina = multiAttackStamina
+        self.dodgeMod = dodgeMod
+        self.dodgeModRange = dodgeModRange
+        self.staminaGainFromDamage = staminaGainFromDamage
+        self.rerollDefense = rerollDefense
 
 
 class Attack:
     def __init__(self, name, attackNumber, staminaCost, damage=[[]], damageMod=0, attackRange=0, magic=False, bleed=False, poison=False, ignoreDefense=False, damageBonus=set(), noRange0=False) -> None:
         self.name = name
         self.attackNumber = attackNumber
-        # Uses reachMod to calculate the odds of stamina cost to get into range (1 stamina, 2 stamina, 3 stamina).
+        # Uses reachMod to calculate the stamina cost to get into range (1 stamina, 2 stamina, 3 stamina).
         self.staminaCost = staminaCost + (1 - reachMod[min([4, attackRange + 1])]) + (1 - reachMod[min([4, attackRange + 2])]) + (1 - reachMod[min([4, attackRange + 3])])
         self.attackRange = attackRange
         self.damage = damage
@@ -199,12 +203,71 @@ HandItem(name="Twin Dragon Greatshield", character="Knight", tier=3, block=[u, u
 HandItem(name="Falchion", character="Knight", tier=3, block=[b], resist=[u], upgradeSlots=2)
 HandItem(name="Black Iron Greatshield", character="Knight", tier=3, block=[u], resist=[u, u])
 
-Armor(name="Sellsword Armour", block=[b], resist=[b], dodge=[d])
-Armor(name="Black Leather Armour", block=[b], resist=[b], dodge=[d], upgradeSlots=1)
-Armor(name="Eastern Armour", block=[b, b], resist=[b, b], dodge=[d, d], upgradeSlots=2)
+Armor(name="Sellsword Armour", character="Mercenary", tier=1, block=[b], resist=[b], dodge=[d])
+Armor(name="Black Leather Armour", character="Mercenary", tier=2, block=[b], resist=[b], dodge=[d], upgradeSlots=1)
+Armor(name="Eastern Armour", character="Mercenary", tier=3, block=[b, b], resist=[b, b], dodge=[d, d], upgradeSlots=2)
 Upgrade(name="Ring of Favour", character="Mercenary", tier=2, type="armor", multiAttackStamina=1)
-HandItem(name="Sellsword Twinblades", twoHanded=True)
-HandItem(name="Wooden Shield", dodge=[d])
-HandItem(name="Warden Twinblades", twoHanded=True, block=[b], upgradeSlots=1)
-HandItem(name="Crystal Straight Sword", upgradeSlots=1)
-HandItem(name="Crest Shield", block=[b], dodge=[d])
+Upgrade(name="Wolf Ring", character="Mercenary", tier=3, type="armor", rerollDefense=True)
+HandItem(name="Sellsword Twinblades", character="Mercenary", tier=1, twoHanded=True)
+HandItem(name="Wooden Shield", character="Mercenary", tier=1, dodge=[d])
+HandItem(name="Warden Twinblades", character="Mercenary", tier=2, twoHanded=True, block=[b], upgradeSlots=1)
+HandItem(name="Crystal Straight Sword", character="Mercenary", tier=2, upgradeSlots=1)
+HandItem(name="Crest Shield", character="Mercenary", tier=2, block=[b], dodge=[d])
+HandItem(name="Onikiri and Ubadachi", character="Mercenary", tier=3, twoHanded=True, dodge=[d], upgradeSlots=1)
+HandItem(name="Large Leather Shield", character="Mercenary", tier=3, block=[u], resist=[b], dodge=[d])
+HandItem(name="Drang Hammers", character="Mercenary", tier=3, twoHanded=True, resist=[b], dodge=[d], upgradeSlots=1)
+
+Armor(name="Pyromancer Garb", character="Pyromancer", tier=1, resist=[b, b], dodge=[d])
+Armor(name="Cornyx's Robes", block=[u], resist=[o], upgradeSlots=2)
+Upgrade(name="Carthus Flame Arc", character="Pyromancer", tier=3, type="weapon", magic=True, damageMod=1)
+HandItem(name="Pyromancy Flame", character="Pyromancer", tier=1)
+HandItem(name="Caduceus Round Shield", character="Pyromancer", tier=1, block=[u])
+HandItem(name="Hand Axe", character="Pyromancer", tier=1)
+HandItem(name="Immolation Tinder", character="Pyromancer", tier=2, twoHanded=True, resist=[b], upgradeSlots=2)
+HandItem(name="Great Combustion", character="Pyromancer", tier=2)
+HandItem(name="Fire Surge", character="Pyromancer", tier=2)
+HandItem(name="Stone Parma", character="Pyromancer", tier=3, block=[u], resist=[u], upgradeSlots=1)
+HandItem(name="Rapport", character="Pyromancer", tier=3)
+HandItem(name="Great Chaos Fireball", character="Pyromancer", tier=3)
+HandItem(name="Fire Whip", character="Pyromancer", tier=3)
+
+Armor(name="Sorcerer Robes", block=[b], resist=[u])
+Armor(name="Dragonscale Armour", block=[b], resist=[b, u], dodge=[d], upgradeSlots=1)
+Upgrade(name="Faron Flashsword", character="Sorcerer", tier=2, type="weapon", magic=True, attackRangeMod=1, attackRangeLimit={0,})
+Upgrade(name="Crystal Magic Weapon", character="Sorcerer", tier=3, type="weapon", magic=True, damageMod=1)
+HandItem(name="Sorcerer's Catalyst", character="Sorcerer", tier=1)
+HandItem(name="Mail Breaker", character="Sorcerer", tier=1)
+HandItem(name="Leather Shield", character="Sorcerer", tier=1, resist=[b], dodge=[d])
+HandItem(name="Torch", character="Sorcerer", tier=2)
+HandItem(name="Magic Shield", character="Sorcerer", tier=2, block=[b], resist=[o])
+HandItem(name="Aural Decoy", character="Sorcerer", tier=2)
+HandItem(name="Soul Greatsword")
+HandItem(name="Homing Crystal Soulmass")
+HandItem(name="Crystal Hail")
+
+Armor(name="Deserter Armour", block=[b], resist=[b], dodge=[d])
+Armor(name="Black Hand Armour (Thief)", block=[u], resist=[b], dodge=[d], upgradeSlots=2)
+Upgrade(name="Obscuring Ring", character="Thief", tier=2, type="armor", dodgeMod=2, dodgeModRange=2)
+HandItem(name="Shortbow", character="Thief", tier=1, twoHanded=True)
+HandItem(name="Bandit Knife", character="Thief", tier=1)
+HandItem(name="Iron Round Shield", character="Thief", tier=1, canUseWithTwoHanded=True, dodge=[d])
+HandItem(name="Small Leather Shield", character="Thief", tier=2, canUseWithTwoHanded=True, block=[b], resist=[b], dodge=[d])
+HandItem(name="Shotel", character="Thief", tier=2, dodge=[d], upgradeSlots=1)
+HandItem(name="Royal Dirk", character="Thief", tier=3, block=[b], resist=[b], dodge=[d], upgradeSlots=1)
+HandItem(name="Man Serpent Hatchet", character="Thief", tier=3, upgradeSlots=1)
+HandItem(name="Hawkwood's Shield", character="Thief", tier=3, canUseWithTwoHanded=True, block=[u], resist=[u], dodge=[d])
+HandItem(name="Dragonrider Bow", character="Thief", tier=3, twoHanded=True, dodge=[d], upgradeSlots=1)
+
+Armor(name="Northern Armour", block=[b], resist=[b], dodge=[d])
+Armor(name="Fallen Knight Armour", block=[u], resist=[u], dodge=[d], upgradeSlots=2)
+Upgrade(name="Knight Slayer's Ring", character="Warrior", tier=2, type="armor", staminaGainFromDamage=3)
+HandItem(name="Battle Axe")
+HandItem(name="Round Shield", block=[b])
+HandItem(name="Spiked Mace", twoHanded=True, block=[b], resist=[b], upgradeSlots=1)
+HandItem(name="Silver Knight Shield", block=[u], upgradeSlots=1)
+HandItem(name="Great Wooden Hammer", twoHanded=True, block=[b], upgradeSlots=1)
+HandItem(name="Caestus")
+HandItem(name="Warpick", upgradeSlots=1)
+HandItem(name="Great Machete", twoHanded=True, block=[b], resist=[b], upgradeSlots=1)
+HandItem(name="Dragonslayer's Axe", resist=[b], upgradeSlots=1)
+HandItem(name="Balder Side Sword", resist=[b], upgradeSlots=1)
