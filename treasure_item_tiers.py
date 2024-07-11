@@ -415,10 +415,10 @@ def populate_treasure_tiers(character):
         treasures[t]["type"] == "armor"
         and ((
                 not treasures[t]["character"]
-                and treasures[t].get("statOrder", [set(), set(), set(), set()])[0] & soulCost[list(character)]["statOrder"][0]
-                and treasures[t].get("statOrder", [set(), set(), set(), set()])[1] & soulCost[list(character)]["statOrder"][1]
-                and treasures[t].get("statOrder", [set(), set(), set(), set()])[2] & soulCost[list(character)]["statOrder"][2]
-                and treasures[t].get("statOrder", [set(), set(), set(), set()])[3] & soulCost[list(character)]["statOrder"][3]
+                and treasures[t].get("statOrder", [set(), set(), set(), set()])[0] & soulCost[list(character)[0]]["statOrder"][0]
+                and treasures[t].get("statOrder", [set(), set(), set(), set()])[1] & soulCost[list(character)[0]]["statOrder"][1]
+                and treasures[t].get("statOrder", [set(), set(), set(), set()])[2] & soulCost[list(character)[0]]["statOrder"][2]
+                and treasures[t].get("statOrder", [set(), set(), set(), set()])[3] & soulCost[list(character)[0]]["statOrder"][3]
             ) or treasures[t]["character"] == character)
         and "soulCost" in treasures[t])
         ], key=lambda x: treasures[x]["soulCost"])
@@ -427,10 +427,10 @@ def populate_treasure_tiers(character):
         treasures[t]["type"] == "weapon"
         and ((
                 not treasures[t]["character"]
-                and treasures[t].get("statOrder", [set(), set(), set(), set()])[0] & soulCost[list(character)]["statOrder"][0]
-                and treasures[t].get("statOrder", [set(), set(), set(), set()])[1] & soulCost[list(character)]["statOrder"][1]
-                and treasures[t].get("statOrder", [set(), set(), set(), set()])[2] & soulCost[list(character)]["statOrder"][2]
-                and treasures[t].get("statOrder", [set(), set(), set(), set()])[3] & soulCost[list(character)]["statOrder"][3]
+                and treasures[t].get("statOrder", [set(), set(), set(), set()])[0] & soulCost[list(character)[0]]["statOrder"][0]
+                and treasures[t].get("statOrder", [set(), set(), set(), set()])[1] & soulCost[list(character)[0]]["statOrder"][1]
+                and treasures[t].get("statOrder", [set(), set(), set(), set()])[2] & soulCost[list(character)[0]]["statOrder"][2]
+                and treasures[t].get("statOrder", [set(), set(), set(), set()])[3] & soulCost[list(character)[0]]["statOrder"][3]
             ) or treasures[t]["character"] == character)
         and "soulCost" in treasures[t])
         ], key=lambda x: treasures[x]["soulCost"])
@@ -439,10 +439,10 @@ def populate_treasure_tiers(character):
         treasures[t]["type"] == "upgradeArmor"
         and ((
                 not treasures[t]["character"]
-                and treasures[t].get("statOrder", [set(), set(), set(), set()])[0] & soulCost[list(character)]["statOrder"][0]
-                and treasures[t].get("statOrder", [set(), set(), set(), set()])[1] & soulCost[list(character)]["statOrder"][1]
-                and treasures[t].get("statOrder", [set(), set(), set(), set()])[2] & soulCost[list(character)]["statOrder"][2]
-                and treasures[t].get("statOrder", [set(), set(), set(), set()])[3] & soulCost[list(character)]["statOrder"][3]
+                and treasures[t].get("statOrder", [set(), set(), set(), set()])[0] & soulCost[list(character)[0]]["statOrder"][0]
+                and treasures[t].get("statOrder", [set(), set(), set(), set()])[1] & soulCost[list(character)[0]]["statOrder"][1]
+                and treasures[t].get("statOrder", [set(), set(), set(), set()])[2] & soulCost[list(character)[0]]["statOrder"][2]
+                and treasures[t].get("statOrder", [set(), set(), set(), set()])[3] & soulCost[list(character)[0]]["statOrder"][3]
             ) or treasures[t]["character"] == character)
         and "soulCost" in treasures[t])
         ]
@@ -450,10 +450,10 @@ def populate_treasure_tiers(character):
         treasures[t]["type"] == "upgradeWeapon"
         and ((
                 not treasures[t]["character"]
-                and treasures[t].get("statOrder", [set(), set(), set(), set()])[0] & soulCost[list(character)]["statOrder"][0]
-                and treasures[t].get("statOrder", [set(), set(), set(), set()])[1] & soulCost[list(character)]["statOrder"][1]
-                and treasures[t].get("statOrder", [set(), set(), set(), set()])[2] & soulCost[list(character)]["statOrder"][2]
-                and treasures[t].get("statOrder", [set(), set(), set(), set()])[3] & soulCost[list(character)]["statOrder"][3]
+                and treasures[t].get("statOrder", [set(), set(), set(), set()])[0] & soulCost[list(character)[0]]["statOrder"][0]
+                and treasures[t].get("statOrder", [set(), set(), set(), set()])[1] & soulCost[list(character)[0]]["statOrder"][1]
+                and treasures[t].get("statOrder", [set(), set(), set(), set()])[2] & soulCost[list(character)[0]]["statOrder"][2]
+                and treasures[t].get("statOrder", [set(), set(), set(), set()])[3] & soulCost[list(character)[0]]["statOrder"][3]
             ) or treasures[t]["character"] == character)
         and "soulCost" in treasures[t])
         ]
@@ -490,7 +490,7 @@ for c in ["Assassin", "Cleric", "Herald", "Knight", "Mercenary", "Pyromancer", "
     if c not in a:
         a[c] = {"armor": {}, "weapon": {}, "upgradeArmor": {}, "upgradeWeapon": {}}
     generate_treasure_soul_cost({"Darkroot", "Executioner Chariot", "Manus, Father of the Abyss", "Painted World of Ariamis", "Gaping Dragon", "Iron Keep", "Asylum Demon", "The Last Giant", "The Sunless City", "Black Dragon Kalameet", "Old Iron King", "Characters Expansion", "Phantoms", "Dark Souls The Board Game", "Guardian Dragon", "Explorers", "Tomb of Giants", "Vordt of the Boreal Valley", "The Four Kings"}, set([c]))
-    populate_treasure_tiers({"Darkroot", "Executioner Chariot", "Manus, Father of the Abyss", "Painted World of Ariamis", "Gaping Dragon", "Iron Keep", "Asylum Demon", "The Last Giant", "The Sunless City", "Black Dragon Kalameet", "Old Iron King", "Characters Expansion", "Phantoms", "Dark Souls The Board Game", "Guardian Dragon", "Explorers", "Tomb of Giants", "Vordt of the Boreal Valley", "The Four Kings"}, set([c]))
+    populate_treasure_tiers(set([c]))
     for x in range(1, 4):
         a[c]["armor"][x] = [t for t in treasures if treasures[t]["type"] == "armor" and treasures[t]["tier"] == x]
         a[c]["weapon"][x] = [t for t in treasures if treasures[t]["type"] == "weapon" and treasures[t]["tier"] == x]
