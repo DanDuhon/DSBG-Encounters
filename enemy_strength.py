@@ -159,13 +159,13 @@ def add_to_bleed_proc_dict_boss(name, reachMod, arcMod1, arcMod2, arcMod3, arcMo
 #     if enemy.enemyType == "regular" and not enemy.modified:
 #         for _ in range(enemy.numberOfModels):
 #             for i in range(len(enemy.attacks)):
-#                 reachSum += reachMod[enemy.enemyType][max([0, min([4, sum(enemy.move[:i+1]) + sum(enemy.attackRange[:i+1]) - (1 if enemy.windup else 0)])])]
+#                 reachSum += reachMod[enemy.enemyType][max([0, min([4, sum(enemy.move[:i+1]) + enemy.attackRange[i] - (1 if enemy.windup else 0)])])]
 #                 reachDiv += 1
 # meanReachMod = reachSum / reachDiv
 # input(meanReachMod)
 
 # Output of the above here to hardcode elsewhere.
-meanReachMod = 0.7714069147635578
+meanReachMod = 0.7235561641156046
 
 try:
     tier = 3
@@ -197,6 +197,7 @@ try:
             poisonAdded = False
             poisonAdded2 = False
             bleedSubtracted = False
+            attackCount = 0
             
             # For each enemy attack, calculate the expected
             # damage the enemy would do to this loadout.
@@ -208,9 +209,18 @@ try:
             for i in range(len(enemy.attacks)):
                 if enemy.attacks[i] == 0:
                     continue
+                attackCount += 1
                 totalAttacks += multiplier
-                reach = reachMod["Executioner's Chariot" if "Executioner's Chariot" in enemy.name else "Old Iron King" if "Old Iron King" in enemy.name else enemy.enemyType][max([0, min([4, sum(enemy.move[:i+1]) + sum(enemy.attackRange[:i+1]) - (1 if enemy.windup else 0)])])]
+                reachModLookup1 = "Executioner's Chariot" if "Executioner's Chariot" in enemy.name else "Old Iron King" if "Old Iron King" in enemy.name else enemy.enemyType
+                reachModLookup2 = sum(enemy.move[:i+1]) + enemy.attackRange[i] - (1 if enemy.windup else 0)
+                reachMinus0 = reachMod[reachModLookup1][max([0, min([4, reachModLookup2])])]
+                reachMinus1 = reachMod[reachModLookup1][max([0, min([4, reachModLookup2 - 1])])]
                 dodge = 1 if loadout[2] == (0,) else (1 - (sum([1 for do in product(*loadout[2]) if sum(do) >= enemy.dodge]) / len(list(product(*loadout[2])))))
+
+                if attackCount == 1:
+                    reach = reachMinus0
+                else:
+                    reach = (reachMinus0 * dodge) + (reachMinus1 * (1 - dodge))
 
                 # This is the effect of Calamity, see below for more details.
                 if "Black Dragon Kalameet" in enemy.name:
@@ -239,7 +249,7 @@ try:
                     
                 if not poisonAdded:
                     poison1 = (((2 if enemy.id else 1) if enemy.attackEffect and "poison" in enemy.attackEffect[i] else 0)
-                        * reach
+                        * (reach * dodge)
                         * dodge)
                     poison2 = (((2 if enemy.id else 1) if enemy.attackEffect and "poison" in enemy.attackEffect[i] else 0)
                         * reach

@@ -1,6 +1,5 @@
 from statistics import mean
 from itertools import product
-from item_tier import itemTier
 
 
 attacks = []
@@ -20,35 +19,35 @@ means = {
     o: mean(o)
 }
 
-bleedTrigger = {
-    1: {
-        0: [],
-        1: [],
-        2: [],
-        3: [],
-        4: [],
-        5: [],
-        6: []
-    },
-    2: {
-        0: [],
-        1: [],
-        2: [],
-        3: [],
-        4: [],
-        5: [],
-        6: []
-    },
-    3: {
-        0: [],
-        1: [],
-        2: [],
-        3: [],
-        4: [],
-        5: [],
-        6: []
-    }
-}
+# bleedTrigger = {
+#     1: {
+#         0: [],
+#         1: [],
+#         2: [],
+#         3: [],
+#         4: [],
+#         5: [],
+#         6: []
+#     },
+#     2: {
+#         0: [],
+#         1: [],
+#         2: [],
+#         3: [],
+#         4: [],
+#         5: [],
+#         6: []
+#     },
+#     3: {
+#         0: [],
+#         1: [],
+#         2: [],
+#         3: [],
+#         4: [],
+#         5: [],
+#         6: []
+#     }
+# }
 
 reachMod = {
     1: 0.44970414201183434,
@@ -59,8 +58,6 @@ reachMod = {
 
 class Attack:
     def __init__(self, name, attackNumber, staminaCost, damage=[[]], damageMod=0, attackRange=0, magic=False, bleed=False, poison=False, ignoreDefense=False, damageBonus=set(), noRange0=False) -> None:
-        if name not in itemTier:
-            return
         attacks.append(self)
         self.name = name
         self.attackNumber = attackNumber
@@ -76,9 +73,6 @@ class Attack:
         self.damageBonus = damageBonus
         self.noRange0 = noRange0
         self.totalDamage = {}
-
-        self.tier = itemTier[name]
-        attackTiers[self.tier].append(self)
 
         self.expectedDamage = {
             -1: 0,
@@ -97,10 +91,10 @@ class Attack:
                 self.expectedDamage[x] = self.expectedDamage[x] + self.damageMod - (x if not self.ignoreDefense else 0)
             self.expectedDamage[x] = max([0, self.expectedDamage[x] + (1 if poison else 0)])
 
-        for x in range(7): # defense
-            for attack in self.damage:
-                combos = list(product(*attack))
-                bleedTrigger[self.tier][x].append((sum([1 for c in combos if sum(c) > x]) / len([c for c in combos]) if len([c for c in combos]) > 0 else 0))
+        # for x in range(7): # defense
+        #     for attack in self.damage:
+        #         combos = list(product(*attack))
+        #         bleedTrigger[self.tier][x].append((sum([1 for c in combos if sum(c) > x]) / len([c for c in combos]) if len([c for c in combos]) > 0 else 0))
 
 Attack(name="Abyss Greatsword", attackNumber=1, damage=[[b,b,b]], staminaCost=1)
 Attack(name="Abyss Greatsword", attackNumber=2, damage=[[u,u,u]], staminaCost=4)
@@ -128,7 +122,7 @@ Attack(name="Black Knight Greataxe", attackNumber=2, damage=[[u,u]], staminaCost
 Attack(name="Black Knight Greataxe", attackNumber=3, damage=[[u,u]], staminaCost=4)
 Attack(name="Black Knight Shield (Deprived)", attackNumber=1, damage=[[u]], staminaCost=2)
 Attack(name="Black Knight Shield (Deprived)", attackNumber=2, damage=[[o]], staminaCost=4)
-Attack(name="Black Knight Shield", attackNumber=1, damage=[[b,u]], staminaCost=2)
+Attack(name="Black Knight Shield (Black Knight)", attackNumber=1, damage=[[b,u]], staminaCost=2)
 Attack(name="Black Knight Halberd", attackNumber=1, damage=[[b,b,b]], staminaCost=1, attackRange=1, noRange0=True)
 Attack(name="Black Knight Halberd", attackNumber=2, damage=[[b,b,u]], staminaCost=4, attackRange=1, noRange0=True)
 Attack(name="Black Knight Sword", attackNumber=1, damage=[[b,b]], staminaCost=0)
@@ -146,8 +140,8 @@ Attack(name="Broadsword", attackNumber=2, damage=[[b,u]], staminaCost=2, attackR
 Attack(name="Broadsword", attackNumber=3, damage=[[u,u]], staminaCost=4, attackRange=1)
 Attack(name="Broken Straight Sword", attackNumber=1, damage=[[b,b,b]], damageMod=-2, staminaCost=0)
 Attack(name="Broken Straight Sword", attackNumber=2, damage=[[u,u,u]], damageMod=-2, staminaCost=3)
-Attack(name="Butcher Knife", attackNumber=1, damage=[[b,b]], staminaCost=1, attackRange=1)
-Attack(name="Butcher Knife", attackNumber=2, damage=[[u,u]], staminaCost=4, attackRange=1)
+Attack(name="Butcher Knife", attackNumber=1, damage=[[b,b]], staminaCost=1, attackRange=1, heal=1)
+Attack(name="Butcher Knife", attackNumber=2, damage=[[u,u]], staminaCost=4, attackRange=1, heal=1)
 Attack(name="Caestus", attackNumber=1, damage=[[b, b]], staminaCost=0)
 Attack(name="Carthus Curved Greatsword", attackNumber=1, damage=[[b,b]], bleed=True, staminaCost=0)
 Attack(name="Carthus Curved Greatsword", attackNumber=2, damage=[[b,b,b]], bleed=True, staminaCost=3)
@@ -296,8 +290,8 @@ Attack(name="Longbow", attackNumber=1, damage=[[b,b]], staminaCost=0, attackRang
 Attack(name="Longbow", attackNumber=2, damage=[[b,b,b]], staminaCost=3, attackRange=4, noRange0=True)
 Attack(name="Lothric Knight Greatsword", attackNumber=1, damage=[[b,b]], magic=True, staminaCost=0, attackRange=1)
 Attack(name="Lothric Knight Greatsword", attackNumber=2, damage=[[b,b,b]], magic=True, staminaCost=3, attackRange=1)
-Attack(name="Lothric's Holy Sword", attackNumber=1, damage=[[u]], magic=True, staminaCost=0)
-Attack(name="Lothric's Holy Sword", attackNumber=2, damage=[[b,u]], magic=True, staminaCost=3)
+Attack(name="Lothric's Holy Sword", attackNumber=1, damage=[[u]], magic=True, staminaCost=1, staminaRecovery=1)
+Attack(name="Lothric's Holy Sword", attackNumber=2, damage=[[b,u]], magic=True, staminaCost=3, staminaRecovery=1)
 Attack(name="Lucerne", attackNumber=1, damage=[[b,b,u]], damageMod=-1, staminaCost=1)
 Attack(name="Lucerne", attackNumber=2, damage=[[b,b,b,u]], damageMod=-1, staminaCost=4)
 Attack(name="Mace", attackNumber=1, damage=[[u]], staminaCost=0)
@@ -392,8 +386,8 @@ Attack(name="Silver Knight Straight Sword", attackNumber=2, damage=[[b,u]], stam
 Attack(name="Skull Lantern", attackNumber=1, damage=[[b,b]], magic=True, staminaCost=3)
 Attack(name="Smelter Sword", attackNumber=1, damage=[[b,b,b]], staminaCost=2, attackRange=1)
 Attack(name="Smelter Sword", attackNumber=2, damage=[[o,o]], staminaCost=5, attackRange=1)
-Attack(name="Smough's Hammer", attackNumber=1, damage=[[u,o]], staminaCost=2, attackRange=1)
-Attack(name="Smough's Hammer", attackNumber=2, damage=[[u,u,o,o]], staminaCost=6, attackRange=1)
+Attack(name="Smough's Hammer", attackNumber=1, damage=[[u,o]], staminaCost=2, attackRange=1, heal=1)
+Attack(name="Smough's Hammer", attackNumber=2, damage=[[u,u,o,o]], staminaCost=6, attackRange=1, heal=1)
 Attack(name="Sorcerer's Catalyst", attackNumber=1, damage=[[u]], magic=True, staminaCost=1, attackRange=3)
 Attack(name="Sorcerer's Catalyst", attackNumber=2, damage=[[b,b]], magic=True, staminaCost=3, attackRange=3)
 Attack(name="Sorcerer's Staff", attackNumber=1, damage=[[u]], staminaCost=0, attackRange=1)
@@ -463,9 +457,9 @@ Attack(name="Witch's Locks", attackNumber=2, damage=[[b,u]], magic=True, stamina
 Attack(name="Zweihander", attackNumber=1, damage=[[b,u,u]], staminaCost=2, attackRange=1)
 Attack(name="Zweihander", attackNumber=2, damage=[[b,o,o]], staminaCost=5, attackRange=1)
 
-for tier in bleedTrigger:
-    for key in bleedTrigger[tier]:
-        bleedTrigger[tier][key] = mean(bleedTrigger[tier][key])
+# for tier in bleedTrigger:
+#     for key in bleedTrigger[tier]:
+#         bleedTrigger[tier][key] = mean(bleedTrigger[tier][key])
         
 # This is to help calculate the difficulty for Fencer Sharron.
 # Percent of attacks that have an expected damage on her of at least 3.

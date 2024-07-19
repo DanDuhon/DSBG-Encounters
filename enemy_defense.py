@@ -1,7 +1,7 @@
 from json import load, dump
 from os import path
 from enemies import enemies
-from attacks import attackTiers, bleedTrigger, blackKnight
+from attacks import attackTiers, blackKnight
 from loadouts import loadoutLookup, dodgeMod, expectedBlock
 from math import ceil
 from statistics import mean
@@ -26,7 +26,7 @@ reachMod = {
 try:
     # Calculate enemy defense.
     # First pass to get how many times to apply each attack.
-    for tier in range(3, 4):
+    for tier in range(1, 4):
     #     for enemy in enemies:
     #         if tier < 3 and enemy.modified:
     #             continue
@@ -71,9 +71,7 @@ try:
             print("\t" + str((i/len(enemies)*100))[:5] + "%", end="\r")
 
             if "Maldron" in enemy.name:
-                enemy.health += 5
-            elif "Leeroy" in enemy.name:
-                enemy.health += 2
+                enemy.health += 5 + enemy.healthBonus
 
             extraStaminaSpent = 0
             if any([{"stagger", "frostbite"} & e for e in enemy.attackEffect]):
@@ -83,11 +81,14 @@ try:
                 # Used to modify Stagger and Frostbite.
                 nums = []
                 den = 1000
-                for i, a in enumerate(enemy.attacks[:int(len(enemy.attacks) / (2 if enemy.id else 1))]):
+                attackIdx = int(len(enemy.attacks) / (2 if enemy.id else 1)) + (1 if len(enemy.attacks) % 2 == 1 else 0)
+                for i, a in enumerate(enemy.attacks[:attackIdx]):
                     if a == 0 or not {"stagger", "frostbite"} & enemy.attackEffect[i]:
                         continue
-                    nums.append(round(reachMod[max([0, min([4, enemy.move[i] + enemy.attackRange[i]])])] * den, 0))
-
+                    reachModLookup1 = "Executioner's Chariot" if "Executioner's Chariot" in enemy.name else "Old Iron King" if "Old Iron King" in enemy.name else enemy.enemyType
+                    reachModLookup2 = sum(enemy.move[:i+1]) + enemy.attackRange[i] - (1 if enemy.windup else 0)
+                    reach = reachMod[reachModLookup1][max([0, min([4, reachModLookup2])])]
+                    nums.append(round(reach * den, 0))
                 stage = 1
                 for n in nums:
                     stage = stage * (den - n)
@@ -125,9 +126,13 @@ try:
 
                         currentHealth -= damage
 
-                        if currentHealth <= 0:
+                        if currentHealth <= 0 and enemy.leeroy:
+                            currentHealth = 2 + enemy.healthBonus
+                            enemy.leeroy = False
+                        elif currentHealth <= 0:
                             enemy.deaths[tier] += 1
                             currentHealth = enemy.health
+                            enemy.leeroy = True if enemy.name == "Paladin Leeroy" else False
                         elif "Heavy Knight" in enemy.name and currentHealth <= 15:
                             currentHealth += 3 * (1/5)
                         elif "Maneater Mildred" in enemy.name and currentHealth < enemy.health:
@@ -148,9 +153,14 @@ try:
                 else:
                     for _ in range(maxAttacksTaken):
                         currentHealth -= damage
-                        if currentHealth <= 0:
+
+                        if currentHealth <= 0 and enemy.leeroy:
+                            currentHealth = 2 + enemy.healthBonus
+                            enemy.leeroy = False
+                        elif currentHealth <= 0:
                             enemy.deaths[tier] += 1
                             currentHealth = enemy.health
+                            enemy.leeroy = True if enemy.name == "Paladin Leeroy" else False
                         elif "Heavy Knight" in enemy.name and currentHealth <= 15:
                             currentHealth += 3 * (1/5)
                         elif "Maneater Mildred" in enemy.name and currentHealth < enemy.health:
