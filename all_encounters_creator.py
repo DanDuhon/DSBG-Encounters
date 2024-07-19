@@ -306,6 +306,7 @@ encounters = {
     "Gate of Peril": {"enemies": [[bhm,sg,fs,hs,fs,hs,df],[],[]], "enemyExpansions": set([dark, dsbg, chariot]), "level": 4, "spawns": [[],[],[]], "expansion": chariot},
     "Huntsman's Copse": {"enemies": [[bhm,bhm,ch,fs,hs],[],[]], "enemyExpansions": set([dsbg, chariot]), "level": 4, "spawns": [[],[],[]], "expansion": chariot},
     "Undead Purgatory": {"enemies": [[fs,ch,bhm,s,sks],[],[]], "enemyExpansions": set([chariot, dsbg]), "level": 4, "spawns": [[],[],[]], "expansion": chariot},
+    "Mega Boss Setup": {"enemies": [[fs,fs,bhm,fs,bhm,fs],[],[]], "enemyExpansions": set([chariot]), "level": 4, "spawns": [[],[],[]], "expansion": chariot},
 
     "Darkened Chamber": {"enemies": [[sk,mc,df,sk,mp,df],[],[]], "enemyExpansions": set([dark]), "level": 4, "spawns": [[],[],[]], "expansion": gaping},
     "Outskirts of Blighttown": {"enemies": [[s,skg,s,skg,lhs,ch,lhs,ch],[],[]], "enemyExpansions": set([dsbg]), "level": 4, "spawns": [[],[],[]], "expansion": gaping},
@@ -367,6 +368,7 @@ for encounter in encounters:
         pass
     if encounters[encounter]["level"] < 4 and encounters[encounter]["expansion"] not in set([e.expansion for e in enemies]):
         pass
+    print(encounter)
     
     allEncounters[encounter] = {
         "name": encounter,
