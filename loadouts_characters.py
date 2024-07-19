@@ -19,36 +19,6 @@ reachMod = {
     4: 1
 }
 
-bleedTrigger = {
-    1: {
-        0: [],
-        1: [],
-        2: [],
-        3: [],
-        4: [],
-        5: [],
-        6: []
-    },
-    2: {
-        0: [],
-        1: [],
-        2: [],
-        3: [],
-        4: [],
-        5: [],
-        6: []
-    },
-    3: {
-        0: [],
-        1: [],
-        2: [],
-        3: [],
-        4: [],
-        5: [],
-        6: []
-    }
-}
-
 gear = {
     "Assassin": {
         "armor": [],
@@ -79,11 +49,10 @@ class Armor:
 
 
 class HandItem:
-    def __init__(self, name, character, tier, attacks=[], block=[], resist=[], dodge=[], blockMod=0, resistMod=0, twoHanded=False, canUseWithTwoHanded=False, turnHeal=0, turnStamina=0, canDodge=True, dodgeMoveBonus=0, immunities=set(), upgradeSlots=0, pushOnAttacked=0, pushType=None) -> None:
+    def __init__(self, name, character, tier, block=[], resist=[], dodge=[], blockMod=0, resistMod=0, twoHanded=False, canUseWithTwoHanded=False, turnHeal=0, turnStamina=0, canDodge=True, dodgeMoveBonus=0, immunities=set(), upgradeSlots=0, pushOnAttacked=0, pushType=None) -> None:
         self.name = name
         self.character = character
         self.tier = tier
-        self.attacks = attacks
         self.block = block
         self.resist = resist
         self.dodge = dodge
@@ -161,21 +130,7 @@ class Attack:
         for x in range(7): # defense
             for attack in self.damage:
                 combos = list(product(*attack))
-                bleedTrigger[self.tier][x].append((sum([1 for c in combos if sum(c) > x]) / len([c for c in combos]) if len([c for c in combos]) > 0 else 0))
-
-
-class Loadout:
-    def __init__(self, armor, handItem1, handItem2, armorUpgrade, handItem1Upgrade1, handItem1Upgrade2, handItem2Upgrade1, handItem2Upgrade2):
-        self.armor = armor
-        self.handItem1 = handItem1
-        self.handItem2 = handItem2
-        self.armorUpgrade = armorUpgrade
-        self.handItem1Upgrade1 = handItem1Upgrade1
-        self.handItem1Upgrade2 = handItem1Upgrade2
-        self.handItem2Upgrade1 = handItem2Upgrade1
-        self.handItem2Upgrade2 = handItem2Upgrade2
-
-
+                #bleedTrigger[self.tier][x].append((sum([1 for c in combos if sum(c) > x]) / len([c for c in combos]) if len([c for c in combos]) > 0 else 0))
 
 
 Armor(name="Assassin Armour", character="Assassin", tier=1, block=[b], resist=[b], dodge=[d])
@@ -276,22 +231,22 @@ HandItem(name="Rapport", character="Pyromancer", tier=3)
 HandItem(name="Great Chaos Fireball", character="Pyromancer", tier=3)
 HandItem(name="Fire Whip", character="Pyromancer", tier=3)
 
-Armor(name="Sorcerer Robes", character="Sorcerer", tier=1, block=[b], resist=[u])
-Armor(name="Dragonscale Armour", character="Sorcerer", tier=2, block=[b], resist=[b, u], dodge=[d], upgradeSlots=1)
+Armor(name="Sorcerer Robes", block=[b], resist=[u])
+Armor(name="Dragonscale Armour", block=[b], resist=[b, u], dodge=[d], upgradeSlots=1)
 Upgrade(name="Faron Flashsword", character="Sorcerer", tier=2, type="weapon", magic=True, attackRangeMod=1, attackRangeLimit={0,})
 Upgrade(name="Crystal Magic Weapon", character="Sorcerer", tier=3, type="weapon", magic=True, damageMod=1)
 HandItem(name="Sorcerer's Catalyst", character="Sorcerer", tier=1)
-HandItem(name="Mail Breaker", character="Sorcerer", tier=1, character="Sorcerer", tier=1)
+HandItem(name="Mail Breaker", character="Sorcerer", tier=1)
 HandItem(name="Leather Shield", character="Sorcerer", tier=1, resist=[b], dodge=[d])
-HandItem(name="Torch", character="Sorcerer", tier=2, character="Sorcerer", tier=2)
+HandItem(name="Torch", character="Sorcerer", tier=2)
 HandItem(name="Magic Shield", character="Sorcerer", tier=2, block=[b], resist=[o])
 HandItem(name="Aural Decoy", character="Sorcerer", tier=2)
-HandItem(name="Soul Greatsword", character="Sorcerer", tier=3)
-HandItem(name="Homing Crystal Soulmass", character="Sorcerer", tier=3)
-HandItem(name="Crystal Hail", character="Sorcerer", tier=3)
+HandItem(name="Soul Greatsword")
+HandItem(name="Homing Crystal Soulmass")
+HandItem(name="Crystal Hail")
 
-Armor(name="Deserter Armour", character="Thief", tier=1, block=[b], resist=[b], dodge=[d])
-Armor(name="Black Hand Armour (Thief)", character="Thief", tier=2, block=[u], resist=[b], dodge=[d], upgradeSlots=2)
+Armor(name="Deserter Armour", block=[b], resist=[b], dodge=[d])
+Armor(name="Black Hand Armour (Thief)", block=[u], resist=[b], dodge=[d], upgradeSlots=2)
 Upgrade(name="Obscuring Ring", character="Thief", tier=2, type="armor", dodgeMod=2, dodgeModRange=2)
 HandItem(name="Shortbow", character="Thief", tier=1, twoHanded=True)
 HandItem(name="Bandit Knife", character="Thief", tier=1)
@@ -303,16 +258,16 @@ HandItem(name="Man Serpent Hatchet", character="Thief", tier=3, upgradeSlots=1)
 HandItem(name="Hawkwood's Shield", character="Thief", tier=3, canUseWithTwoHanded=True, block=[u], resist=[u], dodge=[d])
 HandItem(name="Dragonrider Bow", character="Thief", tier=3, twoHanded=True, dodge=[d], upgradeSlots=1)
 
-Armor(name="Northern Armour", character="Warrior", tier=1, block=[b], resist=[b], dodge=[d])
-Armor(name="Fallen Knight Armour", character="Warrior", tier=3, block=[u], resist=[u], dodge=[d], upgradeSlots=2)
+Armor(name="Northern Armour", block=[b], resist=[b], dodge=[d])
+Armor(name="Fallen Knight Armour", block=[u], resist=[u], dodge=[d], upgradeSlots=2)
 Upgrade(name="Knight Slayer's Ring", character="Warrior", tier=2, type="armor", staminaGainFromDamage=3)
-HandItem(name="Battle Axe", character="Warrior", tier=1)
-HandItem(name="Round Shield", character="Warrior", tier=1, block=[b])
-HandItem(name="Spiked Mace", character="Warrior", tier=2, twoHanded=True, block=[b], resist=[b], upgradeSlots=1)
-HandItem(name="Silver Knight Shield", character="Warrior", tier=2, block=[u], upgradeSlots=1)
-HandItem(name="Great Wooden Hammer", character="Warrior", tier=2, twoHanded=True, block=[b], upgradeSlots=1)
-HandItem(name="Caestus", character="Warrior", tier=2)
-HandItem(name="Warpick", character="Warrior", tier=3, upgradeSlots=1)
-HandItem(name="Great Machete", character="Warrior", tier=3, twoHanded=True, block=[b], resist=[b], upgradeSlots=1)
-HandItem(name="Dragonslayer's Axe", character="Warrior", tier=3, resist=[b], upgradeSlots=1)
-HandItem(name="Balder Side Sword", character="Warrior", tier=3, resist=[b], upgradeSlots=1)
+HandItem(name="Battle Axe")
+HandItem(name="Round Shield", block=[b])
+HandItem(name="Spiked Mace", twoHanded=True, block=[b], resist=[b], upgradeSlots=1)
+HandItem(name="Silver Knight Shield", block=[u], upgradeSlots=1)
+HandItem(name="Great Wooden Hammer", twoHanded=True, block=[b], upgradeSlots=1)
+HandItem(name="Caestus")
+HandItem(name="Warpick", upgradeSlots=1)
+HandItem(name="Great Machete", twoHanded=True, block=[b], resist=[b], upgradeSlots=1)
+HandItem(name="Dragonslayer's Axe", resist=[b], upgradeSlots=1)
+HandItem(name="Balder Side Sword", resist=[b], upgradeSlots=1)
