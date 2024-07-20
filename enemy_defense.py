@@ -10,10 +10,8 @@ from pathlib import Path
 
 baseFolder = path.dirname(__file__)
 
-# The "first pass" section will have to be run if new treasures or enemies/invaders are ever added.
-# Hardcoded values from previous run of the first pass.
-maxAttacksTaken = 168
-maxStaminaSpent = 742
+maxAttacksTaken = 100
+maxStaminaSpent = 500
 
 reachMod = {
     0: 0.07692307692307693,
@@ -25,42 +23,36 @@ reachMod = {
 
 try:
     # Calculate enemy defense.
-    # First pass to get how many times to apply each attack.
-    for tier in range(3, 4):
-    #     for enemy in enemies:
-    #         if tier < 3 and enemy.modified:
-    #             continue
+    for tier in range(1, 4):
+        for enemy in enemies:
+            if tier < 3 and enemy.modified:
+                continue
             
-    #         for attack in attackTiers[tier]:
-    #             damage = attack.expectedDamage[enemy.resist if attack.magic else enemy.armor]
+            for attack in attackTiers[tier]:
+                damage = attack.expectedDamage[enemy.resist if attack.magic else enemy.armor]
 
-    #             if attack.bleed:
-    #                 damage += bleedTrigger[tier][enemy.resist if attack.magic else enemy.armor]
+                if attack.bleed:
+                    damage += 2 * bleedTrigger[tier][enemy.resist if attack.magic else enemy.armor]
 
-    #             if attack.poison:
-    #                 damage += 1
+                if attack.poison:
+                    damage += 1
 
-    #             if set(enemy.name.lower().split(" ")) & attack.damageBonus:
-    #                 damage += 1
+                if set(enemy.name.lower().split(" ")) & attack.damageBonus:
+                    damage += 1
 
-    #             # Account for boss weak arcs.
-    #             if "boss" in enemy.enemyType:
-    #                 damage += 1.5 * (enemy.weakArcs / 4)
+                # Account for boss weak arcs.
+                if "boss" in enemy.enemyType:
+                    damage += 1.5 * (enemy.weakArcs / 4)
                         
-    #             if "Crossbreed Priscilla" in enemy.name:
-    #                 # Odds of Priscilla being invisible: once at the start, once at heatup, once per empty deck.
-    #                 damage -= ((2/40) + ((1/5) * (15/40)) + ((1/6) * (25/40))) * (enemy.weakArcs / 4)
+                if "Crossbreed Priscilla" in enemy.name:
+                    # Odds of Priscilla being invisible: once at the start, once at heatup, once per empty deck.
+                    damage -= ((2/40) + ((1/5) * (15/40)) + ((1/6) * (25/40))) * (enemy.weakArcs / 4)
 
-    #             attack.totalDamage[enemy] = damage
+                if "Titanite Demon" in enemy.name:
+                    if damage >= 3:
+                        damage -= 1
 
-    #             if damage > 0 and enemy.health / damage > maxAttacksTaken:
-    #                 maxAttacksTaken = ceil(enemy.health / damage)
-
-    #             if damage > 0 and (enemy.health / damage) * attack.staminaCost > maxStaminaSpent:
-    #                 maxStaminaSpent = ceil((enemy.health / damage) * attack.staminaCost)
-
-    #     print(maxAttacksTaken)
-    #     input(maxStaminaSpent)
+                attack.totalDamage[enemy] = damage
 
         # Second pass to get the number of deaths the attacks cause.
         print("Defense")
@@ -116,13 +108,16 @@ try:
                 damage = attack.totalDamage[enemy]
                 currentHealth = enemy.health
 
+                if attack.bleed:
+                    damage += 2 * bleedTrigger[tier][enemy.resist if attack.magic else enemy.armor]
+
+                if "Titanite Demon" in enemy.name:
+                    if damage >= 3:
+                        damage -= 1
+
                 if attack.staminaCost > 0:
                     staminaSpent = 0
                     while staminaSpent < maxStaminaSpent:
-                        if "Titanite Demon" in enemy.name:
-                            if damage >= 3:
-                                damage -= 1
-
                         currentHealth -= damage
 
                         if currentHealth <= 0:
