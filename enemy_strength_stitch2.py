@@ -80,9 +80,9 @@ try:
                 if (baseName, charCnt, tier) not in baselineDiff:
                     baselineDiff[(baseName, charCnt, tier)] = diff
                 else:
-                    roundTarget = 5 + behaviorCount.get(baseName, 0)
-                    d = round((diff/baselineDiff[(baseName, charCnt, tier)]) * 10)
-                    diffChange = (roundTarget * round(d / roundTarget)) / 10
+                    roundTarget = 5 + behaviorCount.get(baseName if "-" not in baseName else baseName[:baseName.index(" - ")], 0)
+                    d = round((diff/baselineDiff[(baseName, charCnt, tier)]) * 100)
+                    diffChange = (roundTarget * round(d / roundTarget)) / 100
 
                     if diffChange <= 1.0:
                         continue
