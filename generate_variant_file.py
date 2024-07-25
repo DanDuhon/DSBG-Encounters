@@ -1,3 +1,4 @@
+from copy import deepcopy
 from json import load, dump
 from os import path
 from pathlib import Path
@@ -126,32 +127,60 @@ try:
 
                     behaviorExport[baseName][charCnt][key][defKeyJson][behaviorName].append(valJson)
 
+    print("Filling buckets")
+    reference = deepcopy(behaviorExport)
+    a = len(reference)
+    for i, baseName in enumerate(reference):
+        print(str((i/a)*100)[:6] + "%", end="\r")
+        bucketSize = 5 + behaviorCount.get(baseName if "-" not in baseName else baseName[:baseName.index(" - ")], 0)
+        for charCnt in reference[baseName]:
+            for key in reference[baseName][charCnt]:
+                for defKeyJson in reference[baseName][charCnt][key]:
+                    if behaviorCount.get(baseName, 1) > 1:
+                        for behavior in reference[baseName][charCnt].get(str((int(float(key) * 100) - bucketSize) / 100), {}).get(defKeyJson, {}):
+                            if behavior not in behaviorExport[baseName][charCnt][key][defKeyJson]:
+                                behaviorExport[baseName][charCnt][key][defKeyJson][behavior] = []
+                            behaviorExport[baseName][charCnt][key][defKeyJson][behavior] += reference[baseName][charCnt][str((int(float(key) * 100) - bucketSize) / 100)][defKeyJson][behavior]
+                        for behavior in reference[baseName][charCnt].get(str((int(float(key) * 100) + bucketSize) / 100), {}).get(defKeyJson, {}):
+                            if behavior not in behaviorExport[baseName][charCnt][key][defKeyJson]:
+                                behaviorExport[baseName][charCnt][key][defKeyJson][behavior] = []
+                            behaviorExport[baseName][charCnt][key][defKeyJson][behavior] += reference[baseName][charCnt][str((int(float(key) * 100) + bucketSize) / 100)][defKeyJson][behavior]
+
+    print("Finding insufficient keys")
+    a = len(behaviorExport)
     keysToDelete = []
-    for baseName in behaviorExport:
+    for i, baseName in enumerate(behaviorExport):
+        print(str((i/a)*100)[:6] + "%", end="\r")
+        bucketSize = 5 + behaviorCount.get(baseName if "-" not in baseName else baseName[:baseName.index(" - ")], 0)
         for charCnt in behaviorExport[baseName]:
             for key in behaviorExport[baseName][charCnt]:
                 for defKeyJson in behaviorExport[baseName][charCnt][key]:
-                    if (
-                        len(behaviorExport[baseName][charCnt].get(str(float(key)-0.1), {}).get(defKeyJson, {}))
-                        + len(behaviorExport[baseName][charCnt][key][defKeyJson])
-                        + len(behaviorExport[baseName][charCnt].get(str(float(key)+0.1), {}).get(defKeyJson, {}))
-                        ) != behaviorCount.get(baseName, 1):
+                    if (len(list(behaviorExport[baseName][charCnt][key][defKeyJson].keys()))) != behaviorCount.get(baseName, 1):
                         keysToDelete.append((baseName, charCnt, key, defKeyJson))
 
-    for k in keysToDelete:
+    print("Deleting insufficient keys")
+    a = len(keysToDelete)
+    for i, k in enumerate(keysToDelete):
+        print(str((i/a)*100)[:6] + "%", end="\r")
         del behaviorExport[k[0]][k[1]][k[2]][k[3]]
 
+    print("Finding empty keys")
+    a = len(behaviorExport)
     keysToDelete = []
-    for baseName in behaviorExport:
+    for i, baseName in enumerate(behaviorExport):
+        print(str((i/a)*100)[:6] + "%", end="\r")
         for charCnt in behaviorExport[baseName]:
             for key in behaviorExport[baseName][charCnt]:
                 if len(behaviorExport[baseName][charCnt][key]) == 0:
                     keysToDelete.append((baseName, charCnt, key))
 
+    print("Deleting empty keys")
+    a = len(keysToDelete)
     for k in keysToDelete:
+        print(str((i/a)*100)[:6] + "%", end="\r")
         del behaviorExport[k[0]][k[1]][k[2]]
 
-    print("")
+    print("Saving ")
 
     for key in behaviorExport:
         with open(baseFolder + "\\enemy_variants\\dsbg_shuffle_difficulty_" + key + ".json", "w") as enemyFile:
