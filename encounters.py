@@ -64,6 +64,20 @@ crystalLizardEncounters = {
     "Threshold Bridge"
 }
 
+fangBoarEncounters = {
+    "Broken Passageway (TSC)",
+    "Parish Gates",
+    "Flooded Fortress",
+    "Archive Entrance",
+    "Depths of the Cathedral"
+}
+
+envoyBannerEncounters = {
+    "Kingdom's Messengers",
+    "Deathly Tolls",
+    "Grim Reunion"
+}
+
 gangEncounters = {
     "Undead Sanctum",
     "The Fountainhead",
@@ -140,7 +154,7 @@ def check_if_valid(encounter, level, combo, difficulty, rangedCount, toughnessSo
 try:
     # skip = True
     for ei, e in enumerate(enc):
-        # if e not in {"Lost Chapel"}:
+        # if e not in fangBoarEncounters or e not in envoyBannerEncounters:
         #     continue
         #     skip = False
         # if skip:
@@ -234,7 +248,7 @@ try:
 
                 if e not in respawnEncounters:
                     higherHealthEnemies += (
-                        + [enemiesDict["Armorer Dennis"].id]
+                        [enemiesDict["Armorer Dennis"].id]
                         + [enemiesDict["Fencer Sharron"].id]
                         + [enemiesDict["Invader Brylex"].id]
                         + [enemiesDict["Kirk, Knight of Thorns"].id]
@@ -255,7 +269,7 @@ try:
                 allCombos = [tuple(list(p[0]) + list(p[1]) + list(p[2])) for p in product(gangs, nonGangCombos, higherHealthCombos) if check_if_valid(e, level, list(p[0]) + list(p[1]) + list(p[2]), difficulty, rangedCount, e in toughnessSortedEncounters) and not set(p[0]) & set(p[1])]
                         
                 combosDict = defaultdict(set)
-                [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set())].add(combo) for combo in allCombos]
+                [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set()).union({"The Sunless City"} if e in fangBoarEncounters or e in envoyBannerEncounters else set())].add(combo) for combo in allCombos]
             # Corvian Host is kinda like a model limit break encounter, except that the 5 health enemies all have to be the same.
             # Easier to have some custom code for it.
             elif e == "Corvian Host":
@@ -268,7 +282,7 @@ try:
                 allCombos = [combo[0] + tuple([combo[1]] * 4) for combo in product(smallEnemyCombos, bigEnemies) if check_if_valid(e, level, combo[0] + tuple([combo[1]] * 4), difficulty, rangedCount, e in toughnessSortedEncounters)]
 
                 combosDict = defaultdict(set)
-                [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set())].add(combo) for combo in allCombos]
+                [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set()).union({"The Sunless City"} if e in fangBoarEncounters or e in envoyBannerEncounters else set())].add(combo) for combo in allCombos]
             elif enemyCount < 7:
                 # Generate all combinations of enemies.
                 allCombos = list(set(filterfalse(lambda s: not (
@@ -313,7 +327,7 @@ try:
                 # Black Hollow Mage increases the difficulty of skeleton enemies since
                 # they resurrect defeated skeletons.
                 combosDict = defaultdict(set)
-                [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set())].add(combo) for combo in allCombos]
+                [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set()).union({"The Sunless City"} if e in fangBoarEncounters or e in envoyBannerEncounters else set())].add(combo) for combo in allCombos]
             # 6 enemies seems to be the limit for generating all combinations of enemies
             # in a reasonable amount of time.  For encounters with more than that, we're
             # going to take a sample instead.
@@ -354,7 +368,7 @@ try:
                         # Encounters with Crystal Lizards always require Iron Keep.
                         # Black Hollow Mage increases the difficulty of skeleton enemies since
                         # they resurrect defeated skeletons.
-                        [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set())].add(combo) for combo in allCombos]
+                        [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set()).union({"The Sunless City"} if e in fangBoarEncounters or e in envoyBannerEncounters else set())].add(combo) for combo in allCombos]
 
                 for expansionCombo in combosDict:
                     combosDict[expansionCombo] = list(combosDict[expansionCombo])
@@ -396,7 +410,7 @@ try:
                             islice(combinations(shuffledEnemies, enemyCount), 50000)))
 
                     # Create the dictionary with the enemy sets as keys.
-                    [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set())].add(combo) for combo in allCombos]
+                    [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set()).union({"The Sunless City"} if e in fangBoarEncounters or e in envoyBannerEncounters else set())].add(combo) for combo in allCombos]
 
                     # Keep track of the number of combinations we have.
                     comboCount.append(sum((len(combosDict[sets]) for sets in combosDict)))
