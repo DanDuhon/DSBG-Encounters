@@ -88,8 +88,8 @@ nodeAttackMod = {
 }
 
 
-def arc_damage_mod(nodesAttacked, megaBoss):
-    nodes = 28 if megaBoss else 16
+def arc_damage_mod(nodesAttacked, megaBoss, oldIronKing, chariot):
+    nodes = 19 if oldIronKing else 27 if chariot else 28 if megaBoss else 16
     return {
         1: 1,
         2: 1 + (nodesAttacked / nodes),
@@ -236,7 +236,7 @@ try:
                     addedDamage = min([1, (block if enemy.attackType[i] == "physical" else resist) / enemy.attacks[i]])
                 else:
                     addedDamage = 0
-                    
+
                 if not poisonAdded:
                     poison1 = (((2 if enemy.id else 1) if enemy.attackEffect and "poison" in enemy.attackEffect[i] else 0)
                         * reach
@@ -245,17 +245,17 @@ try:
                         * reach
                         * dodge
                         * (nodeAttackMod[2] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[2] if enemy.nodesAttacked[i] > 0 else 1))
+                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[2] if enemy.nodesAttacked[i] > 0 else 1))
                     poison3 = (((2 if enemy.id else 1) if enemy.attackEffect and "poison" in enemy.attackEffect[i] else 0)
                         * reach
                         * dodge
                         * (nodeAttackMod[3] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[3] if enemy.nodesAttacked[i] > 0 else 1))
+                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[3] if enemy.nodesAttacked[i] > 0 else 1))
                     poison4 = (((2 if enemy.id else 1) if enemy.attackEffect and "poison" in enemy.attackEffect[i] else 0)
                         * reach
                         * dodge
                         * (nodeAttackMod[4] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[4] if enemy.nodesAttacked[i] > 0 else 1))
+                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[4] if enemy.nodesAttacked[i] > 0 else 1))
                     
                     if poison1 > 0.0 or poison2 or poison3 > 0.0 or poison4 > 0.0:
                         poisonAdded = True
@@ -267,17 +267,17 @@ try:
                     * reach
                     * dodge
                     * (nodeAttackMod[2] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                    * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[2] if enemy.nodesAttacked[i] > 0 else 1))
+                    * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[2] if enemy.nodesAttacked[i] > 0 else 1))
                 bleedDamage3 += multiplier * (((4 if enemy.id else 2) if enemy.attackEffect and "bleed" in enemy.attackEffect[i] else 0)
                     * reach
                     * dodge
                     * (nodeAttackMod[3] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                    * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[3] if enemy.nodesAttacked[i] > 0 else 1))
+                    * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[3] if enemy.nodesAttacked[i] > 0 else 1))
                 bleedDamage4 += multiplier * (((4 if enemy.id else 2) if enemy.attackEffect and "bleed" in enemy.attackEffect[i] else 0)
                     * reach
                     * dodge
                     * (nodeAttackMod[4] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                    * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[4] if enemy.nodesAttacked[i] > 0 else 1))
+                    * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[4] if enemy.nodesAttacked[i] > 0 else 1))
                 
                 # Take back one bleed because poison will trigger it.
                 if poisonAdded and not bleedSubtracted:
@@ -288,17 +288,17 @@ try:
                         * reach
                         * dodge
                         * (nodeAttackMod[2] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[2] if enemy.nodesAttacked[i] > 0 else 1))
+                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[2] if enemy.nodesAttacked[i] > 0 else 1))
                     b3 = multiplier * (((4 if enemy.id else 2) if enemy.attackEffect and "bleed" in enemy.attackEffect[i] else 0)
                         * reach
                         * dodge
                         * (nodeAttackMod[3] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[3] if enemy.nodesAttacked[i] > 0 else 1))
+                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[3] if enemy.nodesAttacked[i] > 0 else 1))
                     b4 = multiplier * (((4 if enemy.id else 2) if enemy.attackEffect and "bleed" in enemy.attackEffect[i] else 0)
                         * reach
                         * dodge
                         * (nodeAttackMod[4] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[4] if enemy.nodesAttacked[i] > 0 else 1))
+                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[4] if enemy.nodesAttacked[i] > 0 else 1))
                     
                     bleedDamage1 -= b1
                     bleedDamage2 -= b2
@@ -315,19 +315,19 @@ try:
                     * reach
                     * dodge
                     * (nodeAttackMod[2] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                    * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[2] if enemy.nodesAttacked[i] > 0 else 1)
+                    * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[2] if enemy.nodesAttacked[i] > 0 else 1)
                     ) + poison2 + (b2 if poison2 else 0)) * multiplier
                 expectedDamage3 = ((max([0, enemy.attacks[i] - (block if enemy.attackType[i] == "physical" else resist) + addedDamage])
                     * reach
                     * dodge
                     * (nodeAttackMod[3] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                    * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[3] if enemy.nodesAttacked[i] > 0 else 1)
+                    * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[3] if enemy.nodesAttacked[i] > 0 else 1)
                     ) + poison3 + (b3 if poison3 else 0)) * multiplier
                 expectedDamage4 = ((max([0, enemy.attacks[i] - (block if enemy.attackType[i] == "physical" else resist) + addedDamage])
                     * reach
                     * dodge
                     * (nodeAttackMod[4] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                    * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False)[4] if enemy.nodesAttacked[i] > 0 else 1)
+                    * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[4] if enemy.nodesAttacked[i] > 0 else 1)
                     ) + poison4 + (b4 if poison4 else 0)) * multiplier
                 
                 # Attacks that aren't dodged and aren't fully blocked/resisted and don't include poison (or poison has already been accounted for).
