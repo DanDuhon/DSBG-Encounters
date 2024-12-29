@@ -81,7 +81,13 @@ modIdLookup = {
     "physical": 21,
     "armor resist1": 22,
     "damage health1": 23,
-    "damage health2": 24
+    "damage health2": 24,
+    "nodes1": 25,
+    "nodes2": 26,
+    "nodes3": 27,
+    "nodes4": 28,
+    "nodes5": 29,
+    "nodes6": 30
 }
 
 try:
