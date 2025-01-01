@@ -154,12 +154,12 @@ try:
                                 currentHealth = enemy.health
 
     for enemy in enemies:
-        Path(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.rfind(" (")] + "\\" if enemy.modified else "")).mkdir(exist_ok=True)
+        Path(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.rfind(" [")] + "\\" if enemy.modified else "")).mkdir(exist_ok=True)
         # with open(baseFolder + "\\enemies\\" + enemy.name + ".json", "r") as eLoad:
         #     e = load(eLoad)
         # with open(baseFolder + "\\enemies\\" + enemy.name + ".json", "w") as eDump:
         #     dump({"deaths": enemy.deaths, "totalAttacks": e["totalAttacks"], "damagingAttacks": e["damagingAttacks"], "damageDone": e["damageDone"], "bleedDamage": e["bleedDamage"]}, eDump)
-        with open(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.rfind(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json", "w") as eDump:
+        with open(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.rfind(" [")] + "\\" if enemy.modified else "") + enemy.name + ".json", "w") as eDump:
             dump({"health": enemy.health, "deaths": enemy.deaths, "totalAttacks": {1: 0, 2: 0, 3: 0}, "damagingAttacks": {1: 0, 2: 0, 3: 0}, "damageDone": {1: {1: 0, 2: 0, 3: 0}, 2: {1: 0, 2: 0, 3: 0}, 3: {1: 0, 2: 0, 3: 0}, 4: {1: 0, 2: 0, 3: 0}}, "bleedDamage": {1: {1: 0, 2: 0, 3: 0}, 2: {1: 0, 2: 0, 3: 0}, 3: {1: 0, 2: 0, 3: 0}, 4: {1: 0, 2: 0, 3: 0}}}, eDump)
 except Exception as ex:
     input(ex)
