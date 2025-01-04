@@ -409,6 +409,7 @@ try:
     for i, enemy in enumerate(enemies):
         print(str((i/l)*100)[:6] + "%", end="\r")
         while not path.isfile(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.rfind(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json"):
+            print((enemy.name[:enemy.name.rfind(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json")
             sleep(60)
         with open(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.rfind(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json", "r") as eLoad:
             e = load(eLoad)
@@ -441,8 +442,8 @@ try:
             enemy.bleedDamage3[t] = e["bleedDamage"]["3"][str(t)]
             enemy.bleedDamage4[t] = e["bleedDamage"]["4"][str(t)]
 
-        with open(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.rfind(" [")] + "\\" if enemy.modified else "") + enemy.name + ".json", "w") as enemyFile:
-                dump({"deaths": e["deaths"], "totalAttacks": enemy.totalAttacks, "damagingAttacks": enemy.damagingAttacks, "damageDone": {1: enemy.damageDone1, 2: enemy.damageDone2, 3: enemy.damageDone3, 4: enemy.damageDone4}, "bleedDamage": {1: enemy.bleedDamage1, 2: enemy.bleedDamage2, 3: enemy.bleedDamage3, 4: enemy.bleedDamage4}}, enemyFile)
+        with open(baseFolder + "\\enemies\\" + (enemy.name[:enemy.name.rfind(" (")] + "\\" if enemy.modified else "") + enemy.name + ".json", "w") as enemyFile:
+            dump({"deaths": e["deaths"], "totalAttacks": enemy.totalAttacks, "damagingAttacks": enemy.damagingAttacks, "damageDone": {1: enemy.damageDone1, 2: enemy.damageDone2, 3: enemy.damageDone3, 4: enemy.damageDone4}, "bleedDamage": {1: enemy.bleedDamage1, 2: enemy.bleedDamage2, 3: enemy.bleedDamage3, 4: enemy.bleedDamage4}}, enemyFile)
 
 except Exception as ex:
     input(ex)
