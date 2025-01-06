@@ -71,7 +71,7 @@ try:
                 enemy.health += 2
 
             extraStaminaSpent = 0
-            if any([{"stagger", "frostbite"} & e for e in enemy.attackEffect]):
+            if any([{"stagger", "frostbite"} & set(e) for e in enemy.attackEffect]):
                 if enemy.attackEffect == [{"stagger", "frostbite"}]:
                     pass
                 # Guess at how often this enemy will land with an attack.
@@ -79,7 +79,7 @@ try:
                 nums = []
                 den = 1000
                 for i, a in enumerate(enemy.attacks[:int(len(enemy.attacks) / (2 if enemy.id else 1))]):
-                    if a == 0 or not {"stagger", "frostbite"} & enemy.attackEffect[i]:
+                    if a == 0 or not any([{"stagger", "frostbite"} & set(ae) for ae in enemy.attackEffect]):
                         continue
                     nums.append(round(reachMod[max([0, min([4, enemy.move[i] + enemy.attackRange[i]])])] * den, 0))
 
@@ -89,7 +89,7 @@ try:
                 chance = 1 - (stage / (den ** len(nums)))
 
                 # Double the stamina spent if both Frostbite and Stagger are applied.
-                extraStaminaSpent = chance * dodgeMod[tier][enemy.dodge] * (2 if any([{"stagger",} & e for e in enemy.attackEffect]) and any([{"frostbite",} & e for e in enemy.attackEffect]) else 1)
+                extraStaminaSpent = chance * dodgeMod[tier][enemy.dodge] * (2 if any([{"stagger",} & set(e) for e in enemy.attackEffect]) and any([{"frostbite",} & set(e) for e in enemy.attackEffect]) else 1)
 
             # Maneater Mildred gains health if she does damage.
             # Abstract it out based on the tier.
