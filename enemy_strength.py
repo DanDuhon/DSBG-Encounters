@@ -332,7 +332,7 @@ try:
                 
                 # Attacks that aren't dodged and aren't fully blocked/resisted and don't include poison (or poison has already been accounted for).
                 m = 0
-                if enemy.attacks[i] > 0 and "Executioner's Chariot" not in enemy.name and (poisonAdded2 or "poison" not in enemy.attackEffect[i]):
+                if enemy.attacks[i] > 0 and "Executioner's Chariot" not in enemy.name and (poisonAdded2 or (len(enemy.attackEffect) - 1 >= i and "poison" not in enemy.attackEffect[i])):
                     m = (expectedBlock if enemy.attackType[i] == "physical" else expectedResist)[int(max([0, enemy.attacks[i]]))][tier]
                 damagingAttacks += (dodge * m) * multiplier
                 
