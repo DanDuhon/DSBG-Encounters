@@ -171,7 +171,7 @@ try:
     tier = 3
 
     # Calculate enemy offense.
-    print("Enemy offense tier " + str(tier))
+    print(" ".join(list(set([enemy.name[:enemy.name.index(" - ") if " - " in enemy.name else len(enemy.name)] for enemy in enemies]))) + " offense tier " + str(tier))
     for x, loadout in enumerate(loadoutLookup[tier]):
         print(str((x/len(loadoutLookup[tier]))*100)[:6] + "%", end="\r")
         block = loadout[0]
@@ -331,7 +331,7 @@ try:
                     ) + poison4 + (b4 if poison4 else 0)) * multiplier
                 
                 # Attacks that aren't dodged and aren't fully blocked/resisted and don't include poison (or poison has already been accounted for).
-                m = 0
+                m = 1
                 if enemy.attacks[i] > 0 and "Executioner's Chariot" not in enemy.name and (poisonAdded2 or (len(enemy.attackEffect) - 1 >= i and "poison" not in enemy.attackEffect[i])):
                     m = (expectedBlock if enemy.attackType[i] == "physical" else expectedResist)[int(max([0, enemy.attacks[i]]))][tier]
                 damagingAttacks += (dodge * m) * multiplier

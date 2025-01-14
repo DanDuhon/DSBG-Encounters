@@ -21,8 +21,7 @@ reachMod = {
     4: 1
 }
 
-processing = set(enemy.name[:enemy.name.rfind(" - ")] for enemy in enemies) if any([" - " in name for name in [enemy.name[:enemy.name.rfind(" (")] for enemy in enemies]]) else set(enemy.name[:enemy.name.rfind(" (")] for enemy in enemies)
-print(processing)
+print(" ".join(list(set([enemy.name[:enemy.name.index(" - ") if " - " in enemy.name else len(enemy.name)] for enemy in enemies]))) + " defense")
 
 try:
     # Calculate enemy defense.
