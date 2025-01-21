@@ -20,13 +20,13 @@ behaviorCount = {
     "Boreal Outrider Knight": 8,
     "Crossbreed Priscilla": 13,
     "Dancer of the Boreal Valley": 13,
-    "Executioner's Chariot": 16,
+    "Executioner's Chariot": 13,
     "Fencer Sharron": 7,
     "Gaping Dragon": 13,
     "Gargoyle": 8,
     "Gravelord Nito": 13,
     "Great Grey Wolf Sif": 14,
-    "Guardian Dragon": 13,
+    "Guardian Dragon": 10,
     "Heavy Knight": 9,
     "Hungry Mimic": 7,
     "Invader Brylex": 5,
@@ -59,7 +59,7 @@ try:
     a = len((list(enemyPath.glob("**/*.json"))))
 
     for i, enemy in enumerate(enemyPath.glob("**/*.json")):
-        # if "Asylum Demon" not in enemy.stem:
+        # if "Guardian Dragon" not in enemy.stem and "Executioner's Chariot" not in enemy.stem:
         #     continue
         print(str((i/a)*100)[:6] + "%", end="\r")
         baseName = enemy.stem[:enemy.stem.rfind(" (") if " (" in enemy.stem else len(enemy.stem)]
@@ -88,9 +88,9 @@ try:
                         continue
 
                     if diffChange not in enemies[baseName][charCnt]:
-                        enemies[baseName][charCnt][diffChange] = [tuple(enemy.name.replace(baseName, "").replace(" ('", "").replace("')", "").replace("',)", "").replace(".json", "").split("', '"))]
+                        enemies[baseName][charCnt][diffChange] = [tuple(enemy.name.replace(baseName, "").replace(" ('", "").replace("')", "").replace("',)", "").replace("[", "").replace("'])", "").replace(".json", "").split("', '"))]
                     else:
-                        enemies[baseName][charCnt][diffChange].append(tuple(enemy.name.replace(baseName, "").replace(" ('", "").replace("')", "").replace("',)", "").replace(".json", "").split("', '")))
+                        enemies[baseName][charCnt][diffChange].append(tuple(enemy.name.replace(baseName, "").replace(" ('", "").replace("')", "").replace("',)", "").replace("[", "").replace("'])", "").replace(".json", "").split("', '")))
 
     for baseName in list(baseNames):
         with open(baseFolder + "\\enemy_variants\\" + baseName + ".json", "w") as enemyFile:

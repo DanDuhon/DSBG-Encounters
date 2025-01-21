@@ -159,8 +159,8 @@ try:
         #     skip = False
         # if skip:
         #     continue
-        # if ei % 2 == 0:
-        #     continue
+        if enc[e]["level"] == 4:
+            continue
         encounter = enc[e]
 
         for characterCount in range(1, 5):

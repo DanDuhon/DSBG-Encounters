@@ -22,13 +22,13 @@ behaviorCount = {
     "Boreal Outrider Knight": 8,
     "Crossbreed Priscilla": 13,
     "Dancer of the Boreal Valley": 13,
-    "Executioner's Chariot": 16,
+    "Executioner's Chariot": 13,
     "Fencer Sharron": 7,
     "Gaping Dragon": 13,
     "Gargoyle": 8,
     "Gravelord Nito": 13,
     "Great Grey Wolf Sif": 14,
-    "Guardian Dragon": 13,
+    "Guardian Dragon": 10,
     "Heavy Knight": 9,
     "Hungry Mimic": 7,
     "Invader Brylex": 5,
@@ -98,6 +98,8 @@ try:
 
         if "dsbg_shuffle" in enemy.stem:
             continue
+        # if "Guardian Dragon" not in enemy.stem and "Executioner's Chariot" not in enemy.stem:
+        #     continue
         
         with open(enemy) as ef:
             e = load(ef)
@@ -118,9 +120,17 @@ try:
         for charCnt in range(1, 5):
             for key in e[str(charCnt)]:
                 for val in e[str(charCnt)][key]:
-                    defKey = tuple(sorted(tuple(defenses & set(val))))
+                    val = [v.replace(",", "").replace("'", "").replace("(", "").replace(")", "").replace("[", "").replace("]", "").replace("  ", " ").strip() for v in val]
+                    val = [v.split() if " " in v and {"bleed", "frostbite", "poison", "stagger"} & set(v.split()) else v for v in val]
+                    valFixed = []
+                    for v in val:
+                        if type(v) == str:
+                            valFixed.append(v)
+                        else:
+                            valFixed += v
+                    defKey = tuple(sorted(tuple(defenses & set(valFixed))))
                     defKeyJson = ",".join([str(modIdLookup[m]) for m in defKey])
-                    valJson = [modIdLookup[v] for v in val]
+                    valJson = [modIdLookup[v] for v in valFixed]
 
                     if key not in behaviorExport[baseName][charCnt]:
                         behaviorExport[baseName][charCnt][key] = {}
