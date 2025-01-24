@@ -56,11 +56,11 @@ behaviorCount = {
 }
 
 try:
-    a = len((list(enemyPath.glob("**/*.json"))))
+    enemyToProcess = "Oliver the Collector"
 
-    for i, enemy in enumerate(enemyPath.glob("**/*.json")):
-        # if "Guardian Dragon" not in enemy.stem and "Executioner's Chariot" not in enemy.stem:
-        #     continue
+    a = len((list(enemyPath.glob("**/*" + enemyToProcess + "*.json"))))
+
+    for i, enemy in enumerate(enemyPath.glob("**/*" + enemyToProcess + "*.json")):
         print(str((i/a)*100)[:6] + "%", end="\r")
         baseName = enemy.stem[:enemy.stem.rfind(" (") if " (" in enemy.stem else len(enemy.stem)]
         baseNames.add(baseName)
@@ -93,6 +93,8 @@ try:
                         enemies[baseName][charCnt][diffChange].append(tuple(enemy.name.replace(baseName, "").replace(" ('", "").replace("')", "").replace("',)", "").replace("[", "").replace("'])", "").replace(".json", "").split("', '")))
 
     for baseName in list(baseNames):
+        if not enemies[baseName][1]:
+            continue
         with open(baseFolder + "\\enemy_variants\\" + baseName + ".json", "w") as enemyFile:
             dump({
                 "1": dict(sorted(enemies[baseName][1].items())),

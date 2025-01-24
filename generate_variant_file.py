@@ -199,7 +199,11 @@ try:
     print("Saving ")
 
     for key in behaviorExport:
-        with open(baseFolder + "\\enemy_variants\\dsbg_shuffle_difficulty_" + key + ".json", "w") as enemyFile:
+        if key == "Executioner's Chariot":
+            keySave = "Executioner Chariot"
+        else:
+            keySave = key
+        with open(baseFolder + "\\enemy_variants\\dsbg_shuffle_difficulty_" + keySave + ".json", "w") as enemyFile:
             dump(behaviorExport[key], enemyFile)
 
 except Exception as ex:

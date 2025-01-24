@@ -21,7 +21,7 @@ reachMod = {
     4: 1
 }
 
-print(" ".join(list(set([enemy.name[:enemy.name.index(" - ") if " - " in enemy.name else len(enemy.name)] for enemy in enemies]))) + " defense")
+print(" ".join(list(set([enemy.name[:enemy.name.index(" - ") if " - " in enemy.name else enemy.name.index(" (") if " (" in enemy.name else len(enemy.name)] for enemy in enemies]))) + " defense tier ")
 
 try:
     # Calculate enemy defense.
