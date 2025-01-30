@@ -28,7 +28,7 @@ behaviorCount = {
     "Gargoyle": 8,
     "Gravelord Nito": 13,
     "Great Grey Wolf Sif": 14,
-    "Guardian Dragon": 13,
+    "Guardian Dragon": 10,
     "Heavy Knight": 9,
     "Hungry Mimic": 7,
     "Invader Brylex": 5,

@@ -39,7 +39,7 @@ behaviorCount = {
     "Giant Skeleton Soldier": 0,
     "Gravelord Nito": 13,
     "Great Grey Wolf Sif": 14,
-    "Guardian Dragon": 13,
+    "Guardian Dragon": 10,
     "Heavy Knight": 9,
     "Hollow Soldier": 0,
     "Hungry Mimic": 7,
@@ -91,10 +91,10 @@ behaviorCount = {
 
 try:
     for e in behaviorCount:
-        if behaviorCount[e] < 8 or behaviorCount[e] > 20:
-            continue
-        if e in {"Vordt of the Boreal Valley", "The Last Giant", "The Four Kings", "Stray Demon", "Old Iron King", "Manus, Father of the Abyss", "Guardian Dragon", "Gaping Dragon", "Executioner's Chariot"}:
-            continue
+        # if behaviorCount[e] < 8 or behaviorCount[e] > 20:
+        #     continue
+        # if e not in {"Executioner's Chariot",}:
+        #     continue
         enemyToProcess = e
         print(enemyToProcess)
 
