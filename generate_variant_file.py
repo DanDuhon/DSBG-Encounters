@@ -98,7 +98,7 @@ try:
 
         if "dsbg_shuffle" in enemy.stem:
             continue
-        # if "Guardian Dragon" not in enemy.stem and "Executioner's Chariot" not in enemy.stem:
+        # if "Guardian Dragon" not in enemy.stem:
         #     continue
         
         with open(enemy) as ef:
