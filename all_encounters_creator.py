@@ -281,6 +281,7 @@ encounters = {
     "Skeleton Overlord": {"enemies": [[gss],[],[]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[ss,ss],[],[]], "expansion": tomb},
     "The Locked Grave": {"enemies": [[gsa,ss],[gss,n],[gsa,sa,sa]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[sb]], "expansion": tomb},
     "The Skeleton Ball": {"enemies": [[n,gsa],[sa,gss],[gsa,n,ss,ss]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[]], "expansion": tomb},
+    "Gravelord Nito Setup": {"enemies": [[ss,ss,gss],[],[]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[]], "expansion": tomb},
     
     "Grim Reunion": {"enemies": [[hs,hs,ch,skg],[s,sks],[skg,hs,sks,ch]], "enemyExpansions": set([dsbg,sun]), "level": 3, "spawns": [[],[],[m]], "expansion": sun},
     "Castle Break In": {"enemies": [[hs,hs,s],[hs,ch,ch],[sks,skg,skg]], "enemyExpansions": set([dsbg]), "level": 3, "spawns": [[],[],[]], "expansion": sun},
