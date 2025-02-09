@@ -485,7 +485,7 @@ try:
                     
                 if toAdd:
                     if "The Sunless City" not in combo:
-                        combo.replace("Dark Souls The Board Game", "The Sunless City")
+                        altKey = combo.replace("Dark Souls The Board Game", "The Sunless City")
                     else:
                         altKey = combo.replace("Dark Souls The Board Game", "").replace(",,", ",")
                         if altKey[0] == ",":
