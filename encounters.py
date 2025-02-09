@@ -17,6 +17,7 @@ crossbowHollow = enemiesDict["Crossbow Hollow"].id
 falchionSkeleton = enemiesDict["Falchion Skeleton"].id
 firebombHollow = enemiesDict["Firebomb Hollow"].id
 hollowSoldier = enemiesDict["Hollow Soldier"].id
+largeHollowSoldier = enemiesDict["Large Hollow Soldier"].id
 mimic = enemiesDict["Mimic"].id
 phalanx = enemiesDict["Phalanx"].id
 phalanxHollow = enemiesDict["Phalanx Hollow"].id
@@ -159,8 +160,8 @@ try:
         #     skip = False
         # if skip:
         #     continue
-        if enc[e]["level"] == 4:
-            continue
+        # if enc[e]["level"] < 4:
+        #     continue
         encounter = enc[e]
 
         for characterCount in range(1, 5):
@@ -478,7 +479,8 @@ try:
                         and alt.count(hollowSoldier) <= 3
                         and alt.count(silverKnightGreatbowman) <= 2
                         and alt.count(silverKnightSwordsman) <= 2
-                        and alt.count(sentinel) <= 1):
+                        and alt.count(sentinel) <= 1
+                        and alt.count(largeHollowSoldier) == 0):
                         toAdd.append(alt)
                     
                 if toAdd:
