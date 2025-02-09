@@ -472,7 +472,7 @@ try:
 
             # Account for duplicate enemies in the newer core sets that are essentially redoing the older stuff.
             # The Sunless City
-            for combo in [c for c in alternatives["alternatives"] if "Dark Souls The Board Game" in c and not "The Sunless City" in c]:
+            for combo in [c for c in alternatives["alternatives"] if "Dark Souls The Board Game" in c]:
                 toAdd = []
                 for alt in alternatives["alternatives"][combo]:
                     if e == "The Grand Hall" or (alt.count(crossbowHollow) <= 3
@@ -484,7 +484,13 @@ try:
                         toAdd.append(alt)
                     
                 if toAdd:
-                    alternatives["alternatives"][combo.replace("Dark Souls The Board Game", "The Sunless City")] = toAdd
+                    if "The Sunless City" not in combo:
+                        combo.replace("Dark Souls The Board Game", "The Sunless City")
+                    else:
+                        altKey = combo.replace("Dark Souls The Board Game", "").replace(",,", ",")
+                        if altKey[0] == ",":
+                            altKey = altKey[1:]
+                    alternatives["alternatives"][altKey] = toAdd
 
             if e not in encMain:
                 encMain[e] = {
