@@ -4,6 +4,7 @@ from itertools import combinations, islice, product, filterfalse
 from random import shuffle
 from collections import defaultdict
 from glob import glob
+from copy import deepcopy
 
 from enemies import enemyIds, enemiesDict
 
@@ -104,7 +105,8 @@ toughnessSortedEncounters = {
     "Cold Snap",
     "Dark Alleyway",
     "Deathly Freeze",
-    "No Safe Haven"
+    "No Safe Haven",
+    "The First Bastion"
 }
 
 # These are enemies that shouldn't be the target for the special rules
@@ -160,7 +162,7 @@ try:
         #     skip = False
         # if skip:
         #     continue
-        # if enc[e]["level"] < 4:
+        # if enc[e]["level"] == 4:
         #     continue
         encounter = enc[e]
 
@@ -183,6 +185,61 @@ try:
             if encounter["name"] == "Lakeview Refuge":
                 for _ in range(characterCount):
                     enemies.append(skeletonSoldier)
+
+            # If the encounter breaks the model limit, we should too.
+            allEnemiesMod = deepcopy(allEnemies)
+
+            # 1 health melee enemies
+            if any([enemies.count(enemy) > enemyIds[enemy].numberOfModels for enemy in enemyIds if (
+                enemyIds[enemy].health == 1
+                and max(enemyIds[enemy].attackRange) <= 1
+                and max(enemyIds[enemy].move) < 4)]):
+                for enemy in (enemy for enemy in enemyIds if (
+                    enemyIds[enemy].health == 1
+                    and max(enemyIds[enemy].attackRange) <= 1
+                    and max(enemyIds[enemy].move) < 4)):
+                    # Add the same number of enemies that are over the normal limit.
+                    for _ in range(enemies.count(enemy) - enemyIds[enemy].numberOfModels):
+                        allEnemiesMod.append(enemy)
+
+            # 1 health ranged enemies
+            if any([enemies.count(enemy) > enemyIds[enemy].numberOfModels for enemy in enemyIds if (
+                enemyIds[enemy].health == 1
+                and (max(enemyIds[enemy].attackRange) > 1
+                    or max(enemyIds[enemy].move) == 4))]):
+                for enemy in (enemy for enemy in enemyIds if (
+                    enemyIds[enemy].health == 1
+                    and (max(enemyIds[enemy].attackRange) > 1
+                        or max(enemyIds[enemy].move) == 4))):
+                    # Add the same number of enemies that are over the normal limit.
+                    for _ in range(enemies.count(enemy) - enemyIds[enemy].numberOfModels):
+                        allEnemiesMod.append(enemy)
+
+            # 5+ health melee enemies
+            if any([enemies.count(enemy) > enemyIds[enemy].numberOfModels for enemy in enemyIds if (
+                5 <= enemyIds[enemy].health <= 10
+                and max(enemyIds[enemy].attackRange) <= 1
+                and max(enemyIds[enemy].move) < 4)]):
+                for enemy in (enemy for enemy in enemyIds if (
+                    5 <= enemyIds[enemy].health <= 10
+                    and max(enemyIds[enemy].attackRange) <= 1
+                    and max(enemyIds[enemy].move) < 4)):
+                    # Add the same number of enemies that are over the normal limit.
+                    for _ in range(enemies.count(enemy) - enemyIds[enemy].numberOfModels):
+                        allEnemiesMod.append(enemy)
+
+            # 5+ health ranged enemies
+            if any([enemies.count(enemy) > enemyIds[enemy].numberOfModels for enemy in enemyIds if (
+                5 <= enemyIds[enemy].health <= 10
+                and (max(enemyIds[enemy].attackRange) > 1
+                    or max(enemyIds[enemy].move) == 4))]):
+                for enemy in (enemy for enemy in enemyIds if (
+                    5 <= enemyIds[enemy].health <= 10
+                    and (max(enemyIds[enemy].attackRange) > 1
+                        or max(enemyIds[enemy].move) == 4))):
+                    # Add the same number of enemies that are over the normal limit.
+                    for _ in range(enemies.count(enemy) - enemyIds[enemy].numberOfModels):
+                        allEnemiesMod.append(enemy)
 
             enemyCount = len(enemies)
             rangedCount = sum([1 for enemy in enemies if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) == 4])
@@ -290,10 +347,10 @@ try:
                         check_if_valid(e, level, s, difficulty, rangedCount, e in toughnessSortedEncounters)
                         # Don't put invaders in encounters that respawn enemies
                         and (e not in respawnEncounters or sum(1 for x in s if enemyIds[x].expansion == "Phantoms") == 0)
-                        # Enemies must be different
-                        and (e not in set(["Abandoned and Forgotten", "The First Bastion"]) or len(s) == len(set(s)))
+                        # No more than one of the two toughest enemies
+                        and (e not in {"The First Bastion",} or (s.count(sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]) == 1 and s.count(sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[1]) == 1))
                         # No more than one of the two strongest enemies
-                        and (e != "Trecherous Tower" or (s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 1 and s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[1]) == 1))
+                        and (e not in {"Trecherous Tower", "Abandoned and Forgotten"} or (s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 1 and s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[1]) == 1))
                         # One of the toughest enemy
                         and (e != "Cold Snap" or s.count(sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]) == 1)
                         # Two of the toughest enemy
@@ -320,7 +377,7 @@ try:
                                 or (s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount])[0]) == 2
                                     and s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount])[2]) == 2))
                             and s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 1))),
-                    combinations(allEnemies, enemyCount))))
+                    combinations(allEnemiesMod, enemyCount))))
 
                 # Create a dictionary of alternatives, put into keys that are the
                 # sets in which those enemies are found.
@@ -335,13 +392,13 @@ try:
             else:
                 combosDict = defaultdict(set)
                 comboCount = []
-                shuffledEnemies = allEnemies
+                shuffledEnemies = allEnemiesMod
 
                 # Go through expansions and pairs of expansions and generate all combos.
-                expansions = list(set([enemyIds[enemy].expansion for enemy in allEnemies]))
+                expansions = list(set([enemyIds[enemy].expansion for enemy in allEnemiesMod]))
                 for x in range(1, 3):
                     for expCombo in combinations(expansions, x):
-                        expEnemies = [enemy for enemy in allEnemies if enemyIds[enemy].expansion in expCombo]
+                        expEnemies = [enemy for enemy in allEnemiesMod if enemyIds[enemy].expansion in expCombo]
                         # Generate all combinations of enemies.
                         allCombos = list(set(filterfalse(lambda s: not (
                                 check_if_valid(e, level, s, difficulty, rangedCount, e in toughnessSortedEncounters)
@@ -376,7 +433,7 @@ try:
                     shuffle(combosDict[expansionCombo])
                     combosDict[expansionCombo] = set(combosDict[expansionCombo][:min([len(combosDict[expansionCombo]), 10000])])
 
-                shuffledEnemies = allEnemies
+                shuffledEnemies = allEnemiesMod
                 # In total, we're looking for up to 500,000 combinations but we'll trim that down later.
                 while sum((len(combosDict[sets]) for sets in combosDict)) < 500000:
                     # Combinations go by the order of the iterable it's reading from,
