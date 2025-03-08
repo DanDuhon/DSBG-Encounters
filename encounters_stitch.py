@@ -23,14 +23,14 @@ for encounterFile in listdir(baseFolder + "\\combine"):
 # Sort the dict so we can just load it in and not sort it later.
 coreSets = {"Painted World of Ariamis", "The Sunless City", "Tomb of Giants", "Dark Souls The Board Game"}
 v2Expansions = {"Painted World of Ariamis", "The Sunless City", "Tomb of Giants"}
-encounters = dict(sorted(encounters.items(), key=lambda x: (
+encountersSorted = {k: encounters[k] for k in sorted(encounters, key=lambda x: (
     1 if encounters[x]["level"] == 4 else 0,
     0 if encounters[x]["expansion"] in coreSets and encounters[x]["expansion"] in v2Expansions else 1,
     0 if encounters[x]["expansion"] in v2Expansions else 1,
     1 if encounters[x]["expansion"] == "Executioner Chariot" else 0,
     encounters[x]["expansion"],
     encounters[x]["level"],
-    encounters[x]["name"])))
+    encounters[x]["name"]))}
 
 with open(baseFolder + "\\dsbg_shuffle_encounters.json", "w") as efd:
-    dump(encounters, efd)
+    dump(encountersSorted, efd)
