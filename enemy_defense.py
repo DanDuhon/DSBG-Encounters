@@ -117,7 +117,12 @@ try:
                     if damage >= 3:
                         damage -= 1
 
-                if attack.staminaCost > 0:
+                if enemy.invisibility:
+                    staminaCostToUse = attack.staminaCostInvisibility
+                else:
+                    staminaCostToUse = attack.staminaCost
+
+                if staminaCostToUse > 0:
                     staminaSpent = 0
                     while staminaSpent < maxStaminaSpent:
                         currentHealth -= damage
@@ -132,7 +137,7 @@ try:
                             if currentHealth > enemy.health:
                                 currentHealth = enemy.health
 
-                        staminaSpent += attack.staminaCost + extraStaminaSpent
+                        staminaSpent += staminaCostToUse + extraStaminaSpent
 
                         if "Winged Knight" in enemy.name:
                             staminaSpent += expectedBlock[3][tier]

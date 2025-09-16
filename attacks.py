@@ -9,6 +9,7 @@ attackTiers = {
     2: [],
     3: []
 }
+weaponRange = {}
 
 b = (0, 1, 1, 1, 2, 2)
 u = (1, 1, 2, 2, 2, 3)
@@ -66,6 +67,8 @@ class Attack:
         self.attackNumber = attackNumber
         # Uses reachMod to calculate the odds of stamina cost to get into range (1 stamina, 2 stamina, 3 stamina).
         self.staminaCost = staminaCost + (1 - reachMod[min([4, attackRange + 1])]) + (1 - reachMod[min([4, attackRange + 2])]) + (1 - reachMod[min([4, attackRange + 3])])
+        # In the case of invisibility (can't attack at range 2 or more), calculate stamina cost when your range is at most 1.
+        self.staminaCostInvisibility = staminaCost + (1 - reachMod[min([4, min([attackRange, 1]) + 1])]) + (1 - reachMod[min([4, min([attackRange, 1]) + 2])]) + (1 - reachMod[min([4, min([attackRange, 1]) + 3])])
         self.attackRange = attackRange
         self.damage = damage
         self.damageMod = damageMod
@@ -76,19 +79,20 @@ class Attack:
         self.damageBonus = damageBonus
         self.noRange0 = noRange0
         self.totalDamage = {}
+        weaponRange[name] = max([attackRange, weaponRange.get(name, 0)])
 
         self.tier = itemTier[name]
         attackTiers[self.tier].append(self)
 
         self.expectedDamage = {
-            -1: 0,
-            0: 0,
-            1: 0,
-            2: 0,
-            3: 0,
-            4: 0,
-            5: 0,
-            6: 0
+            -1: 0.0,
+            0: 0.0,
+            1: 0.0,
+            2: 0.0,
+            3: 0.0,
+            4: 0.0,
+            5: 0.0,
+            6: 0.0
         }
         for x in range(7): # defense
             for attack in self.damage:

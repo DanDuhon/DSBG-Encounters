@@ -1,10 +1,13 @@
 from json import dump
 from os import path
+from statistics import mean
 
 from enemies import enemiesDict, enemyIds, enemies
 
 
 baseFolder = path.dirname(__file__)
+
+sumEncounterDiff = False
 
 
 def calculate_rank(l, level, sortByToughness=False):
@@ -369,7 +372,7 @@ for encounter in encounters:
         pass
     if encounters[encounter]["level"] < 4 and encounters[encounter]["expansion"] not in set([e.expansion for e in enemies]):
         pass
-    print(encounter)
+    #print(encounter)
     
     allEncounters[encounter] = {
         "name": encounter,
@@ -394,5 +397,15 @@ for encounter in encounters:
             encounterEnemies.extend([ss])
             allEncounters[encounter]["difficultyOrder"][i] = calculate_rank(encounterEnemies, encounters[encounter]["level"])[i]
 
-with open(baseFolder + "\\encounters\\all_encounters.json", "w") as file:
-    dump(allEncounters, file)
+    diff = []
+    for e in encounterEnemies:
+        diff.append(mean(enemyIds[e].difficultyTiers[min(3, encounters[encounter]["level"])]["difficulty"][x] for x in range(1, 5)))
+
+    if sumEncounterDiff:
+        print(encounter + "_" + encounters[encounter]["expansion"] + "_" + str(encounters[encounter]["level"]) + "_" + str(sum(diff)))
+
+if sumEncounterDiff:
+    input()
+else:
+    with open(baseFolder + "\\encounters\\all_encounters.json", "w") as file:
+        dump(allEncounters, file)

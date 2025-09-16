@@ -28,6 +28,14 @@ reachMod = {
         3: 0.9763313609467456,
         4: 1
     },
+    # This is only used for the ranged spell.
+    "Cathedral Evangelist": {
+        0: 0,
+        1: 0,
+        2: 0.8224852071005917,
+        3: 0.9763313609467456,
+        4: 1
+    },
     "invader": {
         0: 0.07692307692307693,
         1: 0.44970414201183434,
@@ -72,6 +80,113 @@ reachMod = {
         3: 0.8947368421052632,
         4: 1
     }
+}
+
+heroRangeNeeded = {
+    ("Cathedral Evangelist",True): 2,
+    ("Engorged Zombie",True): 2,
+    ("Hollow Soldier",True): 2,
+    ("Ironclad Soldier",True): 2,
+    ("Large Hollow Soldier",True): 2,
+    ("Mushroom Child",True): 2,
+    ("Mushroom Parent",True): 2,
+    ("Phalanx",True): 2,
+    ("Phalanx Hollow",True): 2,
+    ("Silver Knight Spearman",True): 2,
+    ("Skeleton Soldier",True): 2,
+    ("Stone Knight",True): 2,
+    ("Shears Scarecrow",True): 2,
+    ("Skeleton Beast",True): 2,
+    ("Hungry Mimic - Stomping Kick",True): 2,
+    ("Hungry Mimic - Vicious Chomp",True): 1,
+    ("Armorer Dennis - Soul Greatsword",True): 2,
+    ("Armorer Dennis - Upward Slash",True): 2,
+    ("Fencer Sharron - Dual Sword Slash",True): 2,
+    ("Fencer Sharron - Puzzling Stone Sword Whip",True): 2,
+    ("Fencer Sharron - Dual Sword Assault",True): 2,
+    ("Fencer Sharron - Spider Fang Sword Strike",True): 2,
+    ("Invader Brylex - Trampling Charge",True): 2,
+    ("Kirk, Knight of Thorns - Barbed Sword Thrust",True): 2,
+    ("Kirk, Knight of Thorns - Forward Roll",True): 2,
+    ("Kirk, Knight of Thorns - Overhead Chop",True): 2,
+    ("Kirk, Knight of Thorns - Shield Bash",True): 2,
+    ("Kirk, Knight of Thorns - Shield Charge",True): 2,
+    ("Longfinger Kirk - Barbed Sword Strikes",True): 2,
+    ("Longfinger Kirk - Cleave",True): 2,
+    ("Longfinger Kirk - Lunging Stab",True): 2,
+    ("Longfinger Kirk - Rolling Barbs",True): 2,
+    ("Maldron the Assassin - Greatlance Lunge",True): 2,
+    ("Maneater Mildred - Guillotine",True): 2,
+    ("Marvelous Chester - Spinning Low Kick",True): 2,
+    ("Melinda the Butcher - Cleaving Strikes",True): 2,
+    ("Melinda the Butcher - Double Smash",True): 2,
+    ("Melinda the Butcher - Greataxe Sweep",True): 2,
+    ("Melinda the Butcher - Jumping Cleave",True): 1,
+    ("Melinda the Butcher - Sweeping Advance",True): 2,
+    ("Oliver the Collector - Bone Fist Punches",True): 2,
+    ("Oliver the Collector - Majestic Greatsword Slash",True): 2,
+    ("Oliver the Collector - Minotaur Helm Charge",True): 2,
+    ("Oliver the Collector - Puzzling Stone Sword Strike",True): 2,
+    ("Oliver the Collector - Ricard's Rapier Thrust",True): 2,
+    ("Paladin Leeroy - Grant Slam Withdrawal",True): 2,
+    ("Paladin Leeroy - Sanctus Shield Dash",True): 2,
+    ("Paladin Leeroy - Sanctus Shield Slam",True): 2,
+    ("Paladin Leeroy - Wrath of the Gods",True): 2
+}
+
+heroRangeMod = {
+    ("Cathedral Evangelist",True,True): 0,
+    ("Engorged Zombie",True,True): 0,
+    ("Hollow Soldier",True,True): 0,
+    ("Ironclad Soldier",True,True): 0,
+    ("Large Hollow Soldier",True,True): 0,
+    ("Mushroom Child",True,True): 0,
+    ("Mushroom Parent",True,True): 0,
+    ("Phalanx",True,True): 0,
+    ("Phalanx Hollow",True,True): 0,
+    ("Silver Knight Spearman",True,True): 0,
+    ("Skeleton Soldier",True,True): 0,
+    ("Stone Knight",True,True): 0,
+    # Half are avoidable because it's a repeat with 1 reach
+    ("Shears Scarecrow",True,True): 0.5,
+    ("Skeleton Beast",True,True): 0.5,
+    ("Hungry Mimic - Stomping Kick",True): 0,
+    ("Hungry Mimic - Vicious Chomp",True): 0,
+    ("Vicious Mimic - Stomping Kick",True): 0,
+    ("Vicious Mimic - Vicious Chomp",True): 0,
+    ("Armorer Dennis - Soul Greatsword",True): 0,
+    ("Armorer Dennis - Upward Slash",True): 0,
+    ("Fencer Sharron - Dual Sword Slash",True): 0,
+    ("Fencer Sharron - Puzzling Stone Sword Whip",True): 0,
+    ("Fencer Sharron - Dual Sword Assault",True): 0.5,
+    ("Fencer Sharron - Spider Fang Sword Strike",True): 0,
+    ("Invader Brylex - Trampling Charge",True): 0.6666666667,
+    ("Kirk, Knight of Thorns - Barbed Sword Thrust",True): 0,
+    ("Kirk, Knight of Thorns - Forward Roll",True): 0.5,
+    ("Kirk, Knight of Thorns - Overhead Chop",True): 0,
+    ("Kirk, Knight of Thorns - Shield Bash",True): 0,
+    ("Kirk, Knight of Thorns - Shield Charge",True): 0,
+    ("Longfinger Kirk - Barbed Sword Strikes",True): 0.5,
+    ("Longfinger Kirk - Cleave",True): 0,
+    ("Longfinger Kirk - Lunging Stab",True): 0,
+    ("Longfinger Kirk - Rolling Barbs",True): 0.5,
+    ("Maldron the Assassin - Greatlance Lunge",True): 0,
+    ("Maneater Mildred - Guillotine",True): 0,
+    ("Marvelous Chester - Spinning Low Kick",True): 0,
+    ("Melinda the Butcher - Cleaving Strikes",True): 0,
+    ("Melinda the Butcher - Double Smash",True): 0.5,
+    ("Melinda the Butcher - Greataxe Sweep",True): 0,
+    ("Melinda the Butcher - Jumping Cleave",True): 0.6666666667,
+    ("Melinda the Butcher - Sweeping Advance",True): 0.5,
+    ("Oliver the Collector - Bone Fist Punches",True): 0.5,
+    ("Oliver the Collector - Majestic Greatsword Slash",True): 0,
+    ("Oliver the Collector - Minotaur Helm Charge",True): 0.5,
+    ("Oliver the Collector - Puzzling Stone Sword Strike",True): 0,
+    ("Oliver the Collector - Ricard's Rapier Thrust",True): 0,
+    ("Paladin Leeroy - Grant Slam Withdrawal",True): 0,
+    ("Paladin Leeroy - Sanctus Shield Dash",True): 0.5,
+    ("Paladin Leeroy - Sanctus Shield Slam",True): 0,
+    ("Paladin Leeroy - Wrath of the Gods",True): 0
 }
 
 # Node attacks get a damage multiplier based on how likely
@@ -168,7 +283,7 @@ def add_to_bleed_proc_dict_boss(name, reachMod, arcMod1, arcMod2, arcMod3, arcMo
 meanReachMod = 0.7714069147635578
 
 try:
-    tier = 3
+    tier = 1
 
     # Calculate enemy offense.
     print(" ".join(list(set([enemy.name[:enemy.name.index(" - ") if " - " in enemy.name else enemy.name.index(" (") if " (" in enemy.name else len(enemy.name)] for enemy in enemies]))) + " offense tier " + str(tier))
@@ -176,6 +291,8 @@ try:
         print(str((x/len(loadoutLookup[tier]))*100)[:6] + "%", end="\r")
         block = loadout[0]
         resist = loadout[1]
+        heroRange = loadout[3]
+        blockArmorOnly = loadout[4]
         multiplier = loadoutLookup[tier][loadout]
         for enemy in enemies:
             if tier < 3 and enemy.modified:
@@ -190,8 +307,13 @@ try:
             damageDone2 = []
             damageDone3 = []
             damageDone4 = []
+            poison1 = 0.0
+            poison2 = 0.0
+            poison3 = 0.0
+            poison4 = 0.0
             poisonAdded = False
             poisonAdded2 = False
+            heroRangeMultiplier = 1
             
             # For each enemy attack, calculate the expected
             # damage the enemy would do to this loadout.
@@ -204,7 +326,14 @@ try:
                 if enemy.attacks[i] == 0:
                     continue
                 totalAttacks += multiplier
-                reach = reachMod["Executioner's Chariot" if "Executioner's Chariot" in enemy.name else "Old Iron King" if "Old Iron King" in enemy.name else enemy.enemyType][max([0, min([4, sum(enemy.move[:i+1]) + sum(enemy.attackRange[:i+1]) - (1 if enemy.windup else 0)])])]
+                move = sum(enemy.move[:i+1])
+                attackRange = sum(enemy.attackRange[:i+1])
+                reachLookup = max([0, min([4, move + attackRange - (1 if enemy.windup else 0)])])
+                reach = reachMod[(
+                    "Executioner's Chariot" if "Executioner's Chariot" in enemy.name else
+                    "Old Iron King" if "Old Iron King" in enemy.name else
+                    "Cathedral Evangelist" if enemy.name == "Cathedral Evangelist" and i == 0 else
+                    enemy.enemyType)][reachLookup]
                 dodge = 1 if loadout[2] == (0,) else (1 - (sum([1 for do in product(*loadout[2]) if sum(do) >= enemy.dodge]) / len(list(product(*loadout[2])))))
 
                 # This is the effect of Calamity, see below for more details.
@@ -301,9 +430,40 @@ try:
                 m = 1
                 if enemy.attacks[i] > 0 and "Executioner's Chariot" not in enemy.name and (poisonAdded2 or (len(enemy.attackEffect) - 1 >= i and "poison" not in enemy.attackEffect[i])):
                     m = (expectedBlock if enemy.attackType[i] == "physical" else expectedResist)[int(max([0, enemy.attacks[i]]))][tier]
-                damagingAttacks += (dodge * m) * multiplier
+
+                # If the enemy/behavior could be avoided and still do damage with a weapon of appropriate range,
+                # apply a modifier here.
+                enoughRange = heroRange >= heroRangeNeeded.get(
+                         (enemy.name,
+                          enemy.attackType[i] == "physical" if enemy.name == "Cathedral Evangelist" else True), 99)
+                heroRangeMultiplier = heroRangeMod.get(
+                    (enemy.name,
+                     enemy.attackType[i] == "physical" if enemy.name == "Cathedral Evangelist" else True,
+                     enoughRange), 1)
                 
-                if poison1 > 0.0 or poison2 or poison3 > 0.0 or poison4 > 0.0:
+                # These are more specific rules governing avoiding damage.
+                if enemy.name == "Marvelous Chester - Throwing Knife Flurry":
+                    heroRangeMultiplier = max([0, 3 - heroRange]) / 3
+                elif enemy.name == "Marvelous Chester - Throwing Knife Volley":
+                    heroRangeMultiplier = max([0, 2 - heroRange]) / 2
+                elif enemy.name == "Melinda the Butcher - Cleaving Strikes":
+                    if heroRange == 1:
+                        heroRangeMultiplier = 0.5
+                    elif heroRange > 1:
+                        heroRangeMultiplier = 0
+                    else:
+                        heroRangeMultiplier = 1
+                elif enemy.name == "Oliver the Collector - Smelter Hammer Whirlwind":
+                    if heroRange == 0:
+                        heroRangeMultiplier = 0.666666667
+                    elif heroRange == 1:
+                        heroRangeMultiplier = 0.33
+                    else:
+                        heroRangeMultiplier = 0
+
+                damagingAttacks += (dodge * m) * multiplier * heroRangeMultiplier
+                
+                if heroRangeMultiplier > 0 and (poison1 > 0.0 or poison2 or poison3 > 0.0 or poison4 > 0.0):
                     poisonAdded2 = True
                     
                 damageDone1.append(expectedDamage1)
@@ -311,18 +471,30 @@ try:
                 damageDone3.append(expectedDamage3)
                 damageDone4.append(expectedDamage4)
 
-            # Need to cut these in half because all regular enemy attacks get doubled
-            # to better reflect how they work over two turns.
-            enemy.totalAttacks[tier] += totalAttacks / (2 if enemy.id else 1)
-            enemy.damagingAttacks[tier] += damagingAttacks / (2 if enemy.id else 1)
-            enemy.damageDone1[tier] += sum([d for d in damageDone1]) / (2 if enemy.id else 1)
-            enemy.damageDone2[tier] += sum([d for d in damageDone2]) / (2 if enemy.id else 1)
-            enemy.damageDone3[tier] += sum([d for d in damageDone3]) / (2 if enemy.id else 1)
-            enemy.damageDone4[tier] += sum([d for d in damageDone4]) / (2 if enemy.id else 1)
-            enemy.bleedDamage1[tier] += bleedDamage1 / (2 if enemy.id else 1)
-            enemy.bleedDamage2[tier] += bleedDamage2 / (2 if enemy.id else 1)
-            enemy.bleedDamage3[tier] += bleedDamage3 / (2 if enemy.id else 1)
-            enemy.bleedDamage4[tier] += bleedDamage4 / (2 if enemy.id else 1)
+            if enemy.id:
+                # Need to cut these in half because all regular enemy attacks get doubled
+                # to better reflect how they work over two turns.
+                enemy.totalAttacks[tier] += totalAttacks / 2
+                enemy.damagingAttacks[tier] += (damagingAttacks / 2) * heroRangeMultiplier
+                enemy.damageDone1[tier] += (sum([d for d in damageDone1]) / 2) * heroRangeMultiplier
+                enemy.damageDone2[tier] += (sum([d for d in damageDone2]) / 2) * heroRangeMultiplier
+                enemy.damageDone3[tier] += (sum([d for d in damageDone3]) / 2) * heroRangeMultiplier
+                enemy.damageDone4[tier] += (sum([d for d in damageDone4]) / 2) * heroRangeMultiplier
+                enemy.bleedDamage1[tier] += (bleedDamage1 / 2) * heroRangeMultiplier
+                enemy.bleedDamage2[tier] += (bleedDamage2 / 2) * heroRangeMultiplier
+                enemy.bleedDamage3[tier] += (bleedDamage3 / 2) * heroRangeMultiplier
+                enemy.bleedDamage4[tier] += (bleedDamage4 / 2) * heroRangeMultiplier
+            else:
+                enemy.totalAttacks[tier] += totalAttacks
+                enemy.damagingAttacks[tier] += damagingAttacks
+                enemy.damageDone1[tier] += sum([d for d in damageDone1])
+                enemy.damageDone2[tier] += sum([d for d in damageDone2])
+                enemy.damageDone3[tier] += sum([d for d in damageDone3])
+                enemy.damageDone4[tier] += sum([d for d in damageDone4])
+                enemy.bleedDamage1[tier] += bleedDamage1
+                enemy.bleedDamage2[tier] += bleedDamage2
+                enemy.bleedDamage3[tier] += bleedDamage3
+                enemy.bleedDamage4[tier] += bleedDamage4
             
     # (Damaging attacks / total attacks) * average enemy reach
     # This is the % that bleed will be procced.  The attack has
@@ -418,7 +590,7 @@ try:
             dump({"deaths": e["deaths"], "totalAttacks": enemy.totalAttacks, "damagingAttacks": enemy.damagingAttacks, "damageDone": {1: enemy.damageDone1, 2: enemy.damageDone2, 3: enemy.damageDone3, 4: enemy.damageDone4}, "bleedDamage": {1: enemy.bleedDamage1, 2: enemy.bleedDamage2, 3: enemy.bleedDamage3, 4: enemy.bleedDamage4}}, enemyFile)
 
 except Exception as ex:
-    print(enemy.attackEffect)
-    print(i)
+    print(enemy.attackEffect) # type: ignore
+    print(i) # type: ignore
     input(ex)
     raise
