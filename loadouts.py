@@ -29,7 +29,7 @@ dodgeMod = {
     3: {}
 }
 
-loadoutLookup = {1: {}, 2: {}, 3: {}}
+loadoutLookup = {True: {1: {}, 2: {}, 3: {}}, False: {1: {}, 2: {}, 3: {}}}
 x=0
 for tier in range(1, 4):
     loadoutsCombos = chain(
@@ -54,12 +54,21 @@ for tier in range(1, 4):
         block = sum([means[die] for die in l[0].block + l[1][0].block + l[1][1].block]) + sum([l[0].blockMod, l[1][0].blockMod, l[1][1].blockMod])
         blockArmorOnly = sum([means[die] for die in l[0].block]) + sum([l[0].blockMod])
         resist = sum([means[die] for die in l[0].resist + l[1][0].resist + l[1][1].resist]) + sum([l[0].resistMod, l[1][0].resistMod, l[1][1].resistMod])
+        resistArmorOnly = sum([means[die] for die in l[0].resist]) + sum([l[0].resistMod])
         dodge = (0,) if not all([l[0].canDodge, l[1][0].canDodge, l[1][1].canDodge]) else tuple(l[0].dodge + l[1][0].dodge + l[1][1].dodge)
+        dodgeArmorOnly = (0,) if not all([l[0].canDodge, l[1][0].canDodge, l[1][1].canDodge]) else tuple(l[0].dodge)
 
-        if tuple([block, resist, dodge, maxRange, blockArmorOnly]) in loadoutLookup[tier]:
-            loadoutLookup[tier][tuple([block, resist, dodge, maxRange, blockArmorOnly])] += 1
+        # For enemies with ambush
+        if tuple([block, resist, dodge, maxRange, blockArmorOnly, resistArmorOnly, dodgeArmorOnly]) in loadoutLookup[True][tier]:
+            loadoutLookup[True][tier][tuple([block, resist, dodge, maxRange, blockArmorOnly, resistArmorOnly, dodgeArmorOnly])] += 1
         else:
-            loadoutLookup[tier][tuple([block, resist, dodge, maxRange, blockArmorOnly])] = 1
+            loadoutLookup[True][tier][tuple([block, resist, dodge, maxRange, blockArmorOnly, resistArmorOnly, dodgeArmorOnly])] = 1
+            x += 1
+        # Everybody else
+        if tuple([block, resist, dodge, maxRange]) in loadoutLookup[False][tier]:
+            loadoutLookup[False][tier][tuple([block, resist, dodge, maxRange])] += 1
+        else:
+            loadoutLookup[False][tier][tuple([block, resist, dodge, maxRange])] = 1
             x += 1
 
     # Overall dodge modifier for the following dodge difficulties.
