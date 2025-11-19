@@ -1,0 +1,1145 @@
+[
+  {
+    "actions": [
+      {
+        "damage": 4,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack aggro 4 physical with push"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 2,
+    "hp": 1,
+    "models": 3,
+    "name": "Alonne Bow Knight",
+    "on_death": null,
+    "range_behavior": 4,
+    "repeat": 1,
+    "resist": 1,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": false,
+      "is_melee": false,
+      "is_ranged": true
+    },
+    "threat_initiative": 2,
+    "threat_profile": {
+      "p1": 3.005434782608696,
+      "p2": 1.502717391304348,
+      "p3": 1.0018115942028984,
+      "p4": 0.751358695652174
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 5,
+        "damage_type": "magic",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack closest 5 magic"
+      }
+    ],
+    "armor": 2,
+    "dodge_difficulty": 1,
+    "hp": 5,
+    "models": 3,
+    "name": "Alonne Knight Captain",
+    "on_death": null,
+    "range_behavior": 0,
+    "repeat": 1,
+    "resist": 2,
+    "tags": {
+      "hp_band": "5+",
+      "is_leaper": false,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 8,
+    "threat_profile": {
+      "p1": 86.71875,
+      "p2": 43.359375,
+      "p3": 28.906250000000004,
+      "p4": 21.6796875
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 5,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack closest 5 physical"
+      }
+    ],
+    "armor": 2,
+    "dodge_difficulty": 1,
+    "hp": 1,
+    "models": 3,
+    "name": "Alonne Sword Knight",
+    "on_death": null,
+    "range_behavior": 0,
+    "repeat": 1,
+    "resist": 2,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": false,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 5,
+    "threat_profile": {
+      "p1": 13.96875,
+      "p2": 6.984375,
+      "p3": 4.65625,
+      "p4": 3.4921875
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 4,
+        "damage_type": "magic",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack aggro 4 magic"
+      }
+    ],
+    "armor": 2,
+    "dodge_difficulty": 2,
+    "hp": 5,
+    "models": 2,
+    "name": "Black Hollow Mage",
+    "on_death": null,
+    "range_behavior": 4,
+    "repeat": 1,
+    "resist": 3,
+    "tags": {
+      "hp_band": "5+",
+      "is_leaper": false,
+      "is_melee": false,
+      "is_ranged": true
+    },
+    "threat_initiative": 8,
+    "threat_profile": {
+      "p1": 159.25000000000003,
+      "p2": 79.62500000000001,
+      "p3": 53.08333333333334,
+      "p4": 39.81250000000001
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 4,
+        "damage_type": "physical",
+        "kind": "move-attack",
+        "max_targets": 3,
+        "raw_text": "Move-attack 1 towards closest 4 physical"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 2,
+    "hp": 1,
+    "models": 2,
+    "name": "Bonewheel Skeleton",
+    "on_death": null,
+    "range_behavior": null,
+    "repeat": 2,
+    "resist": 1,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": false,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 7,
+    "threat_profile": {
+      "p1": 6.010869565217392,
+      "p2": 6.010869565217392,
+      "p3": 6.010869565217391,
+      "p4": 4.508152173913043
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 3,
+        "damage_type": "magic",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack aggro 3 magic"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 1,
+    "hp": 1,
+    "models": 3,
+    "name": "Crossbow Hollow",
+    "on_death": null,
+    "range_behavior": 4,
+    "repeat": 1,
+    "resist": 0,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": false,
+      "is_melee": false,
+      "is_ranged": true
+    },
+    "threat_initiative": 2,
+    "threat_profile": {
+      "p1": 0.953125,
+      "p2": 0.4765625,
+      "p3": 0.3177083333333333,
+      "p4": 0.23828125
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 6,
+        "damage_type": "physical",
+        "kind": "leap-attack",
+        "max_targets": 3,
+        "raw_text": "Leap-attack aggro 6 physical"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 2,
+    "hp": 5,
+    "models": 2,
+    "name": "Crow Demon",
+    "on_death": null,
+    "range_behavior": null,
+    "repeat": 1,
+    "resist": 2,
+    "tags": {
+      "hp_band": "5+",
+      "is_leaper": true,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 9,
+    "threat_profile": {
+      "p1": 40.036764705882355,
+      "p2": 40.036764705882355,
+      "p3": 40.036764705882355,
+      "p4": 30.027573529411764
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 5,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack closest 5 physical"
+      }
+    ],
+    "armor": 2,
+    "dodge_difficulty": 1,
+    "hp": 1,
+    "models": 2,
+    "name": "Demonic Foliage",
+    "on_death": null,
+    "range_behavior": 1,
+    "repeat": 1,
+    "resist": 1,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": false,
+      "is_melee": false,
+      "is_ranged": true
+    },
+    "threat_initiative": 3,
+    "threat_profile": {
+      "p1": 5.5874999999999995,
+      "p2": 2.7937499999999997,
+      "p3": 1.8624999999999998,
+      "p4": 1.3968749999999999
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 4,
+        "damage_type": "magic",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack closest 4 magic"
+      }
+    ],
+    "armor": 2,
+    "dodge_difficulty": 1,
+    "hp": 1,
+    "models": 2,
+    "name": "Engorged Zombie",
+    "on_death": null,
+    "range_behavior": 0,
+    "repeat": 1,
+    "resist": 2,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": false,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 8,
+    "threat_profile": {
+      "p1": 12.343750000000002,
+      "p2": 6.171875000000001,
+      "p3": 4.114583333333334,
+      "p4": 3.0859375000000004
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 3,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack closest 3 physical with push and bleed"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 1,
+    "hp": 1,
+    "models": 2,
+    "name": "Falchion Skeleton",
+    "on_death": null,
+    "range_behavior": 0,
+    "repeat": 1,
+    "resist": 1,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": false,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 4,
+    "threat_profile": {
+      "p1": 0.8315217391304348,
+      "p2": 0.4157608695652174,
+      "p3": 0.27717391304347827,
+      "p4": 0.2078804347826087
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 3,
+        "damage_type": "magic",
+        "kind": "attack",
+        "max_targets": 3,
+        "raw_text": "Attack aggro node for 3 magic with push"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 1,
+    "hp": 1,
+    "models": 3,
+    "name": "Firebomb Hollow",
+    "on_death": null,
+    "range_behavior": 2,
+    "repeat": 1,
+    "resist": 1,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": false,
+      "is_melee": false,
+      "is_ranged": true
+    },
+    "threat_initiative": 2,
+    "threat_profile": {
+      "p1": 1.3260869565217392,
+      "p2": 1.3260869565217392,
+      "p3": 1.326086956521739,
+      "p4": 0.9945652173913043
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 2,
+        "damage_type": "physical",
+        "kind": "move-attack",
+        "max_targets": 3,
+        "raw_text": "Move-attack 1 away from aggro for 2 physical"
+      },
+      {
+        "damage": 5,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack aggro for 5 physical with push"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 2,
+    "hp": 5,
+    "models": 2,
+    "name": "Giant Skeleton Archer",
+    "on_death": null,
+    "range_behavior": 4,
+    "repeat": 1,
+    "resist": 1,
+    "tags": {
+      "hp_band": "5+",
+      "is_leaper": false,
+      "is_melee": false,
+      "is_ranged": true
+    },
+    "threat_initiative": 1,
+    "threat_profile": {
+      "p1": 25.65217391304348,
+      "p2": 14.52445652173913,
+      "p3": 10.81521739130435,
+      "p4": 8.111413043478263
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 2,
+        "damage_type": "physical",
+        "kind": "move-attack",
+        "max_targets": 3,
+        "raw_text": "Move-attack 1 towards closest for 2 physical"
+      },
+      {
+        "damage": 5,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack closest for 5 physical with push"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 1,
+    "hp": 5,
+    "models": 2,
+    "name": "Giant Skeleton Soldier",
+    "on_death": null,
+    "range_behavior": 1,
+    "repeat": 1,
+    "resist": 1,
+    "tags": {
+      "hp_band": "5+",
+      "is_leaper": false,
+      "is_melee": false,
+      "is_ranged": true
+    },
+    "threat_initiative": 2,
+    "threat_profile": {
+      "p1": 13.695652173913045,
+      "p2": 7.622282608695652,
+      "p3": 5.597826086956521,
+      "p4": 4.198369565217392
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 4,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack closest for 4 physical"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 1,
+    "hp": 1,
+    "models": 3,
+    "name": "Hollow Soldier",
+    "on_death": null,
+    "range_behavior": 0,
+    "repeat": 1,
+    "resist": 1,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": false,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 5,
+    "threat_profile": {
+      "p1": 1.5706521739130437,
+      "p2": 0.7853260869565218,
+      "p3": 0.5235507246376812,
+      "p4": 0.3926630434782609
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 5,
+        "damage_type": "physical",
+        "kind": "move-attack",
+        "max_targets": 3,
+        "raw_text": "Move-attack 1 towards closest for 5 physical with stagger"
+      }
+    ],
+    "armor": 3,
+    "dodge_difficulty": 2,
+    "hp": 5,
+    "models": 3,
+    "name": "Ironclad Soldier",
+    "on_death": null,
+    "range_behavior": null,
+    "repeat": 1,
+    "resist": 2,
+    "tags": {
+      "hp_band": "5+",
+      "is_leaper": false,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 6,
+    "threat_profile": {
+      "p1": 341.25,
+      "p2": 341.25,
+      "p3": 341.25,
+      "p4": 255.9375
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 5,
+        "damage_type": "physical",
+        "kind": "move-attack",
+        "max_targets": 3,
+        "raw_text": "Move-attack 1 towards closest for 5 physical"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 1,
+    "hp": 5,
+    "models": 2,
+    "name": "Large Hollow Soldier",
+    "on_death": null,
+    "range_behavior": null,
+    "repeat": 1,
+    "resist": 0,
+    "tags": {
+      "hp_band": "5+",
+      "is_leaper": false,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 6,
+    "threat_profile": {
+      "p1": 8.73046875,
+      "p2": 8.73046875,
+      "p3": 8.73046875,
+      "p4": 6.5478515625
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 6,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack aggro 6 physical with push"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 2,
+    "hp": 5,
+    "models": 1,
+    "name": "Mimic",
+    "on_death": null,
+    "range_behavior": 1,
+    "repeat": 1,
+    "resist": 1,
+    "tags": {
+      "hp_band": "5+",
+      "is_leaper": false,
+      "is_melee": false,
+      "is_ranged": true
+    },
+    "threat_initiative": 4,
+    "threat_profile": {
+      "p1": 29.59239130434783,
+      "p2": 14.796195652173916,
+      "p3": 9.86413043478261,
+      "p4": 7.398097826086958
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 5,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack closest 5 physical"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 1,
+    "hp": 5,
+    "models": 1,
+    "name": "Mushroom Child",
+    "on_death": null,
+    "range_behavior": 0,
+    "repeat": 1,
+    "resist": 2,
+    "tags": {
+      "hp_band": "5+",
+      "is_leaper": false,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 2,
+    "threat_profile": {
+      "p1": 16.433823529411764,
+      "p2": 8.216911764705882,
+      "p3": 5.477941176470589,
+      "p4": 4.108455882352941
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 6,
+        "damage_type": "physical",
+        "kind": "move-attack",
+        "max_targets": 3,
+        "raw_text": "Move-attack 1 towards closest for 6 physical with stagger"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 1,
+    "hp": 10,
+    "models": 1,
+    "name": "Mushroom Parent",
+    "on_death": null,
+    "range_behavior": null,
+    "repeat": 1,
+    "resist": 2,
+    "tags": {
+      "hp_band": "5+",
+      "is_leaper": false,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 1,
+    "threat_profile": {
+      "p1": 44.77941176470588,
+      "p2": 44.77941176470588,
+      "p3": 44.77941176470588,
+      "p4": 33.584558823529406
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 3,
+        "damage_type": "magic",
+        "kind": "attack",
+        "max_targets": 3,
+        "raw_text": "Attack aggro node for 3 magic"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 1,
+    "hp": 5,
+    "models": 2,
+    "name": "Necromancer",
+    "on_death": null,
+    "range_behavior": null,
+    "repeat": 1,
+    "resist": 2,
+    "tags": {
+      "hp_band": "5+",
+      "is_leaper": false,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 7,
+    "threat_profile": {
+      "p1": 8.970588235294118,
+      "p2": 8.970588235294118,
+      "p3": 8.970588235294118,
+      "p4": 6.727941176470588
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 5,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack closest for 5 physical with push"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 1,
+    "hp": 5,
+    "models": 1,
+    "name": "Phalanx",
+    "on_death": "Spawn 3 Phalanx Hollows",
+    "range_behavior": 1,
+    "repeat": 1,
+    "resist": 1,
+    "tags": {
+      "hp_band": "5+",
+      "is_leaper": false,
+      "is_melee": false,
+      "is_ranged": true
+    },
+    "threat_initiative": 4,
+    "threat_profile": {
+      "p1": 12.146739130434783,
+      "p2": 6.073369565217392,
+      "p3": 4.048913043478261,
+      "p4": 3.036684782608696
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 4,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack closest for 4 physical"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 1,
+    "hp": 1,
+    "models": 5,
+    "name": "Phalanx Hollow",
+    "on_death": null,
+    "range_behavior": 1,
+    "repeat": 1,
+    "resist": 1,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": false,
+      "is_melee": false,
+      "is_ranged": true
+    },
+    "threat_initiative": 4,
+    "threat_profile": {
+      "p1": 1.5706521739130437,
+      "p2": 0.7853260869565218,
+      "p3": 0.5235507246376812,
+      "p4": 0.3926630434782609
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 4,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack aggro 4 physical"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 2,
+    "hp": 1,
+    "models": 3,
+    "name": "Plow Scarecrow",
+    "on_death": null,
+    "range_behavior": 1,
+    "repeat": 1,
+    "resist": 1,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": false,
+      "is_melee": false,
+      "is_ranged": true
+    },
+    "threat_initiative": 4,
+    "threat_profile": {
+      "p1": 3.005434782608696,
+      "p2": 1.502717391304348,
+      "p3": 1.0018115942028984,
+      "p4": 0.751358695652174
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 6,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 3,
+        "raw_text": "Attack closest node for 6 physical"
+      }
+    ],
+    "armor": 2,
+    "dodge_difficulty": 1,
+    "hp": 10,
+    "models": 2,
+    "name": "Sentinel",
+    "on_death": null,
+    "range_behavior": 1,
+    "repeat": 1,
+    "resist": 1,
+    "tags": {
+      "hp_band": "5+",
+      "is_leaper": false,
+      "is_melee": false,
+      "is_ranged": true
+    },
+    "threat_initiative": 9,
+    "threat_profile": {
+      "p1": 76.12499999999999,
+      "p2": 76.12499999999999,
+      "p3": 76.12499999999999,
+      "p4": 57.09374999999999
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 3,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 3,
+        "raw_text": "Attack closest node for 3 physical"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 2,
+    "hp": 1,
+    "models": 3,
+    "name": "Shears Scarecrow",
+    "on_death": null,
+    "range_behavior": 0,
+    "repeat": 2,
+    "resist": 1,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": false,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 8,
+    "threat_profile": {
+      "p1": 3.4021739130434785,
+      "p2": 3.4021739130434785,
+      "p3": 3.4021739130434785,
+      "p4": 2.551630434782609
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 4,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 3,
+        "raw_text": "Attack aggro node for 4 physical"
+      }
+    ],
+    "armor": 2,
+    "dodge_difficulty": 1,
+    "hp": 1,
+    "models": 3,
+    "name": "Silver Knight Greatbowman",
+    "on_death": null,
+    "range_behavior": 4,
+    "repeat": 1,
+    "resist": 0,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": false,
+      "is_melee": false,
+      "is_ranged": true
+    },
+    "threat_initiative": 3,
+    "threat_profile": {
+      "p1": 1.9013157894736843,
+      "p2": 1.9013157894736843,
+      "p3": 1.9013157894736843,
+      "p4": 1.4259868421052633
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 6,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack closest 6 physical"
+      }
+    ],
+    "armor": 2,
+    "dodge_difficulty": 2,
+    "hp": 1,
+    "models": 3,
+    "name": "Silver Knight Spearman",
+    "on_death": null,
+    "range_behavior": 1,
+    "repeat": 1,
+    "resist": 1,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": false,
+      "is_melee": false,
+      "is_ranged": true
+    },
+    "threat_initiative": 8,
+    "threat_profile": {
+      "p1": 13.612499999999999,
+      "p2": 6.8062499999999995,
+      "p3": 4.5375,
+      "p4": 3.4031249999999997
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 5,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 3,
+        "raw_text": "Attack closest node for 5 physical with push"
+      }
+    ],
+    "armor": 2,
+    "dodge_difficulty": 2,
+    "hp": 1,
+    "models": 3,
+    "name": "Silver Knight Swordsman",
+    "on_death": null,
+    "range_behavior": 0,
+    "repeat": 1,
+    "resist": 1,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": false,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 7,
+    "threat_profile": {
+      "p1": 10.237499999999999,
+      "p2": 10.237499999999999,
+      "p3": 10.237499999999999,
+      "p4": 7.678125
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 4,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack aggro 4 physical"
+      }
+    ],
+    "armor": 1,
+    "dodge_difficulty": 1,
+    "hp": 1,
+    "models": 3,
+    "name": "Skeleton Archer",
+    "on_death": null,
+    "range_behavior": 4,
+    "repeat": 1,
+    "resist": 1,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": false,
+      "is_melee": false,
+      "is_ranged": true
+    },
+    "threat_initiative": 3,
+    "threat_profile": {
+      "p1": 1.5706521739130437,
+      "p2": 0.7853260869565218,
+      "p3": 0.5235507246376812,
+      "p4": 0.3926630434782609
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 4,
+        "damage_type": "physical",
+        "kind": "move-attack",
+        "max_targets": 3,
+        "raw_text": "Move-attack 1 towards closest 4 physical"
+      }
+    ],
+    "armor": 2,
+    "dodge_difficulty": 2,
+    "hp": 5,
+    "models": 1,
+    "name": "Skeleton Beast",
+    "on_death": null,
+    "range_behavior": null,
+    "repeat": 2,
+    "resist": 2,
+    "tags": {
+      "hp_band": "5+",
+      "is_leaper": false,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 6,
+    "threat_profile": {
+      "p1": 172.8125,
+      "p2": 172.8125,
+      "p3": 172.81249999999997,
+      "p4": 129.609375
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 2,
+        "damage_type": "physical",
+        "kind": "move-attack",
+        "max_targets": 3,
+        "raw_text": "Move-attack 1 towards closest 2 physical with bleed"
+      }
+    ],
+    "armor": 2,
+    "dodge_difficulty": 1,
+    "hp": 1,
+    "models": 3,
+    "name": "Skeleton Soldier",
+    "on_death": null,
+    "range_behavior": null,
+    "repeat": 1,
+    "resist": 1,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": false,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 5,
+    "threat_profile": {
+      "p1": 0.7125,
+      "p2": 0.7125,
+      "p3": 0.7125,
+      "p4": 0.5343749999999999
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 3,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack aggro for 3 physical with poison"
+      }
+    ],
+    "armor": 0,
+    "dodge_difficulty": 1,
+    "hp": 1,
+    "models": 2,
+    "name": "Snow Rat",
+    "on_death": null,
+    "range_behavior": 0,
+    "repeat": 1,
+    "resist": 1,
+    "tags": {
+      "hp_band": "1",
+      "is_leaper": true,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 1,
+    "threat_profile": {
+      "p1": 0.40909090909090906,
+      "p2": 0.20454545454545453,
+      "p3": 0.13636363636363635,
+      "p4": 0.10227272727272727
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 4,
+        "damage_type": "physical",
+        "kind": "move-attack",
+        "max_targets": 3,
+        "raw_text": "Move-attack 1 towards aggro for 4 physical"
+      },
+      {
+        "damage": 5,
+        "damage_type": "physical",
+        "kind": "attack",
+        "max_targets": 3,
+        "raw_text": "Attack aggro node for 5 physical with push"
+      }
+    ],
+    "armor": 2,
+    "dodge_difficulty": 1,
+    "hp": 5,
+    "models": 2,
+    "name": "Stone Guardian",
+    "on_death": null,
+    "range_behavior": 1,
+    "repeat": 1,
+    "resist": 3,
+    "tags": {
+      "hp_band": "5+",
+      "is_leaper": false,
+      "is_melee": false,
+      "is_ranged": true
+    },
+    "threat_initiative": 6,
+    "threat_profile": {
+      "p1": 184.0,
+      "p2": 184.0,
+      "p3": 184.0,
+      "p4": 138.0
+    }
+  },
+  {
+    "actions": [
+      {
+        "damage": 5,
+        "damage_type": "magic",
+        "kind": "attack",
+        "max_targets": 1,
+        "raw_text": "Attack closest 5 magic with push"
+      }
+    ],
+    "armor": 3,
+    "dodge_difficulty": 1,
+    "hp": 5,
+    "models": 2,
+    "name": "Stone Knight",
+    "on_death": null,
+    "range_behavior": 0,
+    "repeat": 1,
+    "resist": 2,
+    "tags": {
+      "hp_band": "5+",
+      "is_leaper": false,
+      "is_melee": true,
+      "is_ranged": false
+    },
+    "threat_initiative": 7,
+    "threat_profile": {
+      "p1": 231.25000000000003,
+      "p2": 115.62500000000001,
+      "p3": 77.08333333333334,
+      "p4": 57.81250000000001
+    }
+  }
+]

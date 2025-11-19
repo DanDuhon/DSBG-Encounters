@@ -1,572 +1,170 @@
-from os import path
-from json import load, dump
-from itertools import combinations, islice, product, filterfalse
-from random import shuffle
-from collections import defaultdict
-from glob import glob
-from copy import deepcopy
+from statistics import mean
+from typing import List, Dict
 
-from enemies import enemyIds, enemiesDict
+from models import Enemy, EncounterSpec, Slot, EncounterEnemySpec
 
-baseFolder = path.dirname(__file__)
-allEnemies = []
-alonneBowKnight = enemiesDict["Alonne Bow Knight"].id
-alonneSwordKnight = enemiesDict["Alonne Sword Knight"].id
-blackHollowMage = enemiesDict["Black Hollow Mage"].id
-bonewheelSkeleton = enemiesDict["Bonewheel Skeleton"].id
-crossbowHollow = enemiesDict["Crossbow Hollow"].id
-falchionSkeleton = enemiesDict["Falchion Skeleton"].id
-firebombHollow = enemiesDict["Firebomb Hollow"].id
-hollowSoldier = enemiesDict["Hollow Soldier"].id
-largeHollowSoldier = enemiesDict["Large Hollow Soldier"].id
-mimic = enemiesDict["Mimic"].id
-phalanx = enemiesDict["Phalanx"].id
-phalanxHollow = enemiesDict["Phalanx Hollow"].id
-sentinel = enemiesDict["Sentinel"].id
-silverKnightSwordsman = enemiesDict["Silver Knight Swordsman"].id
-silverKnightSpearman = enemiesDict["Silver Knight Spearman"].id
-silverKnightGreatbowman = enemiesDict["Silver Knight Greatbowman"].id
-skeletonArcher = enemiesDict["Skeleton Archer"].id
-skeletonSoldier = enemiesDict["Skeleton Soldier"].id
-kirks = {enemiesDict["Kirk, Knight of Thorns"].id, enemiesDict["Longfinger Kirk"].id}
-mimics = {enemiesDict["Mimic"].id, enemiesDict["Hungry Mimic"].id, enemiesDict["Voracious Mimic"].id}
-
-skeletons = set([enemiesDict[e].id for e in enemiesDict if "Skeleton" in enemiesDict[e].name])
-invaders = set()
-invaders.add(enemiesDict["Armorer Dennis"].id)
-invaders.add(enemiesDict["Fencer Sharron"].id)
-invaders.add(enemiesDict["Invader Brylex"].id)
-invaders.add(enemiesDict["Kirk, Knight of Thorns"].id)
-invaders.add(enemiesDict["Longfinger Kirk"].id)
-invaders.add(enemiesDict["Maldron the Assassin"].id)
-invaders.add(enemiesDict["Maneater Mildred"].id)
-invaders.add(enemiesDict["Marvelous Chester"].id)
-invaders.add(enemiesDict["Melinda the Butcher"].id)
-invaders.add(enemiesDict["Oliver the Collector"].id)
-invaders.add(enemiesDict["Paladin Leeroy"].id)
-invaders.add(enemiesDict["Xanthous King Jeremiah"].id)
-invaders.add(enemiesDict["Hungry Mimic"].id)
-invaders.add(enemiesDict["Voracious Mimic"].id)
-
-crystalLizardEncounters = {
-    "Base of Cardinal Tower",
-    "Blazing Furnace",
-    "Brume Tower",
-    "Cells of the Dead",
-    "Flaming Passageway",
-    "Iron Depths",
-    "Manor Foregarden",
-    "Melting Gallery",
-    "New Londo Ruins",
-    "Pyre of Souls",
-    "Royal Woods Passage",
-    "Ruined Walkway",
-    "Smoking Gallery",
-    "The Castle Grounds",
-    "Threshold Bridge"
+LEVEL_TO_TIER = {
+    1: "tier1",
+    2: "tier2",
+    3: "tier3",
 }
 
-fangBoarEncounters = {
-    "Broken Passageway (TSC)",
-    "Parish Gates",
-    "Flooded Fortress",
-    "Archive Entrance",
-    "Depths of the Cathedral"
-}
+def build_slots(enc: EncounterSpec) -> List[Slot]:
+    slots: List[Slot] = []
+    for ee in enc.enemies:
+        for _ in range(ee.count):
+            slots.append(Slot(tile=ee.tile, orig_enemy_name=ee.enemy_name))
+    return slots
 
-envoyBannerEncounters = {
-    "Kingdom's Messengers",
-    "Deathly Tolls",
-    "Grim Reunion"
-}
+def compute_encounter_threat(
+    enc: EncounterSpec,
+    name_to_enemy: Dict[str, Enemy],
+    tier_name: str,
+) -> Dict[int, float]:
+    totals = {1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0}
+    for ee in enc.enemies:
+        e = name_to_enemy[ee.enemy_name]
+        for p in (1, 2, 3, 4):
+            totals[p] += e.threat_profile[tier_name][f"p{p}"] * ee.count
+    return totals
 
-gangEncounters = {
-    "Undead Sanctum",
-    "The Fountainhead",
-    "Deathly Tolls",
-    "Flooded Fortress",
-    "Depths of the Cathedral",
-    "Twilight Falls"
-}
+def compute_hp_counts_for_encounter(enc: EncounterSpec, name_to_enemy: Dict[str, Enemy]):
+    from collections import Counter
+    c = Counter()
+    slots = build_slots(enc)
+    for s in slots:
+        e = name_to_enemy[s.orig_enemy_name]
+        c[e.tags["hp_band"]] += 1
+    return c, slots
 
-respawnEncounters = {
-    "Altar of Bones",
-    "Bridge Too Far",
-    "Broken Passageway (TSC)",
-    "Central Plaza (TSC)",
-    "Deathly Tolls",
-    "Last Rites",
-    "The Mass Grave"
-}
+def compute_effective_role_counts(enemies_list: List[Enemy]):
+    melee = 0
+    ranged = 0
+    for e in enemies_list:
+        is_leaper = e.tags.get("is_leaper", False)
+        is_ranged = e.tags.get("is_ranged", False)
+        is_melee = e.tags.get("is_melee", False)
+        if is_melee or is_leaper:
+            melee += 1
+        if is_ranged or is_leaper:
+            ranged += 1
+    return melee, ranged
 
-# For these encounters, it made more sense to sort the enemies
-# by toughness rather than difficulty.
-toughnessSortedEncounters = {
-    "Cold Snap",
-    "Dark Alleyway",
-    "Deathly Freeze",
-    "No Safe Haven",
-    "The First Bastion"
-}
+def compute_effective_role_counts_for_encounter(enc: EncounterSpec, name_to_enemy: Dict[str, Enemy]):
+    slots = build_slots(enc)
+    enemies_list = [name_to_enemy[s.orig_enemy_name] for s in slots]
+    return compute_effective_role_counts(enemies_list)
 
-# These are enemies that shouldn't be the target for the special rules
-# in Deathly Freeze (increases range to 1 and adds node attack) because
-# these enemies attack as part of their movement and the rule interaction
-# would just be confusing.
-deathlyFreezeEnemyBlacklist = {
-    enemiesDict["Bonewheel Skeleton"].id,
-    enemiesDict["Crow Demon"].id,
-    enemiesDict["Ironclad Soldier"].id,
-    enemiesDict["Large Hollow Soldier"].id,
-    enemiesDict["Skeleton Beast"].id,
-    enemiesDict["Skeleton Soldier"].id,
-    enemiesDict["Snow Rat"].id
-    }
+def average_threat(enemy: Enemy, tier_name: str) -> float:
+    return mean(enemy.threat_profile[tier_name][f"p{p}"] for p in (1, 2, 3, 4))
 
-for enemy in enemyIds:
-    for _ in range(enemyIds[enemy].numberOfModels):
-        allEnemies.append(enemy)
+def compute_encounter_threat_from_enemies(enemies_list: List[Enemy], tier_name: str) -> Dict[int, float]:
+    totals = {1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0}
+    for e in enemies_list:
+        for p in (1, 2, 3, 4):
+            totals[p] += e.threat_profile[tier_name][f"p{p}"]
+    return totals
 
-with open(path.join(baseFolder + "\\encounters", "all_encounters.json")) as aef:
-    enc = load(aef)
+def threat_distance(orig_threat: Dict[int, float], cand_threat: Dict[int, float]) -> float:
+    errs: List[float] = []
+    for p in (1, 2, 3, 4):
+        t0 = orig_threat[p]
+        t1 = cand_threat[p]
+        if t0 <= 0:
+            errs.append(abs(t1 - t0))
+        else:
+            errs.append(abs(t1 - t0) / t0)
+    return max(errs)
 
-with open(path.join(baseFolder, "dsbg_shuffle_encounters.json")) as ef:
-    encMain = load(ef)
+def generate_alternatives(
+    enc: EncounterSpec,
+    enemies: List[Enemy],
+    tier_name: str,
+    max_candidates: int = 10,
+    max_tries: int = 5000,
+    threat_tolerance: float = 0.2,
+) -> List[Dict]:
+    """
+    Generate alternative enemy sets for an encounter that:
+      - keep the same total enemy groups
+      - keep the same HP-band counts
+      - keep the same effective melee/ranged counts
+      - keep total threat within 'threat_tolerance' for P=1..4
+      - ensure the "boss slot" (highest-threat original enemy) is replaced
+        with the highest-threat enemy in the new set.
+    """
+    import random
+    name_to_enemy = {e.name: e for e in enemies}
 
+    target_hp_counts, slots = compute_hp_counts_for_encounter(enc, name_to_enemy)
+    target_melee, target_ranged = compute_effective_role_counts_for_encounter(enc, name_to_enemy)
+    orig_threat = compute_encounter_threat(enc, name_to_enemy, tier_name)
+    num_slots = len(slots)
 
-def check_if_valid(encounter, level, combo, difficulty, rangedCount, toughnessSorted):
-    comboDifficulty = sum([enemyIds[enemy].difficultyTiers[level]["difficulty"][characterCount] * (1.5 if enemy in skeletons and blackHollowMage in combo else 1) for enemy in combo])
-    comboRangedCount = sum([1 for enemy in combo if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) > 3 or enemyIds[enemy].enemyType == "invader"])
-    comboHigherHealthCount = sum([1 for enemy in combo if enemyIds[enemy].health >= 5])
-    return (difficulty * 0.9 <= comboDifficulty <= difficulty * 1.1
-        and (not toughnessSorted or sum([1 for enemy in combo if enemyIds[enemy].armor + enemyIds[enemy].resist > 2]))
-        # Since Painted World has no real ranged enemies, Snow Rat and Crow Demon are counted as both
-        # Thus, they can be replaced with either a ranged or melee enemy
-        and ((enc[e]["expansion"] == "Painted World of Ariamis" and comboRangedCount <= rangedCount) or comboRangedCount == rangedCount)
-        and comboHigherHealthCount == higherHealthCount
-        # Can't have more enemies than available models and Phalanx is 3 Phalanx Hollows shoved together
-        and ((3 if phalanx in combo else 0) + combo.count(phalanxHollow) < 6 or encounter == "Eye of the Storm")
-        # Make sure we're not putting both Kirk enemies in the same encounter
-        and len(set(combo) & kirks) < 2
-        # Make sure we only have one Mimic model
-        and len(set(combo) & mimics) < 2
-        # Black Hollow Mages need to be with at least one "skeleton" enemy
-        and (blackHollowMage not in combo or set(combo) & skeletons))
+    # Build pools by HP band
+    band_pools: Dict[str, List[Enemy]] = {}
+    for e in enemies:
+        band = e.tags["hp_band"]
+        band_pools.setdefault(band, []).append(e)
 
-try:
-    # skip = True
-    for ei, e in enumerate(enc):
-        # if e not in {"Depths of the Cathedral",}:
-        #     continue
-        #     skip = False
-        # if skip:
-        #     continue
-        # if enc[e]["level"] == 4:
-        #     continue
-        encounter = enc[e]
+    orig_names_sorted = tuple(sorted(s.orig_enemy_name for s in slots))
+    seen = {orig_names_sorted}
 
-        for characterCount in range(1, 5):
-            # Don't process an encounter already being processed.
-            if glob(baseFolder + "\\combine\\" + e + str(characterCount) + ".json"):
-                continue
+    candidates: List[Dict] = []
+    tries = 0
 
-            # Put a temporary file out there so we know it's being processed.
-            with open(baseFolder + "\\combine\\" + e + str(characterCount) + ".json", "w") as ef:
-                dump({}, ef)
+    while len(candidates) < max_candidates and tries < max_tries:
+        tries += 1
+        cand_enemies: List[Enemy] = []
 
-            print(e + " " + str(characterCount))
-            level = enc[e]["level"] if enc[e]["level"] < 4 else 3
-            alternatives = dict()
-            enemies = []
-            for tile in encounter["tiles"]:
-                enemies += encounter["tiles"][tile]["enemies"] + encounter["tiles"][tile]["spawns"]
+        feasible = True
+        for band, count in target_hp_counts.items():
+            pool = band_pools.get(band)
+            if not pool:
+                feasible = False
+                break
+            for _ in range(count):
+                cand_enemies.append(random.choice(pool))
+        if not feasible:
+            break
 
-            if encounter["name"] == "Lakeview Refuge":
-                for _ in range(characterCount):
-                    enemies.append(skeletonSoldier)
+        melee, ranged = compute_effective_role_counts(cand_enemies)
+        if melee != target_melee or ranged != target_ranged:
+            continue
 
-            # If the encounter breaks the model limit, we should too.
-            allEnemiesMod = deepcopy(allEnemies)
+        cand_threat = compute_encounter_threat_from_enemies(cand_enemies, tier_name)
+        dist = threat_distance(orig_threat, cand_threat)
+        if dist > threat_tolerance:
+            continue
 
-            # 1 health melee enemies
-            if any([enemies.count(enemy) > enemyIds[enemy].numberOfModels for enemy in enemyIds if (
-                enemyIds[enemy].health == 1
-                and max(enemyIds[enemy].attackRange) <= 1
-                and max(enemyIds[enemy].move) < 4)]):
-                for enemy in (enemy for enemy in enemyIds if (
-                    enemyIds[enemy].health == 1
-                    and max(enemyIds[enemy].attackRange) <= 1
-                    and max(enemyIds[enemy].move) < 4)):
-                    # Add the same number of enemies that are over the normal limit.
-                    for _ in range(enemies.count(enemy) - enemyIds[enemy].numberOfModels):
-                        allEnemiesMod.append(enemy)
+        key = tuple(sorted(e.name for e in cand_enemies))
+        if key in seen or key == orig_names_sorted:
+            continue
+        seen.add(key)
 
-            # 1 health ranged enemies
-            if any([enemies.count(enemy) > enemyIds[enemy].numberOfModels for enemy in enemyIds if (
-                enemyIds[enemy].health == 1
-                and (max(enemyIds[enemy].attackRange) > 1
-                    or max(enemyIds[enemy].move) == 4))]):
-                for enemy in (enemy for enemy in enemyIds if (
-                    enemyIds[enemy].health == 1
-                    and (max(enemyIds[enemy].attackRange) > 1
-                        or max(enemyIds[enemy].move) == 4))):
-                    # Add the same number of enemies that are over the normal limit.
-                    for _ in range(enemies.count(enemy) - enemyIds[enemy].numberOfModels):
-                        allEnemiesMod.append(enemy)
+        slot_orig_enemies = [name_to_enemy[s.orig_enemy_name] for s in slots]
+        orig_avgs = [average_threat(e, tier_name) for e in slot_orig_enemies]
+        boss_idx = max(range(num_slots), key=lambda i: orig_avgs[i])
 
-            # 5+ health melee enemies
-            if any([enemies.count(enemy) > enemyIds[enemy].numberOfModels for enemy in enemyIds if (
-                5 <= enemyIds[enemy].health <= 10
-                and max(enemyIds[enemy].attackRange) <= 1
-                and max(enemyIds[enemy].move) < 4)]):
-                for enemy in (enemy for enemy in enemyIds if (
-                    5 <= enemyIds[enemy].health <= 10
-                    and max(enemyIds[enemy].attackRange) <= 1
-                    and max(enemyIds[enemy].move) < 4)):
-                    # Add the same number of enemies that are over the normal limit.
-                    for _ in range(enemies.count(enemy) - enemyIds[enemy].numberOfModels):
-                        allEnemiesMod.append(enemy)
+        cand_avgs = [average_threat(e, tier_name) for e in cand_enemies]
+        boss_candidate_idx = max(range(num_slots), key=lambda i: cand_avgs[i])
 
-            # 5+ health ranged enemies
-            if any([enemies.count(enemy) > enemyIds[enemy].numberOfModels for enemy in enemyIds if (
-                5 <= enemyIds[enemy].health <= 10
-                and (max(enemyIds[enemy].attackRange) > 1
-                    or max(enemyIds[enemy].move) == 4))]):
-                for enemy in (enemy for enemy in enemyIds if (
-                    5 <= enemyIds[enemy].health <= 10
-                    and (max(enemyIds[enemy].attackRange) > 1
-                        or max(enemyIds[enemy].move) == 4))):
-                    # Add the same number of enemies that are over the normal limit.
-                    for _ in range(enemies.count(enemy) - enemyIds[enemy].numberOfModels):
-                        allEnemiesMod.append(enemy)
+        cand_enemies[boss_idx], cand_enemies[boss_candidate_idx] = (
+            cand_enemies[boss_candidate_idx],
+            cand_enemies[boss_idx],
+        )
 
-            enemyCount = len(enemies)
-            rangedCount = sum([1 for enemy in enemies if max(enemyIds[enemy].attackRange) > 1 or max(enemyIds[enemy].move) == 4])
-            invaderCount = sum([1 for enemy in enemies if enemy in invaders])
-            higherHealthCount = sum([1 for enemy in enemies if enemyIds[enemy].health >= 5])
-            difficulty = sum([enemyIds[enemy].difficultyTiers[level]["difficulty"][characterCount] * enemies.count(enemy) for enemy in enemyIds if enemy in enemies])
+        assignment = [
+            {"tile": slots[i].tile, "enemy": cand_enemies[i].name}
+            for i in range(num_slots)
+        ]
 
-            # All the gang encounters are very restrictive, so we do them custom a bit.
-            # Otherwise they take far longer to process.
-            if e in gangEncounters:
-                gangMeleeCount =  enemies.count(hollowSoldier)
-                gangRangedCount =  enemies.count(crossbowHollow)
-                nonGangCount = len(enemies) - gangMeleeCount - gangRangedCount - higherHealthCount
-                
-                hollowMelee = combinations(([hollowSoldier] * gangMeleeCount) + ([phalanxHollow] * gangMeleeCount), gangMeleeCount)
-                hollowRanged = combinations(([crossbowHollow] * gangRangedCount) + ([firebombHollow] * gangRangedCount), gangRangedCount)
-                silverKnightMelee = combinations(([silverKnightSwordsman] * gangMeleeCount) + ([silverKnightSpearman] * gangMeleeCount), gangMeleeCount)
-                silverKnightRanged = combinations(([silverKnightGreatbowman] * gangRangedCount), gangRangedCount)
-                skeletonMelee = combinations(([skeletonSoldier] * gangMeleeCount) + ([falchionSkeleton] * gangMeleeCount) + ([bonewheelSkeleton] * gangMeleeCount), gangMeleeCount)
-                skeletonRanged = combinations(([skeletonArcher] * gangRangedCount), gangRangedCount)
-                silverKnightGangs = set([p[0] + p[1] for p in product(list(silverKnightMelee), list(silverKnightRanged))])
-                skeletonGangs = set([p[0] + p[1] for p in product(list(skeletonMelee), list(skeletonRanged))])
-                hollowGangs = set([p[0] + p[1] for p in product(list(hollowMelee), list(hollowRanged))])
-                gangs = [a for a in hollowGangs] + [a for a in skeletonGangs] + [a for a in silverKnightGangs] + [([alonneSwordKnight] * gangMeleeCount) + ([alonneBowKnight] * gangRangedCount)]
+        candidates.append(
+            {
+                "assignment": assignment,
+                "threat": cand_threat,
+                "distance": dist,
+            }
+        )
 
-                nonGangs = (
-                    [enemiesDict["Demonic Foliage"].id] * 2
-                    + [enemiesDict["Engorged Zombie"].id] * 2
-                    + [enemiesDict["Plow Scarecrow"].id] * 3
-                    + [enemiesDict["Shears Scarecrow"].id] * 3
-                    + [enemiesDict["Snow Rat"].id] * 2
-                    + [enemiesDict["Hollow Soldier"].id] * 3
-                    + [enemiesDict["Phalanx Hollow"].id] * 3
-                    + [enemiesDict["Bonewheel Skeleton"].id] * 3
-                    + [enemiesDict["Falchion Skeleton"].id] * 3
-                    + [enemiesDict["Skeleton Soldier"].id] * 3
-                    + [enemiesDict["Silver Knight Swordsman"].id] * 3
-                    + [enemiesDict["Silver Knight Spearman"].id] * 3
-                    + [enemiesDict["Alonne Sword Knight"].id] * 3
-                    + [enemiesDict["Alonne Bow Knight"].id] * 3
-                    + [enemiesDict["Silver Knight Greatbowman"].id] * 3
-                    + [enemiesDict["Skeleton Archer"].id] * 3
-                    + [enemiesDict["Crossbow Hollow"].id] * 3
-                    + [enemiesDict["Firebomb Hollow"].id] * 3
-                )
-
-                higherHealthEnemies = (
-                    [enemiesDict["Alonne Knight Captain"].id] * 3
-                    + [enemiesDict["Crow Demon"].id] * 2
-                    + [enemiesDict["Giant Skeleton Archer"].id] * 2
-                    + [enemiesDict["Giant Skeleton Soldier"].id] * 2
-                    + [enemiesDict["Ironclad Soldier"].id] * 3
-                    + [enemiesDict["Large Hollow Soldier"].id] * 2
-                    + [enemiesDict["Mimic"].id]
-                    + [enemiesDict["Mushroom Child"].id]
-                    + [enemiesDict["Mushroom Parent"].id]
-                    + [enemiesDict["Phalanx"].id]
-                    + [enemiesDict["Sentinel"].id] * 2
-                    + [enemiesDict["Stone Guardian"].id] * 2
-                    + [enemiesDict["Stone Knight"].id] * 2
-                    + [enemiesDict["Necromancer"].id] * 2
-                    + [enemiesDict["Black Hollow Mage"].id] * 2
-                )
-
-                if e not in respawnEncounters:
-                    higherHealthEnemies += (
-                        [enemiesDict["Armorer Dennis"].id]
-                        + [enemiesDict["Fencer Sharron"].id]
-                        + [enemiesDict["Invader Brylex"].id]
-                        + [enemiesDict["Kirk, Knight of Thorns"].id]
-                        + [enemiesDict["Longfinger Kirk"].id]
-                        + [enemiesDict["Maldron the Assassin"].id]
-                        + [enemiesDict["Maneater Mildred"].id]
-                        + [enemiesDict["Marvelous Chester"].id]
-                        + [enemiesDict["Melinda the Butcher"].id]
-                        + [enemiesDict["Oliver the Collector"].id]
-                        + [enemiesDict["Paladin Leeroy"].id]
-                        + [enemiesDict["Xanthous King Jeremiah"].id]
-                        + [enemiesDict["Hungry Mimic"].id]
-                        + [enemiesDict["Voracious Mimic"].id]
-                    )
-
-                higherHealthCombos = set(combinations([enemyIds[en].id for en in higherHealthEnemies], higherHealthCount))
-                nonGangCombos = set(combinations([enemyIds[en].id for en in nonGangs], nonGangCount))
-                allCombos = [tuple(list(p[0]) + list(p[1]) + list(p[2])) for p in product(gangs, nonGangCombos, higherHealthCombos) if check_if_valid(e, level, list(p[0]) + list(p[1]) + list(p[2]), difficulty, rangedCount, e in toughnessSortedEncounters) and not set(p[0]) & set(p[1])]
-                        
-                combosDict = defaultdict(set)
-                [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set()).union({"The Sunless City"} if e in fangBoarEncounters | envoyBannerEncounters else set())].add(combo) for combo in allCombos]
-            # Corvian Host is kinda like a model limit break encounter, except that the 5 health enemies all have to be the same.
-            # Easier to have some custom code for it.
-            elif e == "Corvian Host":
-                smallEnemies = [enemyIds[enemy].id for enemy in allEnemies if enemyIds[enemy].health == 1]
-                smallEnemyCombos = combinations(smallEnemies, 4)
-                bigEnemies = list(set([enemyIds[enemy].id for enemy in allEnemies if enemyIds[enemy].health >= 5 and enemyIds[enemy].numberOfModels > 1]))
-                enemyCount = 8
-                rangedCount = 4
-
-                allCombos = [combo[0] + tuple([combo[1]] * 4) for combo in product(smallEnemyCombos, bigEnemies) if check_if_valid(e, level, combo[0] + tuple([combo[1]] * 4), difficulty, rangedCount, e in toughnessSortedEncounters)]
-
-                combosDict = defaultdict(set)
-                [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set()).union({"The Sunless City"} if e in fangBoarEncounters | envoyBannerEncounters else set())].add(combo) for combo in allCombos]
-            elif enemyCount < 7:
-                # Generate all combinations of enemies.
-                allCombos = list(set(filterfalse(lambda s: not (
-                        check_if_valid(e, level, s, difficulty, rangedCount, e in toughnessSortedEncounters)
-                        # Don't put invaders in encounters that respawn enemies
-                        and (e not in respawnEncounters or sum(1 for x in s if enemyIds[x].expansion == "Phantoms") == 0)
-                        # No more than one of the two toughest enemies
-                        and (e not in {"The First Bastion",} or (s.count(sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]) == 1 and s.count(sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[1]) == 1))
-                        # No more than one of the two strongest enemies
-                        and (e not in {"Trecherous Tower", "Abandoned and Forgotten"} or (s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 1 and s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[1]) == 1))
-                        # One of the toughest enemy
-                        and (e != "Cold Snap" or s.count(sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]) == 1)
-                        # Two of the toughest enemy
-                        and (e != "Corrupted Hovel" or s.count(sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]) == 2)
-                        # One of the weakest enemy and one of the strongest
-                        and (e != "Gleaming Silver" or (s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 1 and s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount])[0]) == 1))
-                        # One of the toughest enemy
-                        and (e != "No Safe Haven" or s.count(sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]) == 1)
-                        # Two of the strongest enemy
-                        and (e != "Skeletal Spokes" or s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 2)
-                        # The strongest enemy must have more than 1 health
-                        and (e != "Skeleton Overlord" or enemyIds[sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]].health > 1)
-                        # Two of the weakest enemy
-                        and (e != "The Shine of Gold" or s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount])[0]) == 2)
-                        # One of the strongest enemy and the rest can't cause poison
-                        and (e != "Shattered Keep" or (
-                            s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 1
-                            and sorted([enemy for enemy in s if all(["poison" not in attackEffect for attackEffect in enemyIds[enemy].attackEffect])], key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[1:]))
-                       # No poison causing enemies
-                        and (e != "Rain of Filth" or all([all(["poison" not in attackEffect for attackEffect in enemyIds[enemy].attackEffect]) for enemy in s]))
-                        # One of the strongest enemy and either 4 of the weakest enemy or 2 pairs of the two weakest enemies
-                        and (e != "Eye of the Storm" or (
-                            (s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount])[0]) == 4
-                                or (s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount])[0]) == 2
-                                    and s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount])[2]) == 2))
-                            and s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 1))),
-                    combinations(allEnemiesMod, enemyCount))))
-
-                # Create a dictionary of alternatives, put into keys that are the
-                # sets in which those enemies are found.
-                # Encounters with Crystal Lizards always require Iron Keep.
-                # Black Hollow Mage increases the difficulty of skeleton enemies since
-                # they resurrect defeated skeletons.
-                combosDict = defaultdict(set)
-                [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set()).union({"The Sunless City"} if e in fangBoarEncounters | envoyBannerEncounters else set())].add(combo) for combo in allCombos]
-            # 6 enemies seems to be the limit for generating all combinations of enemies
-            # in a reasonable amount of time.  For encounters with more than that, we're
-            # going to take a sample instead.
-            else:
-                combosDict = defaultdict(set)
-                comboCount = []
-                shuffledEnemies = allEnemiesMod
-
-                # Go through expansions and pairs of expansions and generate all combos.
-                expansions = list(set([enemyIds[enemy].expansion for enemy in allEnemiesMod]))
-                for x in range(1, 3):
-                    for expCombo in combinations(expansions, x):
-                        expEnemies = [enemy for enemy in allEnemiesMod if enemyIds[enemy].expansion in expCombo]
-                        # Generate all combinations of enemies.
-                        allCombos = list(set(filterfalse(lambda s: not (
-                                check_if_valid(e, level, s, difficulty, rangedCount, e in toughnessSortedEncounters)
-                                # Don't put invaders in encounters that respawn enemies
-                                and (e not in respawnEncounters or sum(1 for x in s if enemyIds[x].expansion == "Phantoms") == 0)
-                                # Two of the strongest enemy
-                                and (e != "Frozen Revolutions" or s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 2)
-                                # Two of the toughest single target melee enemy and that enemy isn't in the blacklist
-                                and (e != "Deathly Freeze" or (
-                                    sum([1 for enemy in s if enemy not in deathlyFreezeEnemyBlacklist and (max(enemyIds[enemy].attackRange) < 2 or True not in set(enemyIds[enemy].nodeAttack)) and enemy == sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]]) == 2))
-                                # One of the strongest enemy and either two of the second strongest or two that are the second and third strongest
-                                and (e != "Trophy Room" or (
-                                    (
-                                        s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 1
-                                        and s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[1]) == 2)
-                                    or (
-                                        s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 1
-                                        and s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[1]) == 1
-                                        and s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[2]) == 1)
-                                    ))),
-                            combinations(expEnemies, enemyCount))))
-
-                        # Create a dictionary of alternatives, put into keys that are the
-                        # sets in which those enemies are found.
-                        # Encounters with Crystal Lizards always require Iron Keep.
-                        # Black Hollow Mage increases the difficulty of skeleton enemies since
-                        # they resurrect defeated skeletons.
-                        [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set()).union({"The Sunless City"} if e in fangBoarEncounters | envoyBannerEncounters else set())].add(combo) for combo in allCombos]
-
-                for expansionCombo in combosDict:
-                    combosDict[expansionCombo] = list(combosDict[expansionCombo])
-                    shuffle(combosDict[expansionCombo])
-                    combosDict[expansionCombo] = set(combosDict[expansionCombo][:min([len(combosDict[expansionCombo]), 10000])])
-
-                shuffledEnemies = allEnemiesMod
-                # In total, we're looking for up to 500,000 combinations but we'll trim that down later.
-                while sum((len(combosDict[sets]) for sets in combosDict)) < 500000:
-                    # Combinations go by the order of the iterable it's reading from,
-                    # so shuffling the order of the enemies will give us different
-                    # combinations.
-                    # We're also going to keep the same distribution of 1 health and 5+ health enemies.
-                    # Otherwise this just takes a lot longer.
-                    shuffle(shuffledEnemies)
-                    while sorted([enemyIds[enemy].health >= 5 for enemy in shuffledEnemies[:enemyCount]], key=lambda x: x) != sorted([enemyIds[enemy].health >= 5 for enemy in enemies], key=lambda x: x):
-                        shuffle(shuffledEnemies)
-
-                    # Grab the first 50,000 combinations.
-                    allCombos = list(filterfalse(lambda s: not (
-                                check_if_valid(e, level, s, difficulty, rangedCount, e in toughnessSortedEncounters)
-                                # Don't put invaders in encounters that respawn enemies
-                                and (e not in respawnEncounters or sum(1 for x in s if enemyIds[x].expansion == "Phantoms") == 0)
-                                # Two of the strongest enemy
-                                and (e != "Frozen Revolutions" or s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 2)
-                                # Two of the toughest single target melee enemy and that enemy isn't in the blacklist
-                                and (e != "Deathly Freeze" or (
-                                    sum([1 for enemy in s if enemy not in deathlyFreezeEnemyBlacklist and (max(enemyIds[enemy].attackRange) < 2 or True not in set(enemyIds[enemy].nodeAttack)) and enemy == sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]]) == 2))
-                                # One of the strongest enemy and either two of the second strongest or two that are the second and third strongest
-                                and (e != "Trophy Room" or (
-                                    (
-                                        s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 1
-                                        and s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[1]) == 2)
-                                    or (
-                                        s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 1
-                                        and s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[1]) == 1
-                                        and s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[2]) == 1)
-                                    ))),
-                            islice(combinations(shuffledEnemies, enemyCount), 50000)))
-
-                    # Create the dictionary with the enemy sets as keys.
-                    [combosDict[frozenset([enemyIds[enemyId].expansion for enemyId in combo]).union({"Iron Keep"} if e in crystalLizardEncounters else set()).union({"The Sunless City"} if e in fangBoarEncounters | envoyBannerEncounters else set())].add(combo) for combo in allCombos]
-
-                    # Keep track of the number of combinations we have.
-                    comboCount.append(sum((len(combosDict[sets]) for sets in combosDict)))
-
-                    # If we didn't find any new combos in the last 100 loops, be done.
-                    # This prevents an infinite loop if there will never be 1 million alternatives.
-                    # Deathly Freeze is an example of this.
-                    if len(comboCount) >= 100 and len(set(comboCount[-100:])) == 1:
-                        print("\tBreaking")
-                        break
-
-                if max([len(k) for k in combosDict]) < 3:
-                    print(len(comboCount))
-                    print(len(set(comboCount[-100:])))
-                    input("SOMETHING'S WRONG!")
-
-            if len(combosDict) == 0:
-                input("SOMETHING'S WRONG!")
-
-            # This is manually set for each encounter in the JSON file.
-            # enemySlots is the number of enemies in each row following this pattern:
-            # [Tile 1 Row 1, Tile 1 Row 2, Tile 1 Row 3 (level 4 only), Tile 1 Row 4 (level 4 only), Tile 1 spawns,
-            # Tile 2 Row 1, Tile 2 Row 2, Tile 2 spawns, Tile 3 Row 1, Tile 3 Row 2, Tile 3 spawns]
-            with open(path.join(baseFolder + "\\encounters", e + str(characterCount) + ".json")) as ef:
-                thisEnc = load(ef)
-            alternatives["enemySlots"] = thisEnc.get("enemySlots")
-                
-            # For each key in the dictionary, shuffle the enemy combos,
-            # then trim it down so we keep at most 50000 values per encounter.
-            # Keep all combos that only consist of 1 or 2 sets.
-            # If this is an encounter that requires a particular encounter, expand how many we keep by 1.
-            keepLimit = 3 if e in crystalLizardEncounters | fangBoarEncounters | envoyBannerEncounters else 2
-            keepCombos = {k: v for k, v in combosDict.items() if len(k) <= 2}
-            alts = min([50000, sum([len(combosDict[combo]) for combo in combosDict if len(combo) > 2])])
-            if alts >=0:
-                keys = len(combosDict)
-                numToKeep = int(alts / keys)
-                for expansionCombo in combosDict:
-                    combosDict[expansionCombo] = list(combosDict[expansionCombo])
-                    shuffle(combosDict[expansionCombo])
-                    combosDict[expansionCombo] = combosDict[expansionCombo][:min([len(combosDict[expansionCombo]), numToKeep])]
-
-            combosDict = combosDict | keepCombos
-
-            # Put the alternative enemies in the same difficulty order as the
-            # original enemies. This way I can just iterate through the list
-            # when we load the encounter and take the enemies in order.
-            alternatives["alternatives"] = {",".join([k for k in key]): list(value) for key, value in combosDict.items()}
-            for expansionCombo in alternatives["alternatives"]:
-                newAlts = []
-                for alt in alternatives["alternatives"][expansionCombo]:
-                    newAlt = []
-                    if e in toughnessSortedEncounters:
-                        altDifficulty = sorted(alt, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]))
-                        for ord in enc[e]["difficultyOrder"][str(characterCount)]:
-                            newAlt.append(altDifficulty[ord])
-                    else:
-                        altDifficulty = sorted(alt, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount])
-                        for ord in enc[e]["difficultyOrder"][str(characterCount)]:
-                            newAlt.append(altDifficulty[ord])
-                    if newAlt not in newAlts:
-                        newAlts.append(newAlt)
-                alternatives["alternatives"][expansionCombo] = newAlts
-
-            # Account for duplicate enemies in the newer core sets that are essentially redoing the older stuff.
-            # The Sunless City
-            for combo in [c for c in alternatives["alternatives"] if "Dark Souls The Board Game" in c]:
-                toAdd = []
-                for alt in alternatives["alternatives"][combo]:
-                    if e in {"The Grand Hall", "Depths of the Cathedral", "Twilight Falls"} or (alt.count(crossbowHollow) <= 3
-                        and alt.count(hollowSoldier) <= 3
-                        and alt.count(silverKnightGreatbowman) <= 2
-                        and alt.count(silverKnightSwordsman) <= 2
-                        and alt.count(sentinel) <= 1
-                        and alt.count(largeHollowSoldier) == 0):
-                        toAdd.append(alt)
-                    
-                if toAdd:
-                    if "The Sunless City" not in combo:
-                        altKey = combo.replace("Dark Souls The Board Game", "The Sunless City")
-                    else:
-                        altKey = combo.replace("Dark Souls The Board Game,", "").replace(",Dark Souls The Board Game", "")
-                    alternatives["alternatives"][altKey] = toAdd
-
-            if e not in encMain:
-                encMain[e] = {
-                    "name": enc[e]["name"],
-                    "expansion": enc[e]["expansion"],
-                    "level": enc[e]["level"],
-                    "expansionCombos": []
-                    }
-                
-            encMain[e]["expansionCombos"] = [str(k).split(",") for k in alternatives["alternatives"].keys()]
-                    
-            with open(baseFolder + "\\encounters\\" + e + str(characterCount) + ".json", "w") as encountersFile:
-                dump(alternatives, encountersFile)
-
-            with open(baseFolder + "\\combine\\" + e + str(characterCount) + ".json", "w") as ef:
-                dump(encMain[e], ef)
-except Exception as ex:
-    input(ex)
-    raise
+    return candidates
