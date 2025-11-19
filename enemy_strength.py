@@ -613,3 +613,7 @@ def process_strength(tier, ambush):
         # print(i) # type: ignore
         input(ex)
         raise
+
+
+if __name__ == "__main__":
+    process_strength(3, False)

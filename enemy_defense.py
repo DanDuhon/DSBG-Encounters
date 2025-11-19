@@ -73,9 +73,26 @@ def process_defense():
                     enemy.health += 2
 
                 extraStaminaSpent = 0
-                if any([{"stagger", "frostbite"} & set(e) for e in enemy.attackEffect]):
-                    if enemy.attackEffect == [{"stagger", "frostbite"}]:
-                        pass
+                if enemy.frostbiteLeap:
+                    # Guess at how often this enemy will land with an attack with Stagger.
+                    nums = []
+                    den = 1000
+                    for i, a in enumerate(enemy.attacks[:int(len(enemy.attacks) / (2 if enemy.id else 1))]):
+                        if a == 0 or not any([{"stagger",} & set(ae) for ae in enemy.attackEffect]):
+                            continue
+                        nums.append(round(reachMod[max([0, min([4, enemy.move[i] + enemy.attackRange[i]])])] * den, 0))
+
+                    stage = 1
+                    for n in nums:
+                        stage = stage * (den - n)
+                    chance = 1 - (stage / (den ** len(nums)))
+
+                    # This enemy inflicts Frostbite that can't be avoided.
+                    extraStaminaSpent = 1
+
+                    # Double the stamina spent if both Frostbite and Stagger are applied.
+                    extraStaminaSpent += chance * dodgeMod[tier][enemy.dodge] * (2 if any([{"stagger",} & set(e) for e in enemy.attackEffect]) else 1)
+                elif any([{"stagger", "frostbite"} & set(e) for e in enemy.attackEffect]):
                     # Guess at how often this enemy will land with an attack.
                     # Used to modify Stagger and Frostbite.
                     nums = []
@@ -175,3 +192,7 @@ def process_defense():
     except Exception as ex:
         input(ex)
         raise
+
+
+if __name__ == "__main__":
+    process_defense()

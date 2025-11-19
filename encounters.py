@@ -156,8 +156,8 @@ def check_if_valid(encounter, level, combo, difficulty, rangedCount, toughnessSo
 try:
     # skip = True
     for ei, e in enumerate(enc):
-        # if e not in {"Depths of the Cathedral",}:
-        #     continue
+        if e not in {"The Last Bastion",}:
+            continue
         #     skip = False
         # if skip:
         #     continue
@@ -350,6 +350,8 @@ try:
                         and (e not in {"The First Bastion",} or (s.count(sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]) == 1 and s.count(sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[1]) == 1))
                         # No more than one of the two strongest enemies
                         and (e not in {"Trecherous Tower", "Abandoned and Forgotten"} or (s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[0]) == 1 and s.count(sorted(s, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][characterCount], reverse=True)[1]) == 1))
+                        # No duplicate enemies
+                        and (e != "The Last Bastion" or len(set(s)) > 1)
                         # One of the toughest enemy
                         and (e != "Cold Snap" or s.count(sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]) == 1)
                         # Two of the toughest enemy
