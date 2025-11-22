@@ -3,6 +3,7 @@ from item_tier import itemTier
 
 
 armor = []
+armorByName = {}
 armorTiers = {
     1: [],
     2: [],
@@ -25,6 +26,7 @@ class Armor:
         if name not in itemTier:
             return
         armor.append(self)
+        armorByName[name] = self
         self.name = name
         self.block = block
         self.resist = resist

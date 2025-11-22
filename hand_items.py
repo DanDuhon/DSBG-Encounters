@@ -3,6 +3,7 @@ from item_tier import itemTier
 
 
 handItems = []
+handItemsByName = {}
 handItemTiers = {
     1: [],
     2: [],
@@ -25,6 +26,7 @@ class HandItem:
         if name not in itemTier:
             return
         handItems.append(self)
+        handItemsByName[name] = self
         self.name = name
         self.block = block
         self.resist = resist

@@ -292,7 +292,7 @@ def process_strength(tier, ambush):
                 if tier < 3 and enemy.modified:
                     continue
 
-                heroRange = loadout[3]
+                heroRange = loadout[4] if "boss" in enemy.enemyType else loadout[3]
                 multiplier = loadoutLookup[ambush][tier][loadout]
 
                 totalAttacks = 0
