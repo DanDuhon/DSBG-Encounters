@@ -20,7 +20,7 @@ def main():
     # Example: "No Safe Haven"
     no_safe_haven = EncounterSpec(
         name="No Safe Haven",
-        level=1,  # maps to tier1
+        level=1,
         enemies=[
             EncounterEnemySpec(enemy_name="Snow Rat", count=2, tile=1),
             EncounterEnemySpec(enemy_name="Engorged Zombie", count=1, tile=2),

@@ -5,7 +5,7 @@ from models import Enemy, BuildKey, Character
 from builds import PLAYER_COUNTS, build_all_builds
 from enemies_io import load_enemies_from_csv
 from parties import iter_parties_for_tier
-from dice_math import enemy_threat_vs_party
+from mobility import enemy_threat_vs_party
 
 def compute_enemy_threat_profile_all_tiers(
     enemy: Enemy,
@@ -83,6 +83,23 @@ def build_enemy_threat_json(
     enemies = load_enemies_from_csv(csv_path)
     for e in enemies:
         e.threat_profile = compute_enemy_threat_profile_all_tiers(e, builds)
+
+    #    Phalanx special case: when Phalanx dies, it becomes 3 Phalanx Hollows.
+    #    So for each tier/player-count entry, we add 3 * Phalanx Hollow threat
+    #    onto Phalanx's own threat profile.
+    by_name: Dict[str, Enemy] = {e.name: e for e in enemies}
+
+    phalanx = by_name.get("Phalanx")
+    phalanx_hollow = by_name.get("Phalanx Hollow")
+
+    if phalanx is not None and phalanx_hollow is not None:
+        for tier_name, tier_vals in phalanx.threat_profile.items():
+            hollow_tier_vals = phalanx_hollow.threat_profile.get(tier_name, {})
+            for p_key, base_val in list(tier_vals.items()):
+                base = float(base_val or 0.0)
+                hollow_val = float(hollow_tier_vals.get(p_key, 0.0) or 0.0)
+                # Phalanx effective threat = Phalanx + 3 × Phalanx Hollow
+                tier_vals[p_key] = base + 3.0 * hollow_val
 
     data = enemies_to_json_serializable(enemies)
     with open(json_out_path, "w", encoding="utf-8") as f:

@@ -2,7 +2,7 @@ from itertools import combinations, product
 from typing import List, Dict
 
 from models import Character, BuildKey
-from builds import CLASS_NAMES, TIER_CONFIG, PLAYER_COUNTS
+from builds import CLASS_NAMES, TIER_CONFIG
 
 def iter_parties_for_tier(
     party_size: int,
@@ -11,7 +11,7 @@ def iter_parties_for_tier(
 ) -> List[List[Character]]:
     """
     Generate all parties for:
-      - given party size (1–4)
+      - given party size (1-4)
       - given tier_name ("tier1"/"tier2"/"tier3")
 
     Rules:

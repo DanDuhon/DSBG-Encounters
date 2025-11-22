@@ -46,7 +46,7 @@ def make_placeholder_build(cls_name: str, tier: str, party_size: int) -> Charact
     atk_dice = ["black"] * (1 + tier_idx)   # T0: 1 die, T1: 2 dice, etc.
 
     attacks = [
-        Attack("physical", atk_dice, flat_mod=0, stamina_cost=0, min_range=0, max_range=0),
+        Attack("physical", atk_dice, flat_mod=0, min_range=0, max_range=0),
     ]
 
     return Character(
@@ -59,55 +59,115 @@ def make_placeholder_build(cls_name: str, tier: str, party_size: int) -> Charact
         attacks=attacks,
     )
 
-# ---------- Real Knight builds ----------
-
 def make_knight_build(tier: str, party_size: int) -> Character:
-    """
-    Knight builds T0–T3.
-
-    T0 starter Knight from your description.
-    Higher tiers here are illustrative; swap dice/stamina to match your real design.
-    """
     if tier == "T0":
         block_phys = ["blue", "black"]
         block_magic = ["black"]
         dodge = 0
         attacks = [
-            Attack("physical", ["blue"], flat_mod=0, stamina_cost=0, min_range=0, max_range=0),
-            Attack("physical", ["blue", "black"], flat_mod=0, stamina_cost=4, min_range=0, max_range=0),
+            Attack(["blue"]),
         ]
 
-    elif tier == "T1":
-        block_phys = ["blue", "black"]
-        block_magic = ["black"]
-        dodge = 0
-        attacks = [
-            Attack("physical", ["blue", "black"], flat_mod=0, stamina_cost=0, min_range=0, max_range=0),
-            Attack("physical", ["blue", "orange"], flat_mod=0, stamina_cost=4, min_range=0, max_range=0),
-        ]
+    if party_size == 1:
+        if tier == "T1":
+            block_phys = ["orange", "black"]
+            block_magic = ["blue", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["black", "black"]),
+                Attack(["blue"])
+            ]
 
-    elif tier == "T2":
-        block_phys = ["blue", "blue", "black"]
-        block_magic = ["black", "black"]
-        dodge = 0
-        attacks = [
-            Attack("physical", ["blue", "orange"], flat_mod=0, stamina_cost=0, min_range=0, max_range=0),
-            Attack("physical", ["orange", "orange"], flat_mod=0, stamina_cost=4, min_range=0, max_range=0),
-        ]
+        elif tier == "T2":
+            block_phys = ["black", "blue", "orange"]
+            block_magic = ["black", "orange", "orange"]
+            dodge = 0
+            attacks = [
+                Attack(["blue", "black"], flat_mod=1, shift=True),
+            ]
 
-    elif tier == "T3":
-        block_phys = ["blue", "blue", "black"]
-        block_magic = ["blue", "black"]
-        dodge = 1
-        attacks = [
-            Attack("physical", ["blue", "orange"], flat_mod=1, stamina_cost=0, min_range=0, max_range=0),
-            Attack("physical", ["orange", "orange"], flat_mod=1, stamina_cost=3, min_range=0, max_range=0),
-        ]
+        elif tier == "T3":
+            block_phys = ["black", "blue", "orange"]
+            block_magic = ["blue", "blue", "orange"]
+            dodge = 0
+            attacks = [
+                Attack(["blue", "blue", "black"], flat_mod=1),
+            ]
 
-    else:
-        return make_placeholder_build("Knight", tier, party_size)
+    elif party_size == 2:
+        if tier == "T1":
+            block_phys = ["orange", "black", "black"]
+            block_magic = ["blue", "black", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["blue", "black"], shift=True)
+            ]
 
-    # Optionally branch on party_size here if you want solo/4p variants.
+        elif tier == "T2":
+            block_phys = ["black", "blue", "orange"]
+            block_magic = ["black", "blue", "orange"]
+            dodge = 0
+            attacks = [
+                Attack(["blue", "black"], flat_mod=1, shift=True),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black", "blue", "orange"]
+            block_magic = ["blue", "blue", "orange"]
+            dodge = 0
+            attacks = [
+                Attack(["blue", "blue", "black"], flat_mod=1),
+            ]
+            
+    elif party_size == 3:
+        if tier == "T1":
+            block_phys = ["blue", "black"]
+            block_magic = ["blue", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["black", "black"])
+            ]
+
+        elif tier == "T2":
+            block_phys = ["orange", "black", "black"]
+            block_magic = ["blue", "black", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["blue", "black"], flat_mod=1, shift=True)
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black", "blue", "orange"]
+            block_magic = ["black", "blue", "orange"]
+            dodge = 0
+            attacks = [
+                Attack(["blue", "black", "black"], shift=True)
+            ]
+            
+    elif party_size == 4:
+        if tier == "T1":
+            block_phys = ["blue", "blue"]
+            block_magic = []
+            dodge = 1
+            attacks = [
+                Attack(["black", "black"])
+            ]
+
+        elif tier == "T2":
+            block_phys = ["blue", "black"]
+            block_magic = ["blue", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["black", "black"], flat_mod=1)
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black", "blue", "orange"]
+            block_magic = ["black", "blue", "orange"]
+            dodge = 0
+            attacks = [
+                Attack(["blue", "black", "black"], shift=True)
+            ]
 
     return Character(
         cls_name="Knight",
@@ -119,53 +179,1097 @@ def make_knight_build(tier: str, party_size: int) -> Character:
         attacks=attacks,
     )
 
-# ---------- Real Sorcerer builds ----------
+def make_assassin_build(tier: str, party_size: int) -> Character:
+    if tier == "T0":
+        block_phys = ["black"]
+        block_magic = ["black"]
+        dodge = 2
+        attacks = [
+            Attack(["black", "black"], flat_mod=-1),
+        ]
+
+    if party_size == 1:
+        if tier == "T1":
+            block_phys = []
+            block_magic = []
+            dodge = 2
+            attacks = [
+                Attack(["orange", "orange"], flat_mod=-2, apply_poison=True, max_range=1),
+                Attack(["orange", "orange"], apply_bleed=True, max_range=1, flat_mod=-2)
+            ]
+
+        elif tier == "T2":
+            block_phys = ["black"]
+            block_magic = ["black", "black"]
+            dodge = 4
+            attacks = [
+                Attack(["orange", "orange", "orange"], flat_mod=-2, apply_bleed=True, apply_poison=True),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black", "blue"]
+            block_magic = ["blue", "black", "black"]
+            dodge = 5
+            attacks = [
+                Attack(["blue", "blue", "black", "orange", "orange"], flat_mod=-3, shift=True),
+                Attack(["orange", "orange", "black", "orange", "orange"], flat_mod=-3),
+            ]
+
+    elif party_size == 2:
+        if tier == "T1":
+            block_phys = []
+            block_magic = []
+            dodge = 2
+            attacks = [
+                Attack(["black", "black", "orange", "orange"], flat_mod=-3, apply_poison=True, max_range=1),
+                Attack(["orange", "orange"], apply_bleed=True, max_range=1, flat_mod=-2)
+            ]
+
+        elif tier == "T2":
+            block_phys = ["black"]
+            block_magic = ["black", "black"]
+            dodge = 4
+            attacks = [
+                Attack(["orange", "orange", "orange"], flat_mod=-2, apply_bleed=True, apply_poison=True),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black", "blue"]
+            block_magic = ["blue", "black", "black"]
+            dodge = 5
+            attacks = [
+                Attack(["blue", "blue", "black", "orange", "orange"], flat_mod=-3, shift=True),
+                Attack(["orange", "orange", "black", "orange", "orange"], flat_mod=-3),
+            ]
+            
+    elif party_size == 3:
+        if tier == "T1":
+            block_phys = []
+            block_magic = []
+            dodge = 2
+            attacks = [
+                Attack(["orange", "orange"], flat_mod=-2, apply_poison=True, max_range=1),
+                Attack(["orange", "orange"], apply_bleed=True, max_range=1, flat_mod=-2)
+            ]
+
+        elif tier == "T2":
+            block_phys = []
+            block_magic = []
+            dodge = 2
+            attacks = [
+                Attack(["orange", "orange"], flat_mod=-2, apply_poison=True, max_range=1),
+                Attack(["orange", "orange"], apply_bleed=True, max_range=1, flat_mod=-2)
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black", "blue"]
+            block_magic = ["blue", "black", "black"]
+            dodge = 4
+            attacks = [
+                Attack(["orange", "orange", "orange"], flat_mod=-2, apply_bleed=True, apply_poison=True),
+            ]
+            
+    elif party_size == 4:
+        if tier == "T1":
+            block_phys = ["black"]
+            block_magic = ["black"]
+            dodge = 1
+            attacks = [
+                Attack([], apply_poison=True, max_range=1),
+                Attack([], apply_bleed=True, max_range=1)
+            ]
+
+        elif tier == "T2":
+            block_phys = []
+            block_magic = []
+            dodge = 2
+            attacks = [
+                Attack(["orange", "orange"], flat_mod=-2, apply_poison=True, max_range=1),
+                Attack(["orange", "orange"], apply_bleed=True, max_range=1, flat_mod=-2)
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black"]
+            block_magic = ["black", "black"]
+            dodge = 4
+            attacks = [
+                Attack(["orange", "orange", "orange"], flat_mod=-2, apply_bleed=True, apply_poison=True),
+            ]
+
+    return Character(
+        cls_name="Assassin",
+        tier=tier,
+        party_size=party_size,
+        block_phys_dice=block_phys,
+        block_magic_dice=block_magic,
+        dodge_dice=dodge,
+        attacks=attacks,
+    )
 
 def make_sorcerer_build(tier: str, party_size: int) -> Character:
-    """
-    Sorcerer builds T0–T3.
-    """
     if tier == "T0":
         block_phys = ["black"]
         block_magic = ["blue", "black"]
         dodge = 1
         attacks = [
-            Attack("magic", ["blue"], flat_mod=0, stamina_cost=1, min_range=1, max_range=3),
-            Attack("magic", ["black", "black"], flat_mod=0, stamina_cost=3, min_range=1, max_range=3),
+            Attack(damage_type="magic", dice=["blue"], max_range=3),
         ]
 
-    elif tier == "T1":
-        block_phys = ["black"]
-        block_magic = ["blue", "black"]
-        dodge = 1
-        attacks = [
-            Attack("magic", ["blue"], flat_mod=0, stamina_cost=0, min_range=1, max_range=3),
-            Attack("magic", ["blue", "black"], flat_mod=0, stamina_cost=3, min_range=1, max_range=3),
-        ]
+    if party_size == 1:
+        if tier == "T1":
+            block_phys = ["black"]
+            block_magic = ["black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black"], max_range=3, apply_stagger=True),
+                Attack(damage_type="magic", dice=["blue", "black"], max_range=3),
+            ]
 
-    elif tier == "T2":
-        block_phys = ["black", "black"]
-        block_magic = ["blue", "black"]
-        dodge = 1
-        attacks = [
-            Attack("magic", ["blue", "black"], flat_mod=0, stamina_cost=0, min_range=1, max_range=3),
-            Attack("magic", ["blue", "blue"], flat_mod=0, stamina_cost=3, min_range=1, max_range=3),
-        ]
+        elif tier == "T2":
+            block_phys = ["blue"]
+            block_magic = ["blue", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["blue"], flat_mod=2, max_range=1),
+            ]
 
-    elif tier == "T3":
-        block_phys = ["black"]
-        block_magic = ["blue", "blue", "black"]
-        dodge = 2
-        attacks = [
-            Attack("magic", ["blue", "black"], flat_mod=1, stamina_cost=0, min_range=1, max_range=3),
-            Attack("magic", ["blue", "blue"], flat_mod=1, stamina_cost=3, min_range=1, max_range=3),
-        ]
+        elif tier == "T3":
+            block_phys = ["blue"]
+            block_magic = ["blue", "black"]
+            dodge = 2
+            attacks = [
+                Attack(damage_type="magic", dice=["blue"], flat_mod=2, max_range=1),
+                Attack(damage_type="magic", dice=["blue", "blue"], max_range=1),
+            ]
 
-    else:
-        return make_placeholder_build("Sorcerer", tier, party_size)
+    elif party_size == 2:
+        if tier == "T1":
+            block_phys = ["black"]
+            block_magic = ["black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black"], max_range=3, apply_stagger=True),
+                Attack(damage_type="magic", dice=["blue", "black"], max_range=3),
+            ]
+
+        elif tier == "T2":
+            block_phys = ["black"]
+            block_magic = ["blue", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black"], max_range=3, apply_stagger=True),
+                Attack(damage_type="magic", dice=["blue", "black"], max_range=3),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["blue"]
+            block_magic = ["blue", "black"]
+            dodge = 2
+            attacks = [
+                Attack(damage_type="magic", dice=["blue"], flat_mod=2, max_range=1),
+                Attack(damage_type="magic", dice=["blue", "blue"], max_range=1),
+            ]
+
+    elif party_size == 3:
+        if tier == "T1":
+            block_phys = ["black"]
+            block_magic = ["black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black"], max_range=3, apply_stagger=True),
+                Attack(damage_type="magic", dice=["blue", "black"], max_range=3),
+            ]
+
+        elif tier == "T2":
+            block_phys = ["black"]
+            block_magic = ["blue", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "black"], max_range=1, shift=True),
+                Attack([], push=True)
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black"]
+            block_magic = ["blue", "black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "black", "black"], flat_mod=1, max_range=1),
+            ]
+
+    elif party_size == 4:
+        if tier == "T1":
+            block_phys = ["black"]
+            block_magic = ["blue"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["blue"], max_range=3),
+                Attack(damage_type="magic", dice=["blue", "black"], max_range=3),
+            ]
+
+        elif tier == "T2":
+            block_phys = ["black"]
+            block_magic = ["black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black"], max_range=3, apply_stagger=True),
+                Attack(damage_type="magic", dice=["blue", "black"], max_range=3),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black"]
+            block_magic = ["blue", "black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "black", "black"], flat_mod=1, max_range=1),
+            ]
 
     return Character(
         cls_name="Sorcerer",
+        tier=tier,
+        party_size=party_size,
+        block_phys_dice=block_phys,
+        block_magic_dice=block_magic,
+        dodge_dice=dodge,
+        attacks=attacks,
+    )
+
+def make_pyromancer_build(tier: str, party_size: int) -> Character:
+    if tier == "T0":
+        block_phys = ["blue"]
+        block_magic = ["black", "black"]
+        dodge = 1
+        attacks = [
+            Attack(damage_type="magic", dice=["black"], max_range=2),
+        ]
+
+    if party_size == 1:
+        if tier == "T1":
+            block_phys = ["black"]
+            block_magic = ["black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "black"], max_range=2),
+                Attack([], max_range=1, apply_poison=True),
+            ]
+
+        elif tier == "T2":
+            block_phys = ["orange"]
+            block_magic = ["orange", "black"]
+            dodge = 0
+            attacks = [
+                Attack(damage_type="magic", dice=["blue"], max_range=2, push=True),
+                Attack(["blue"], flat_mod=2, max_range=1),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["orange"]
+            block_magic = ["orange", "black"]
+            dodge = 0
+            attacks = [
+                Attack(damage_type="magic", dice=["orange"], max_range=2, push=True),
+                Attack(["blue"], flat_mod=2, max_range=1),
+            ]
+
+    elif party_size == 2:
+        if tier == "T1":
+            block_phys = ["black"]
+            block_magic = ["black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "black"], max_range=2),
+                Attack([], max_range=1, apply_poison=True),
+            ]
+
+        elif tier == "T2":
+            block_phys = ["blue"]
+            block_magic = ["orange", "black"]
+            dodge = 0
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "black"], flat_mod=1, max_range=1),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["orange"]
+            block_magic = ["orange", "black"]
+            dodge = 0
+            attacks = [
+                Attack(damage_type="magic", dice=["orange"], max_range=2, push=True),
+                Attack(["blue"], flat_mod=2, max_range=1),
+            ]
+
+    elif party_size == 3:
+        if tier == "T1":
+            block_phys = ["black"]
+            block_magic = ["black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "black"], max_range=2),
+                Attack([], max_range=1, apply_poison=True),
+            ]
+
+        elif tier == "T2":
+            block_phys = ["blue"]
+            block_magic = ["orange", "black"]
+            dodge = 0
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "black"], flat_mod=1, max_range=1),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["orange"]
+            block_magic = ["orange", "black"]
+            dodge = 0
+            attacks = [
+                Attack(damage_type="magic", dice=["orange"], max_range=2, push=True),
+                Attack(["blue"], flat_mod=2, max_range=1),
+            ]
+
+    elif party_size == 4:
+        if tier == "T1":
+            block_phys = ["black", "black"]
+            block_magic = ["black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "black"], max_range=3)
+            ]
+
+        elif tier == "T2":
+            block_phys = ["black"]
+            block_magic = ["black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "black"], max_range=2),
+                Attack([], max_range=1, apply_poison=True),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black"]
+            block_magic = ["black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "black", "black"], flat_mod=1, max_range=1),
+            ]
+
+    return Character(
+        cls_name="Pyromancer",
+        tier=tier,
+        party_size=party_size,
+        block_phys_dice=block_phys,
+        block_magic_dice=block_magic,
+        dodge_dice=dodge,
+        attacks=attacks,
+    )
+
+def make_cleric_build(tier: str, party_size: int) -> Character:
+    if tier == "T0":
+        block_phys = ["black", "black"]
+        block_magic = ["blue", "black"]
+        dodge = 0
+        attacks = [
+            Attack(["blue"]),
+        ]
+
+    if party_size == 1:
+        if tier == "T1":
+            block_phys = ["black", "black", "blue"]
+            block_magic = ["black", "black", "blue"]
+            dodge = 0
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "blue"])
+            ]
+
+        elif tier == "T2":
+            block_phys = ["orange", "blue"]
+            block_magic = ["orange", "orange"]
+            dodge = 0
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "blue"], flat_mod=1),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["orange", "black", "black", "black"]
+            block_magic = ["orange", "black", "black", "black", "black", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["black", "blue", "blue"]),
+            ]
+
+    elif party_size == 2:
+        if tier == "T1":
+            block_phys = ["black", "black", "blue"]
+            block_magic = ["black", "black", "blue"]
+            dodge = 0
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "blue"])
+            ]
+
+        elif tier == "T2":
+            block_phys = ["orange", "black", "black"]
+            block_magic = ["orange", "black"]
+            dodge = 0
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "blue"], flat_mod=1),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["orange", "black", "black", "black"]
+            block_magic = ["orange", "black", "black", "black", "black", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["black", "blue", "blue"]),
+            ]
+
+    elif party_size == 3:
+        if tier == "T1":
+            block_phys = ["blue", "black", "black"]
+            block_magic = ["black", "black", "blue"]
+            dodge = 0
+            attacks = [
+                Attack(["blue"])
+            ]
+
+        elif tier == "T2":
+            block_phys = ["black", "black", "blue"]
+            block_magic = ["black", "black", "blue"]
+            dodge = 0
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "blue"], flat_mod=1)
+            ]
+
+        elif tier == "T3":
+            block_phys = ["orange", "black", "black"]
+            block_magic = ["orange", "black", "black", "black", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["black", "blue"], flat_mod=2),
+            ]
+
+    elif party_size == 4:
+        if tier == "T1":
+            block_phys = ["blue", "black"]
+            block_magic = ["black", "black", "blue"]
+            dodge = 0
+            attacks = [
+                Attack(["blue"])
+            ]
+
+        elif tier == "T2":
+            block_phys = ["blue", "black", "black"]
+            block_magic = ["black", "black", "blue"]
+            dodge = 0
+            attacks = [
+                Attack(["blue"], flat_mod=1)
+            ]
+
+        elif tier == "T3":
+            block_phys = ["orange", "black", "black"]
+            block_magic = ["orange", "black", "black", "black", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["black", "blue"], flat_mod=2),
+            ]
+
+    return Character(
+        cls_name="Cleric",
+        tier=tier,
+        party_size=party_size,
+        block_phys_dice=block_phys,
+        block_magic_dice=block_magic,
+        dodge_dice=dodge,
+        attacks=attacks,
+    )
+
+def make_deprived_build(tier: str, party_size: int) -> Character:
+    if tier == "T0":
+        block_phys = ["black"]
+        block_magic = []
+        dodge = 0
+        attacks = [
+            Attack(["black"]),
+        ]
+
+    if party_size == 1:
+        if tier == "T1":
+            block_phys = ["blue", "black", "black"]
+            block_magic = ["blue"]
+            dodge = 2
+            attacks = [
+                Attack(["blue", "blue"])
+            ]
+
+        elif tier == "T2":
+            block_phys = ["black", "black", "black"]
+            block_magic = ["black"]
+            dodge = 3
+            attacks = [
+                Attack(["black", "blue", "blue"], flat_mod=1),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["blue", "black", "black"]
+            block_magic = ["orange"]
+            dodge = 3
+            attacks = [
+                Attack(["black", "black", "black", "blue", "blue"]),
+            ]
+
+    elif party_size == 2:
+        if tier == "T1":
+            block_phys = ["blue", "black", "black"]
+            block_magic = ["blue"]
+            dodge = 2
+            attacks = [
+                Attack(["blue", "blue"])
+            ]
+
+        elif tier == "T2":
+            block_phys = ["black", "black", "black"]
+            block_magic = ["black"]
+            dodge = 3
+            attacks = [
+                Attack(["black", "blue", "blue"], flat_mod=1),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["blue", "black", "black"]
+            block_magic = ["orange"]
+            dodge = 3
+            attacks = [
+                Attack(["black", "black", "black", "blue", "blue"]),
+            ]
+
+    elif party_size == 3:
+        if tier == "T1":
+            block_phys = ["blue", "black", "black"]
+            block_magic = ["blue"]
+            dodge = 2
+            attacks = [
+                Attack(["blue", "blue"])
+            ]
+
+        elif tier == "T2":
+            block_phys = ["black", "black", "black"]
+            block_magic = ["black"]
+            dodge = 3
+            attacks = [
+                Attack(["blue", "blue"], flat_mod=2),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["blue", "black", "black"]
+            block_magic = ["orange"]
+            dodge = 3
+            attacks = [
+                Attack(["black", "black", "black", "blue", "blue"]),
+            ]
+
+    elif party_size == 4:
+        if tier == "T1":
+            block_phys = ["blue", "black"]
+            block_magic = ["black"]
+            dodge = 2
+            attacks = [
+                Attack(["black", "black", "black"], max_range=3)
+            ]
+
+        elif tier == "T2":
+            block_phys = ["blue", "black", "black"]
+            block_magic = ["blue"]
+            dodge = 2
+            attacks = [
+                Attack(["blue", "blue"], flat_mod=1),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["blue", "black", "black"]
+            block_magic = ["blue"]
+            dodge = 3
+            attacks = [
+                Attack(["black", "black", "black", "blue", "blue"]),
+            ]
+
+    return Character(
+        cls_name="Deprived",
+        tier=tier,
+        party_size=party_size,
+        block_phys_dice=block_phys,
+        block_magic_dice=block_magic,
+        dodge_dice=dodge,
+        attacks=attacks,
+    )
+
+def make_herald_build(tier: str, party_size: int) -> Character:
+    if tier == "T0":
+        block_phys = ["black", "black"]
+        block_magic = ["black"]
+        dodge = 1
+        attacks = [
+            Attack(["black"], max_range=1),
+        ]
+
+    if party_size == 1:
+        if tier == "T1":
+            block_phys = ["blue", "black", "black"]
+            block_magic = ["blue", "black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "black"], max_range=3)
+            ]
+
+        elif tier == "T2":
+            block_phys = ["orange"]
+            block_magic = ["orange"]
+            dodge = 0
+            attacks = [
+                Attack(["orange", "orange"]),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["orange", "blue", "black"]
+            block_magic = ["orange", "orange", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["blue", "blue", "black", "black"], flat_mod=1),
+            ]
+
+    elif party_size == 2:
+        if tier == "T1":
+            block_phys = ["blue", "black", "black"]
+            block_magic = ["blue", "black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "black"], max_range=3)
+            ]
+
+        elif tier == "T2":
+            block_phys = ["orange"]
+            block_magic = ["orange"]
+            dodge = 0
+            attacks = [
+                Attack(["orange", "orange"]),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["orange", "blue", "black"]
+            block_magic = ["orange", "orange", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["blue", "blue", "black", "black"], flat_mod=1),
+            ]
+
+    elif party_size == 3:
+        if tier == "T1":
+            block_phys = ["blue", "black", "black"]
+            block_magic = ["blue", "black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "black"], max_range=3)
+            ]
+
+        elif tier == "T2":
+            block_phys = ["orange", "black", "black"]
+            block_magic = ["orange", "black", "black"]
+            dodge = 0
+            attacks = [
+                Attack(damage_type="magic", dice=["blue", "black"], flat_mod=1),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["orange"]
+            block_magic = ["orange", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["blue", "blue", "blue"]),
+            ]
+
+    elif party_size == 4:
+        if tier == "T1":
+            block_phys = ["blue"]
+            block_magic = ["black", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["blue", "blue"])
+            ]
+
+        elif tier == "T2":
+            block_phys = ["blue", "black", "black"]
+            block_magic = ["blue", "black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(damage_type="magic", dice=["black", "black"], flat_mod=1, max_range=3)
+            ]
+
+        elif tier == "T3":
+            block_phys = ["orange", "blue"]
+            block_magic = ["orange", "orange"]
+            dodge = 1
+            attacks = [
+                Attack(["black", "black", "blue"], flat_mod=1),
+            ]
+
+    return Character(
+        cls_name="Herald",
+        tier=tier,
+        party_size=party_size,
+        block_phys_dice=block_phys,
+        block_magic_dice=block_magic,
+        dodge_dice=dodge,
+        attacks=attacks,
+    )
+
+def make_mercenary_build(tier: str, party_size: int) -> Character:
+    if tier == "T0":
+        block_phys = ["black"]
+        block_magic = ["black"]
+        dodge = 1
+        attacks = [
+            Attack(["black", "black"], repeat=2),
+        ]
+
+    if party_size == 1:
+        if tier == "T1":
+            block_phys = ["blue", "black", "black"]
+            block_magic = ["black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(["black"], repeat=2)
+            ]
+
+        elif tier == "T2":
+            block_phys = ["black"]
+            block_magic = ["black"]
+            dodge = 4
+            attacks = [
+                Attack(["blue", "blue"], flat_mod=1),
+                Attack(["black", "black"], flat_mod=1),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black", "black"]
+            block_magic = ["black", "black", "black"]
+            dodge = 3
+            attacks = [
+                Attack(["blue", "blue", "black"], repeat=2),
+            ]
+
+    elif party_size == 2:
+        if tier == "T1":
+            block_phys = ["black", "black", "black"]
+            block_magic = ["black", "black", "black"]
+            dodge = 2
+            attacks = [
+                Attack(["black"], repeat=2)
+            ]
+
+        elif tier == "T2":
+            block_phys = ["black"]
+            block_magic = ["black"]
+            dodge = 4
+            attacks = [
+                Attack(["blue", "blue"], flat_mod=1),
+                Attack(["black", "black"], flat_mod=1),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black", "black"]
+            block_magic = ["black", "black", "black"]
+            dodge = 3
+            attacks = [
+                Attack(["blue", "blue", "black"], repeat=2),
+            ]
+
+    elif party_size == 3:
+        if tier == "T1":
+            block_phys = ["blue", "black", "black"]
+            block_magic = ["black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(["black"], repeat=2)
+            ]
+
+        elif tier == "T2":
+            block_phys = ["black", "black", "black"]
+            block_magic = ["black", "black", "black"]
+            dodge = 2
+            attacks = [
+                Attack(["black"], repeat=2, flat_mod=1)
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black", "black", "black"]
+            block_magic = ["black", "black", "black", "black"]
+            dodge = 2
+            attacks = [
+                Attack(["blue", "blue", "black"], repeat=2),
+            ]
+
+    elif party_size == 4:
+        if tier == "T1":
+            block_phys = ["black", "black"]
+            block_magic = ["black"]
+            dodge = 2
+            attacks = [
+                Attack(["black", "black"])
+            ]
+
+        elif tier == "T2":
+            block_phys = ["blue", "black", "black"]
+            block_magic = ["black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(["black", "black"], flat_mod=1, repeat=2)
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black", "black", "black"]
+            block_magic = ["black", "black", "black", "black"]
+            dodge = 2
+            attacks = [
+                Attack(["blue", "blue", "black"], repeat=2),
+            ]
+
+    return Character(
+        cls_name="Mercenary",
+        tier=tier,
+        party_size=party_size,
+        block_phys_dice=block_phys,
+        block_magic_dice=block_magic,
+        dodge_dice=dodge,
+        attacks=attacks,
+    )
+
+def make_thief_build(tier: str, party_size: int) -> Character:
+    if tier == "T0":
+        block_phys = ["black"]
+        block_magic = ["black"]
+        dodge = 2
+        attacks = [
+            Attack(["blue"], max_range=3),
+        ]
+
+    if party_size == 1:
+        if tier == "T1":
+            block_phys = ["black"]
+            block_magic = ["black"]
+            dodge = 3
+            attacks = [
+                Attack(["black", "black"], max_range=4)
+            ]
+
+        elif tier == "T2":
+            block_phys = ["black", "black"]
+            block_magic = ["black", "black"]
+            dodge = 3
+            attacks = [
+                Attack(["blue", "blue"], flat_mod=1, push=True, max_range=3),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black", "blue"]
+            block_magic = ["black", "blue"]
+            dodge = 3
+            attacks = [
+                Attack(["blue", "blue", "black"], push=True, max_range=3),
+            ]
+
+    elif party_size == 2:
+        if tier == "T1":
+            block_phys = ["black"]
+            block_magic = ["black"]
+            dodge = 3
+            attacks = [
+                Attack(["black", "black"], max_range=4)
+            ]
+
+        elif tier == "T2":
+            block_phys = ["blue", "black"]
+            block_magic = ["black", "black"]
+            dodge = 2
+            attacks = [
+                Attack(["blue", "blue"], flat_mod=1, push=True, max_range=3),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black", "blue"]
+            block_magic = ["black", "blue"]
+            dodge = 3
+            attacks = [
+                Attack(["blue", "blue", "black"], push=True, max_range=3),
+            ]
+
+    elif party_size == 3:
+        if tier == "T1":
+            block_phys = ["black"]
+            block_magic = ["black"]
+            dodge = 3
+            attacks = [
+                Attack(["black", "black"], max_range=4)
+            ]
+
+        elif tier == "T2":
+            block_phys = ["blue", "black"]
+            block_magic = ["black", "black"]
+            dodge = 2
+            attacks = [
+                Attack(["blue", "blue"], flat_mod=1, push=True, max_range=3),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black", "black"]
+            block_magic = ["black", "black"]
+            dodge = 2
+            attacks = [
+                Attack(["blue", "blue", "black"], push=True, max_range=3),
+            ]
+
+    elif party_size == 4:
+        if tier == "T1":
+            block_phys = ["black"]
+            block_magic = ["black"]
+            dodge = 2
+            attacks = [
+                Attack(["black", "black"], max_range=4),
+            ]
+
+        elif tier == "T2":
+            block_phys = ["blue", "black"]
+            block_magic = ["black", "black"]
+            dodge = 2
+            attacks = [
+                Attack(["black", "black"], flat_mod=1, max_range=4),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black", "black"]
+            block_magic = ["black", "black"]
+            dodge = 2
+            attacks = [
+                Attack(["blue", "blue", "black"], push=True, max_range=3),
+            ]
+
+    return Character(
+        cls_name="Warrior",
+        tier=tier,
+        party_size=party_size,
+        block_phys_dice=block_phys,
+        block_magic_dice=block_magic,
+        dodge_dice=dodge,
+        attacks=attacks,
+    )
+
+def make_warrior_build(tier: str, party_size: int) -> Character:
+    if tier == "T0":
+        block_phys = ["black", "black"]
+        block_magic = ["black"]
+        dodge = 1
+        attacks = [
+            Attack(["black", "black"]),
+        ]
+
+    if party_size == 1:
+        if tier == "T1":
+            block_phys = ["orange", "black", "black"]
+            block_magic = ["blue", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["black", "black", "black"])
+            ]
+
+        elif tier == "T2":
+            block_phys = ["black", "blue"]
+            block_magic = ["black", "black"]
+            dodge = 2
+            attacks = [
+                Attack(["orange", "orange"], flat_mod=1),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black", "blue"]
+            block_magic = ["black", "black"]
+            dodge = 2
+            attacks = [
+                Attack(["orange", "orange", "black"], flat_mod=1),
+            ]
+
+    elif party_size == 2:
+        if tier == "T1":
+            block_phys = ["orange", "black", "blue"]
+            block_magic = ["blue", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["blue", "blue"])
+            ]
+
+        elif tier == "T2":
+            block_phys = ["black", "blue", "black"]
+            block_magic = ["black", "black"]
+            dodge = 1
+            attacks = [
+                Attack(["orange", "orange"], flat_mod=1),
+            ]
+
+        elif tier == "T3":
+            block_phys = ["black", "blue"]
+            block_magic = ["black", "black"]
+            dodge = 2
+            attacks = [
+                Attack(["orange", "orange", "black"], flat_mod=1),
+            ]
+
+    elif party_size == 3:
+        if tier == "T1":
+            block_phys = ["orange", "black", "black"]
+            block_magic = ["blue", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["black", "black", "black"])
+            ]
+
+        elif tier == "T2":
+            block_phys = ["orange", "blue"]
+            block_magic = ["blue", "black"]
+            dodge = 1
+            attacks = [
+                Attack(["blue", "blue"], flat_mod=1)
+            ]
+
+        elif tier == "T3":
+            block_phys = ["orange", "blue"]
+            block_magic = ["blue", "black"]
+            dodge = 1
+            attacks = [
+                Attack(["blue", "blue", "black"], flat_mod=1)
+            ]
+
+    elif party_size == 4:
+        if tier == "T1":
+            block_phys = ["blue"]
+            block_magic = []
+            dodge = 1
+            attacks = [
+                Attack(["black", "black"]),
+                Attack(["black", "black"]),
+            ]
+
+        elif tier == "T2":
+            block_phys = ["orange", "black", "black"]
+            block_magic = ["blue", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["black", "black", "black"])
+            ]
+
+        elif tier == "T3":
+            block_phys = ["orange", "blue"]
+            block_magic = ["blue", "black"]
+            dodge = 0
+            attacks = [
+                Attack(["blue", "blue", "black"], flat_mod=1)
+            ]
+
+    return Character(
+        cls_name="Warrior",
         tier=tier,
         party_size=party_size,
         block_phys_dice=block_phys,
@@ -181,12 +1285,28 @@ def make_build_for(cls_name: str, tier: str, party_size: int) -> Character:
     Main entry point for building a Character for (class, tier, party_size).
     Extend this with more classes as you define them.
     """
-    if cls_name == "Knight":
+    if cls_name == "Assassin":
+        return make_assassin_build(tier, party_size)
+    elif cls_name == "Cleric":
+        return make_cleric_build(tier, party_size)
+    elif cls_name == "Deprived":
+        return make_deprived_build(tier, party_size)
+    elif cls_name == "Herald":
+        return make_herald_build(tier, party_size)
+    elif cls_name == "Knight":
         return make_knight_build(tier, party_size)
+    elif cls_name == "Mercenary":
+        return make_mercenary_build(tier, party_size)
+    elif cls_name == "Pyromancer":
+        return make_pyromancer_build(tier, party_size)
     elif cls_name == "Sorcerer":
         return make_sorcerer_build(tier, party_size)
-    else:
-        return make_placeholder_build(cls_name, tier, party_size)
+    elif cls_name == "Thief":
+        return make_thief_build(tier, party_size)
+    elif cls_name == "Warrior":
+        return make_warrior_build(tier, party_size)
+    # else:
+    #     return make_placeholder_build(cls_name, tier, party_size)
 
 
 def build_all_builds() -> Dict[BuildKey, Character]:

@@ -1,0 +1,409 @@
+name,tier,player_num,threat
+Alonne Bow Knight,tier1,1,2.0587082410315274
+Alonne Bow Knight,tier1,2,0.717373456668237
+Alonne Bow Knight,tier1,3,0.4477349694334624
+Alonne Bow Knight,tier1,4,0.41988810151604716
+Alonne Bow Knight,tier2,1,0.413607684140653
+Alonne Bow Knight,tier2,2,0.17056174829296136
+Alonne Bow Knight,tier2,3,0.14310426205906307
+Alonne Bow Knight,tier2,4,0.155652386654558
+Alonne Bow Knight,tier3,1,0.17560281446027584
+Alonne Bow Knight,tier3,2,0.08112086489161
+Alonne Bow Knight,tier3,3,0.08385053314484828
+Alonne Bow Knight,tier3,4,0.06445418934353804
+Alonne Knight Captain,tier1,1,15.200554573325235
+Alonne Knight Captain,tier1,2,10.369266909554117
+Alonne Knight Captain,tier1,3,6.713852577941647
+Alonne Knight Captain,tier1,4,3.8219895913855675
+Alonne Knight Captain,tier2,1,1.9135162588738819
+Alonne Knight Captain,tier2,2,0.4791035996249745
+Alonne Knight Captain,tier2,3,0.3955396756681806
+Alonne Knight Captain,tier2,4,0.3804955369411935
+Alonne Knight Captain,tier3,1,0.38893440920929717
+Alonne Knight Captain,tier3,2,0.10554311133441642
+Alonne Knight Captain,tier3,3,0.07656011117684162
+Alonne Knight Captain,tier3,4,0.05657811169702444
+Alonne Sword Knight,tier1,1,1.9725496571267551
+Alonne Sword Knight,tier1,2,1.165442184731431
+Alonne Sword Knight,tier1,3,0.6369438583304959
+Alonne Sword Knight,tier1,4,0.29897828125308173
+Alonne Sword Knight,tier2,1,0.14144244648226226
+Alonne Sword Knight,tier2,2,0.0307148406438761
+Alonne Sword Knight,tier2,3,0.022963908341722263
+Alonne Sword Knight,tier2,4,0.017778283510408978
+Alonne Sword Knight,tier3,1,0.03260862596776354
+Alonne Sword Knight,tier3,2,0.006542718556670097
+Alonne Sword Knight,tier3,3,0.004979839206401154
+Alonne Sword Knight,tier3,4,0.0024926149104030453
+Black Hollow Mage,tier1,1,22.69966471376151
+Black Hollow Mage,tier1,2,18.57806128296932
+Black Hollow Mage,tier1,3,13.318434482392961
+Black Hollow Mage,tier1,4,10.054108862410711
+Black Hollow Mage,tier2,1,7.882471009451372
+Black Hollow Mage,tier2,2,2.335254484077369
+Black Hollow Mage,tier2,3,1.8328875650535612
+Black Hollow Mage,tier2,4,2.3355806308939777
+Black Hollow Mage,tier3,1,1.2649868496293695
+Black Hollow Mage,tier3,2,0.5439923120086795
+Black Hollow Mage,tier3,3,0.5139781416000421
+Black Hollow Mage,tier3,4,0.47555663945082255
+Bonewheel Skeleton,tier1,1,1.3237278009902824
+Bonewheel Skeleton,tier1,2,0.33335934063897593
+Bonewheel Skeleton,tier1,3,0.17495853192676078
+Bonewheel Skeleton,tier1,4,0.11009223899967856
+Bonewheel Skeleton,tier2,1,0.08493717947383357
+Bonewheel Skeleton,tier2,2,0.02478794887171596
+Bonewheel Skeleton,tier2,3,0.022290353037554594
+Bonewheel Skeleton,tier2,4,0.018937037623904786
+Bonewheel Skeleton,tier3,1,0.019595328450474493
+Bonewheel Skeleton,tier3,2,0.008851298208035369
+Bonewheel Skeleton,tier3,3,0.009231127985286098
+Bonewheel Skeleton,tier3,4,0.0047723172568452914
+Crossbow Hollow,tier1,1,0.9362319963441866
+Crossbow Hollow,tier1,2,0.2520259418732821
+Crossbow Hollow,tier1,3,0.15402559116073483
+Crossbow Hollow,tier1,4,0.15741101194808121
+Crossbow Hollow,tier2,1,0.09633076646262326
+Crossbow Hollow,tier2,2,0.029716000792347482
+Crossbow Hollow,tier2,3,0.02644464219573727
+Crossbow Hollow,tier2,4,0.047669053541250554
+Crossbow Hollow,tier3,1,0.025640607683733253
+Crossbow Hollow,tier3,2,0.01323199922192565
+Crossbow Hollow,tier3,3,0.011197578307381502
+Crossbow Hollow,tier3,4,0.011510363061591219
+Crow Demon,tier1,1,25.649120699217224
+Crow Demon,tier1,2,21.337773951660775
+Crow Demon,tier1,3,17.80945527346113
+Crow Demon,tier1,4,14.88356802422086
+Crow Demon,tier2,1,7.961858866403003
+Crow Demon,tier2,2,5.5708978567011
+Crow Demon,tier2,3,6.3163644116187045
+Crow Demon,tier2,4,6.17280078933359
+Crow Demon,tier3,1,2.6591236691062337
+Crow Demon,tier3,2,2.3789529045956455
+Crow Demon,tier3,3,3.3729858084292768
+Crow Demon,tier3,4,2.5745087265509747
+Demonic Foliage,tier1,1,2.3450428993128756
+Demonic Foliage,tier1,2,1.218642945497423
+Demonic Foliage,tier1,3,0.622320989221865
+Demonic Foliage,tier1,4,0.3408783027358555
+Demonic Foliage,tier2,1,0.1926570856226434
+Demonic Foliage,tier2,2,0.045293813646777356
+Demonic Foliage,tier2,3,0.03658648272295315
+Demonic Foliage,tier2,4,0.036184278360823184
+Demonic Foliage,tier3,1,0.05578009400291091
+Demonic Foliage,tier3,2,0.013700781861351227
+Demonic Foliage,tier3,3,0.011280378328760625
+Demonic Foliage,tier3,4,0.00625736223718615
+Engorged Zombie,tier1,1,0.8988942637083837
+Engorged Zombie,tier1,2,0.5892703689661434
+Engorged Zombie,tier1,3,0.31379898962224606
+Engorged Zombie,tier1,4,0.1295105799434445
+Engorged Zombie,tier2,1,0.04507571208293287
+Engorged Zombie,tier2,2,0.007874774527690155
+Engorged Zombie,tier2,3,0.005828690463274138
+Engorged Zombie,tier2,4,0.006081682157518891
+Engorged Zombie,tier3,1,0.004738696391602721
+Engorged Zombie,tier3,2,0.0010542675917523765
+Engorged Zombie,tier3,3,0.0007655083771068782
+Engorged Zombie,tier3,4,0.0005877547879225095
+Falchion Skeleton,tier1,1,0.7919426938810202
+Falchion Skeleton,tier1,2,0.1374606547199039
+Falchion Skeleton,tier1,3,0.05609909467679626
+Falchion Skeleton,tier1,4,0.03977281217323093
+Falchion Skeleton,tier2,1,0.03456334022048409
+Falchion Skeleton,tier2,2,0.009712699615414967
+Falchion Skeleton,tier2,3,0.006879408731726641
+Falchion Skeleton,tier2,4,0.006281296761367512
+Falchion Skeleton,tier3,1,0.01579081945478081
+Falchion Skeleton,tier3,2,0.00410463417080148
+Falchion Skeleton,tier3,3,0.00329914155075933
+Falchion Skeleton,tier3,4,0.0014407743303506719
+Firebomb Hollow,tier1,1,0.9922139645523453
+Firebomb Hollow,tier1,2,0.5920449096299054
+Firebomb Hollow,tier1,3,0.5437613579703958
+Firebomb Hollow,tier1,4,0.5522181263757646
+Firebomb Hollow,tier2,1,0.10625210169998271
+Firebomb Hollow,tier2,2,0.0673100480611021
+Firebomb Hollow,tier2,3,0.09027858000705485
+Firebomb Hollow,tier2,4,0.16182800664405017
+Firebomb Hollow,tier3,1,0.027795260584469916
+Firebomb Hollow,tier3,2,0.028411929783871206
+Firebomb Hollow,tier3,3,0.03637169069296744
+Firebomb Hollow,tier3,4,0.03703324850761183
+Giant Skeleton Archer,tier1,1,17.53434466425367
+Giant Skeleton Archer,tier1,2,6.9572211425864126
+Giant Skeleton Archer,tier1,3,4.863595585461684
+Giant Skeleton Archer,tier1,4,4.464746841772386
+Giant Skeleton Archer,tier2,1,3.856564572912594
+Giant Skeleton Archer,tier2,2,1.7122129697516566
+Giant Skeleton Archer,tier2,3,1.6539793941601815
+Giant Skeleton Archer,tier2,4,1.691279726498329
+Giant Skeleton Archer,tier3,1,1.602787644854984
+Giant Skeleton Archer,tier3,2,0.7895249588121132
+Giant Skeleton Archer,tier3,3,0.951200452325235
+Giant Skeleton Archer,tier3,4,0.7387882409985271
+Giant Skeleton Soldier,tier1,1,9.56998001067705
+Giant Skeleton Soldier,tier1,2,2.9498038086401714
+Giant Skeleton Soldier,tier1,3,1.7516275231562026
+Giant Skeleton Soldier,tier1,4,1.3999342198506424
+Giant Skeleton Soldier,tier2,1,1.4504152248903863
+Giant Skeleton Soldier,tier2,2,0.46358547848499476
+Giant Skeleton Soldier,tier2,3,0.3729135759149363
+Giant Skeleton Soldier,tier2,4,0.34488221189869167
+Giant Skeleton Soldier,tier3,1,0.5489607170991173
+Giant Skeleton Soldier,tier3,2,0.1853791348348477
+Giant Skeleton Soldier,tier3,3,0.17486682348154325
+Giant Skeleton Soldier,tier3,4,0.09555250352679094
+Hollow Soldier,tier1,1,0.2587054380504964
+Hollow Soldier,tier1,2,0.03202022218882438
+Hollow Soldier,tier1,3,0.01150285175189066
+Hollow Soldier,tier1,4,0.007598840272422144
+Hollow Soldier,tier2,1,0.013564245031120612
+Hollow Soldier,tier2,2,0.0024305908966337584
+Hollow Soldier,tier2,3,0.0014800372101885356
+Hollow Soldier,tier2,4,0.0013235105302428797
+Hollow Soldier,tier3,1,0.003318980639446619
+Hollow Soldier,tier3,2,0.0007775123200337691
+Hollow Soldier,tier3,3,0.0005745868068541067
+Hollow Soldier,tier3,4,0.000281299114975135
+Ironclad Soldier,tier1,1,22.95827883512944
+Ironclad Soldier,tier1,2,35.912741053941204
+Ironclad Soldier,tier1,3,60.064810511224856
+Ironclad Soldier,tier1,4,66.68751385073755
+Ironclad Soldier,tier2,1,9.681615093207613
+Ironclad Soldier,tier2,2,2.890666733776531
+Ironclad Soldier,tier2,3,4.413680746117846
+Ironclad Soldier,tier2,4,4.623567618316669
+Ironclad Soldier,tier3,1,1.3573733420434162
+Ironclad Soldier,tier3,2,0.6039155365291496
+Ironclad Soldier,tier3,3,0.8657963701511544
+Ironclad Soldier,tier3,4,0.4967624592052014
+Large Hollow Soldier,tier1,1,5.5485141733364625
+Large Hollow Soldier,tier1,2,1.8694128426073096
+Large Hollow Soldier,tier1,3,1.2053792222995663
+Large Hollow Soldier,tier1,4,0.7924409252716116
+Large Hollow Soldier,tier2,1,0.5446606105980888
+Large Hollow Soldier,tier2,2,0.18622689812376916
+Large Hollow Soldier,tier2,3,0.18857353186710363
+Large Hollow Soldier,tier2,4,0.15770200217036776
+Large Hollow Soldier,tier3,1,0.1807224595524663
+Large Hollow Soldier,tier3,2,0.09189823227965446
+Large Hollow Soldier,tier3,3,0.09584924741294101
+Large Hollow Soldier,tier3,4,0.04502072297408024
+Mimic,tier1,1,19.04362669869944
+Mimic,tier1,2,6.0236983331731055
+Mimic,tier1,3,3.4991427969939632
+Mimic,tier1,4,2.862981216015026
+Mimic,tier2,1,4.230959063619769
+Mimic,tier2,2,1.3613716600117487
+Mimic,tier2,3,0.9977631559281995
+Mimic,tier2,4,0.9539944489228881
+Mimic,tier3,1,1.5555204039354702
+Mimic,tier3,2,0.5520613191178623
+Mimic,tier3,3,0.47036450636423827
+Mimic,tier3,4,0.3185303840856209
+Mushroom Child,tier1,1,6.815637163320005
+Mushroom Child,tier1,2,1.7748493238947118
+Mushroom Child,tier1,3,0.5986734882871484
+Mushroom Child,tier1,4,0.36279946304685823
+Mushroom Child,tier2,1,1.108132433572728
+Mushroom Child,tier2,2,0.18847879091652628
+Mushroom Child,tier2,3,0.09667149347468204
+Mushroom Child,tier2,4,0.07143414511876686
+Mushroom Child,tier3,1,0.19712393981675752
+Mushroom Child,tier3,2,0.045441877068500086
+Mushroom Child,tier3,3,0.03018913574174035
+Mushroom Child,tier3,4,0.014536139609837854
+Mushroom Parent,tier1,1,25.671692925411623
+Mushroom Parent,tier1,2,14.003380129225313
+Mushroom Parent,tier1,3,9.9642160599371
+Mushroom Parent,tier1,4,6.114965077144022
+Mushroom Parent,tier2,1,5.853543573748144
+Mushroom Parent,tier2,2,2.3172102816629385
+Mushroom Parent,tier2,3,2.201470459535652
+Mushroom Parent,tier2,4,1.3611557154583809
+Mushroom Parent,tier3,1,1.65437113320482
+Mushroom Parent,tier3,2,0.8777808517864315
+Mushroom Parent,tier3,3,0.9576725798529409
+Mushroom Parent,tier3,4,0.4040566039117565
+Necromancer,tier1,1,2.876950589675682
+Necromancer,tier1,2,1.459603395606858
+Necromancer,tier1,3,0.7736492893397301
+Necromancer,tier1,4,0.5348387218524003
+Necromancer,tier2,1,0.2479652555323435
+Necromancer,tier2,2,0.05882513390159224
+Necromancer,tier2,3,0.05572267599248174
+Necromancer,tier2,4,0.08089681249247947
+Necromancer,tier3,1,0.024187171317601168
+Necromancer,tier3,2,0.011821027455318616
+Necromancer,tier3,3,0.01152646575740612
+Necromancer,tier3,4,0.009015884652342128
+Phalanx,tier1,1,8.336348924431686
+Phalanx,tier1,2,2.2982459017941568
+Phalanx,tier1,3,1.2589222260644668
+Phalanx,tier1,4,0.987920865948096
+Phalanx,tier2,1,1.330349495152381
+Phalanx,tier2,2,0.39265921556372185
+Phalanx,tier2,3,0.2824665160991265
+Phalanx,tier2,4,0.26124624292832693
+Phalanx,tier3,1,0.51606112218493
+Phalanx,tier3,2,0.16392823147222052
+Phalanx,tier3,3,0.1321208847528769
+Phalanx,tier3,4,0.07208537312197577
+Phalanx Hollow,tier1,1,0.8091081632514902
+Phalanx Hollow,tier1,2,0.1577847910651329
+Phalanx Hollow,tier1,3,0.06818374264122781
+Phalanx Hollow,tier1,4,0.04870152762065852
+Phalanx Hollow,tier2,1,0.07144329512943462
+Phalanx Hollow,tier2,2,0.01606334128720856
+Phalanx Hollow,tier2,3,0.010307157229768512
+Phalanx Hollow,tier2,4,0.009459007964740801
+Phalanx Hollow,tier3,1,0.021556330384593612
+Phalanx Hollow,tier3,2,0.0055754910515148914
+Phalanx Hollow,tier3,3,0.00424413829836448
+Phalanx Hollow,tier3,4,0.0021144577788937136
+Plow Scarecrow,tier1,1,1.5519117038799704
+Plow Scarecrow,tier1,2,0.37742095055268843
+Plow Scarecrow,tier1,3,0.17845035777793977
+Plow Scarecrow,tier1,4,0.13655278872064297
+Plow Scarecrow,tier2,1,0.20366680606878879
+Plow Scarecrow,tier2,2,0.04985241409275695
+Plow Scarecrow,tier2,3,0.03242756217122
+Plow Scarecrow,tier2,4,0.031256977115206336
+Plow Scarecrow,tier3,1,0.057944774558155575
+Plow Scarecrow,tier3,2,0.01553645661051562
+Plow Scarecrow,tier3,3,0.012739326512719008
+Plow Scarecrow,tier3,4,0.00785177537696182
+Sentinel,tier1,1,39.9460063523337
+Sentinel,tier1,2,45.45787628481263
+Sentinel,tier1,3,42.04977366719541
+Sentinel,tier1,4,28.84873560771202
+Sentinel,tier2,1,6.27164435492533
+Sentinel,tier2,2,4.445090936345223
+Sentinel,tier2,3,5.929678119031063
+Sentinel,tier2,4,6.025876328907365
+Sentinel,tier3,1,2.655487650986184
+Sentinel,tier3,2,1.8931359993145447
+Sentinel,tier3,3,2.5880407119756272
+Sentinel,tier3,4,1.6264339164637862
+Shears Scarecrow,tier1,1,0.453354864271328
+Shears Scarecrow,tier1,2,0.11991077721195735
+Shears Scarecrow,tier1,3,0.06385277696260257
+Shears Scarecrow,tier1,4,0.04376157869570301
+Shears Scarecrow,tier2,1,0.02679643279595297
+Shears Scarecrow,tier2,2,0.009154677977075433
+Shears Scarecrow,tier2,3,0.008450130391181617
+Shears Scarecrow,tier2,4,0.007691165890785855
+Shears Scarecrow,tier3,1,0.004935869105415326
+Shears Scarecrow,tier3,2,0.0021669694528511523
+Shears Scarecrow,tier3,3,0.002951861421553898
+Shears Scarecrow,tier3,4,0.0017581148990356422
+Silver Knight Greatbowman,tier1,1,1.7209052484865144
+Silver Knight Greatbowman,tier1,2,2.014671914050574
+Silver Knight Greatbowman,tier1,3,1.7692465886942412
+Silver Knight Greatbowman,tier1,4,1.349788121293884
+Silver Knight Greatbowman,tier2,1,0.22653839463273323
+Silver Knight Greatbowman,tier2,2,0.18861533755048746
+Silver Knight Greatbowman,tier2,3,0.2691323742063584
+Silver Knight Greatbowman,tier2,4,0.32968720164544246
+Silver Knight Greatbowman,tier3,1,0.10848323712967414
+Silver Knight Greatbowman,tier3,2,0.10516318010802359
+Silver Knight Greatbowman,tier3,3,0.17103156661375696
+Silver Knight Greatbowman,tier3,4,0.1124982075070212
+Silver Knight Spearman,tier1,1,5.4764488068507795
+Silver Knight Spearman,tier1,2,2.64161089090803
+Silver Knight Spearman,tier1,3,1.3208442074415303
+Silver Knight Spearman,tier1,4,0.7387265176565242
+Silver Knight Spearman,tier2,1,0.5090009702844351
+Silver Knight Spearman,tier2,2,0.12976211092130052
+Silver Knight Spearman,tier2,3,0.09327979937353696
+Silver Knight Spearman,tier2,4,0.09101440669106657
+Silver Knight Spearman,tier3,1,0.12651727139932523
+Silver Knight Spearman,tier3,2,0.03164066571404901
+Silver Knight Spearman,tier3,3,0.02678878534240326
+Silver Knight Spearman,tier3,4,0.01738136105356794
+Silver Knight Swordsman,tier1,1,3.263924643112412
+Silver Knight Swordsman,tier1,2,3.3411415747964743
+Silver Knight Swordsman,tier1,3,2.4039723182820483
+Silver Knight Swordsman,tier1,4,1.2637571088787973
+Silver Knight Swordsman,tier2,1,0.17746289318694217
+Silver Knight Swordsman,tier2,2,0.10387649337108326
+Silver Knight Swordsman,tier2,3,0.12239473003894
+Silver Knight Swordsman,tier2,4,0.11880575152471859
+Silver Knight Swordsman,tier3,1,0.05797276767639085
+Silver Knight Swordsman,tier3,2,0.027954970694428927
+Silver Knight Swordsman,tier3,3,0.03762571276958578
+Silver Knight Swordsman,tier3,4,0.022065859009200953
+Skeleton Archer,tier1,1,1.2668326606477003
+Skeleton Archer,tier1,2,0.4157115099540641
+Skeleton Archer,tier1,3,0.2612885300487367
+Skeleton Archer,tier1,4,0.24446580478138286
+Skeleton Archer,tier2,1,0.21693928041014138
+Skeleton Archer,tier2,2,0.0921309796742992
+Skeleton Archer,tier2,3,0.07768787892599825
+Skeleton Archer,tier2,4,0.08384248379442852
+Skeleton Archer,tier3,1,0.10403589249651904
+Skeleton Archer,tier3,2,0.04995767023822063
+Skeleton Archer,tier3,3,0.0507530219980414
+Skeleton Archer,tier3,4,0.03202454032138949
+Skeleton Beast,tier1,1,33.79817600787591
+Skeleton Beast,tier1,2,38.20951634923318
+Skeleton Beast,tier1,3,31.645463167672563
+Skeleton Beast,tier1,4,18.042798199961524
+Skeleton Beast,tier2,1,3.6843986924739935
+Skeleton Beast,tier2,2,1.7528953723599587
+Skeleton Beast,tier2,3,1.7615104645697597
+Skeleton Beast,tier2,4,1.5412426475671956
+Skeleton Beast,tier3,1,0.7301774946251051
+Skeleton Beast,tier3,2,0.37455596768430927
+Skeleton Beast,tier3,3,0.4448273216627253
+Skeleton Beast,tier3,4,0.23893321367297
+Skeleton Soldier,tier1,1,0.5122951811608069
+Skeleton Soldier,tier1,2,0.5547576481152139
+Skeleton Soldier,tier1,3,0.34012775170451065
+Skeleton Soldier,tier1,4,0.13261726855190062
+Skeleton Soldier,tier2,1,0.01352628090925564
+Skeleton Soldier,tier2,2,0.005030083025425159
+Skeleton Soldier,tier2,3,0.0060815780302260385
+Skeleton Soldier,tier2,4,0.0063145034238000575
+Skeleton Soldier,tier3,1,0.002831681832052699
+Skeleton Soldier,tier3,2,0.0014178191655517683
+Skeleton Soldier,tier3,3,0.0021177796003428264
+Skeleton Soldier,tier3,4,0.0009725694053885533
+Snow Rat,tier1,1,0.6108290718392521
+Snow Rat,tier1,2,0.2088599919581448
+Snow Rat,tier1,3,0.1289231331065316
+Snow Rat,tier1,4,0.128951493457906
+Snow Rat,tier2,1,0.1461819918898481
+Snow Rat,tier2,2,0.061661322585238994
+Snow Rat,tier2,3,0.048474157382961826
+Snow Rat,tier2,4,0.05085375595361569
+Snow Rat,tier3,1,0.068776485039883
+Snow Rat,tier3,2,0.033869959370987364
+Snow Rat,tier3,3,0.0348768774244361
+Snow Rat,tier3,4,0.021106719929069078
+Stone Guardian,tier1,1,30.67950322440121
+Stone Guardian,tier1,2,50.17704329537623
+Stone Guardian,tier1,3,50.459905118333914
+Stone Guardian,tier1,4,31.950030522827923
+Stone Guardian,tier2,1,14.02277637463781
+Stone Guardian,tier2,2,7.270619991251635
+Stone Guardian,tier2,3,6.5663788483259395
+Stone Guardian,tier2,4,4.966820325691946
+Stone Guardian,tier3,1,2.257673209900862
+Stone Guardian,tier3,2,1.3686010230311072
+Stone Guardian,tier3,3,1.6196349295562558
+Stone Guardian,tier3,4,0.8292224717669722
+Stone Knight,tier1,1,13.928677307286739
+Stone Knight,tier1,2,12.195466870733718
+Stone Knight,tier1,3,13.94525165404249
+Stone Knight,tier1,4,15.41190724990423
+Stone Knight,tier2,1,7.109068792492702
+Stone Knight,tier2,2,0.8408459263405476
+Stone Knight,tier2,3,0.9060606802809205
+Stone Knight,tier2,4,0.9966586324887946
+Stone Knight,tier3,1,0.5945366396806612
+Stone Knight,tier3,2,0.1516264018913932
+Stone Knight,tier3,3,0.11380134054765599
+Stone Knight,tier3,4,0.08969430189762193

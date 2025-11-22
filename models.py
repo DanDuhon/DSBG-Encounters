@@ -10,10 +10,15 @@ class EnemyAction:
     damage_type: str       # "physical" or "magic"
     max_targets: int       # 1 or 3
     raw_text: str          # original text
+    apply_bleed: bool = False
+    apply_poison: bool = False
+    apply_frostbite: bool = False
+    apply_stagger: bool = False
 
 
 @dataclass
 class Enemy:
+    enemy_id: int
     name: str
     models: int
     hp: int
@@ -28,17 +33,30 @@ class Enemy:
     tags: Dict[str, Any]
     # threat_profile[tier_name]["p1"/"p2"/"p3"/"p4"]
     threat_profile: Dict[str, Dict[str, float]]
+    move_speed: float = 0.0
+    has_push: bool = False
+    has_leap: bool = False
+    is_ranged_or_leap: bool = False
+    can_bleed: bool = False
+    can_poison: bool = False
+    can_frostbite: bool = False
+    can_stagger: bool = False
 
 
 @dataclass
 class Attack:
-    damage_type: str               # "physical" or "magic"
     dice: List[str]                # e.g. ["black", "black"]
-    flat_mod: int
-    stamina_cost: int
-    min_range: int = 0
+    damage_type: str = "physical"  # "physical" or "magic"
+    flat_mod: int = 0
     max_range: int = 0
-    shaft: bool = False           # cannot hit at 0 range if True
+    shift: bool = False
+    apply_bleed: bool = False
+    apply_poison: bool = False
+    apply_stagger: bool = False
+    apply_frostbite: bool = False
+    push: bool = False
+    ignore_armor: bool = False
+    repeat: int = 1
 
 
 @dataclass
