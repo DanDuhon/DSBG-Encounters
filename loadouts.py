@@ -1,9 +1,10 @@
 from itertools import product, chain, combinations
 from statistics import mean
 
-from armor import armorTiers
-from hand_items import handItemTiers
+from armor import armorByName
+from hand_items import handItemsByName
 from attacks import weaponRange, weaponRangeBoss
+from builds import builds as classBuilds
 
 
 b = (0, 1, 1, 1, 2, 2)
@@ -17,84 +18,224 @@ means = {
     d: mean(d)
 }
 
+partySizes = sorted({
+    partySize
+    for classBuild in classBuilds.values()
+    for partySize in classBuild.keys()
+})
+
+tiers = sorted({
+    tier
+    for classBuild in classBuilds.values()
+    for partyDict in classBuild.values()
+    for tier in partyDict.keys()
+})
+
 loadouts = {
-    1: [],
-    2: [],
-    3: []
+    partySize: {tier: [] for tier in tiers}
+    for partySize in partySizes
 }
 
 dodgeMod = {
-    1: {},
-    2: {},
-    3: {}
+    partySize: {tier: {} for tier in tiers}
+    for partySize in partySizes
 }
 
-loadoutLookup = {True: {1: {}, 2: {}, 3: {}}, False: {1: {}, 2: {}, 3: {}}}
-x=0
-for tier in range(1, 4):
-    loadoutsCombos = chain(
-        product(armorTiers[tier], product([h for h in handItemTiers[tier] if h.twoHanded], [h for h in handItemTiers[tier] if h.canUseWithTwoHanded])),
-        product(armorTiers[tier], combinations([h for h in handItemTiers[tier] if not h.twoHanded], 2)))
+loadoutLookup = {
+    True: {
+        partySize: {tier: {} for tier in tiers}
+        for partySize in partySizes
+    },
+    False: {
+        partySize: {tier: {} for tier in tiers}
+        for partySize in partySizes
+    },
+}
 
-    for i, l in enumerate(loadoutsCombos):
-        # This is to speed things up for testing.
-        # if i > 100:
-        #     break
-        loadouts[tier].append({
-            "block": sum([means[die] for die in l[0].block + l[1][0].block + l[1][1].block]) + sum([l[0].blockMod, l[1][0].blockMod, l[1][1].blockMod]),
-            "blockRoll": [[v + sum([l[0].blockMod, l[1][0].blockMod, l[1][1].blockMod]) for v in b] for b in l[0].block + l[1][0].block + l[1][1].block],
-            "resist": sum([means[die] for die in l[0].resist + l[1][0].resist + l[1][1].resist]) + sum([l[0].resistMod, l[1][0].resistMod, l[1][1].resistMod]),
-            "resistRoll": [[v + sum([l[0].resistMod, l[1][0].resistMod, l[1][1].resistMod]) for v in b] for b in l[0].resist + l[1][0].resist + l[1][1].resist],
-            "dodge": 0 if not all([l[0].canDodge, l[1][0].canDodge, l[1][1].canDodge]) else (l[0].dodge + l[1][0].dodge + l[1][1].dodge),
-            "dodgeBonus": l[0].dodgeBonus,
-            "immunities": l[0].immunities | l[1][0].immunities | l[1][1].immunities
-        })
 
-        maxRange = max([weaponRange.get(l[1][0].name, 0), weaponRange.get(l[1][1].name, 0)])
-        maxRangeBoss = max([weaponRangeBoss.get(l[1][0].name, 0), weaponRangeBoss.get(l[1][1].name, 0)])
-        block = sum([means[die] for die in l[0].block + l[1][0].block + l[1][1].block]) + sum([l[0].blockMod, l[1][0].blockMod, l[1][1].blockMod])
-        blockArmorOnly = sum([means[die] for die in l[0].block]) + sum([l[0].blockMod])
-        resist = sum([means[die] for die in l[0].resist + l[1][0].resist + l[1][1].resist]) + sum([l[0].resistMod, l[1][0].resistMod, l[1][1].resistMod])
-        resistArmorOnly = sum([means[die] for die in l[0].resist]) + sum([l[0].resistMod])
-        dodge = (0,) if not all([l[0].canDodge, l[1][0].canDodge, l[1][1].canDodge]) else tuple(l[0].dodge + l[1][0].dodge + l[1][1].dodge)
-        dodgeArmorOnly = (0,) if not all([l[0].canDodge, l[1][0].canDodge, l[1][1].canDodge]) else tuple(l[0].dodge)
+# Helper to turn a name into either an armor or hand-item object.
+def _lookup_item(name):
+    """Return the armor/hand-item object for the given name.
 
-        # For enemies with ambush
-        if tuple([block, resist, dodge, maxRange, blockArmorOnly, resistArmorOnly, dodgeArmorOnly]) in loadoutLookup[True][tier]:
-            loadoutLookup[True][tier][tuple([block, resist, dodge, maxRange, blockArmorOnly, resistArmorOnly, dodgeArmorOnly])] += 1
-        else:
-            loadoutLookup[True][tier][tuple([block, resist, dodge, maxRange, blockArmorOnly, resistArmorOnly, dodgeArmorOnly])] = 1
-            x += 1
-        # Everybody else
-        if tuple([block, resist, dodge, maxRange, maxRangeBoss]) in loadoutLookup[False][tier]:
-            loadoutLookup[False][tier][tuple([block, resist, dodge, maxRange, maxRangeBoss])] += 1
-        else:
-            loadoutLookup[False][tier][tuple([block, resist, dodge, maxRange, maxRangeBoss])] = 1
-            x += 1
+    Prefers armorByName, falls back to handItemByName.
+    """
+    if name in armorByName:
+        return armorByName[name]
+    return handItemsByName[name]
 
-    # Overall dodge modifier for the following dodge difficulties.
-    # Used for enemies that inflict Stagger or Frostbite.
-    dodgeMod[tier] = {
-        0: 1,
-        1: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 1]) / len(list(product(*l["dodge"]))))) for l in loadouts[tier]]),
-        2: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 2]) / len(list(product(*l["dodge"]))))) for l in loadouts[tier]]),
-        3: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 3]) / len(list(product(*l["dodge"]))))) for l in loadouts[tier]]),
-        4: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 4]) / len(list(product(*l["dodge"]))))) for l in loadouts[tier]]),
-        5: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 5]) / len(list(product(*l["dodge"]))))) for l in loadouts[tier]]),
-        6: mean([1 if l["dodge"] == 0 else (1 - (sum([1 for do in product(*l["dodge"]) if sum(do) >= 6]) / len(list(product(*l["dodge"]))))) for l in loadouts[tier]])
-    }
+
+# Build loadouts for each party size and tier.
+unique_signature_count = 0
+
+for partySize in partySizes:
+    for tier in tiers:
+        for className, partyDict in classBuilds.items():
+            tierDict = partyDict[partySize]
+
+            armors = []
+            handItems = []
+            itemNames = tierDict[tier]
+            
+            for name in itemNames:
+                item = _lookup_item(name)
+
+                if name in armorByName:
+                    armors.append(item)
+                else:
+                    handItems.append(item)
+
+            twoHanders = [h for h in handItems if getattr(h, "twoHanded", False)]
+            offHands = [h for h in handItems if getattr(h, "canUseWithTwoHanded", False)]
+            oneHanders = [h for h in handItems if not getattr(h, "twoHanded", False)]
+
+            loadoutsCombos = chain(
+                product(armors, product(twoHanders, offHands)) if twoHanders and offHands else [],
+                product(armors, combinations(oneHanders, 2)) if len(oneHanders) >= 2 else [],
+            )
+
+            for armorObj, (mainHand, offHand) in loadoutsCombos:
+                totalBlockMod = armorObj.blockMod + mainHand.blockMod + offHand.blockMod
+                totalResistMod = armorObj.resistMod + mainHand.resistMod + offHand.resistMod
+
+                blockDice = armorObj.block + mainHand.block + offHand.block
+                resistDice = armorObj.resist + mainHand.resist + offHand.resist
+
+                block = sum(means[die] for die in blockDice) + totalBlockMod
+                blockRoll = [
+                    [v + totalBlockMod for v in die]
+                    for die in blockDice
+                ]
+
+                resist = sum(means[die] for die in resistDice) + totalResistMod
+                resistRoll = [
+                    [v + totalResistMod for v in die]
+                    for die in resistDice
+                ]
+
+                canDodgeAll = (
+                    getattr(armorObj, "canDodge", False)
+                    and getattr(mainHand, "canDodge", False)
+                    and getattr(offHand, "canDodge", False)
+                )
+
+                dodge_value = (
+                    0
+                    if not canDodgeAll
+                    else (armorObj.dodge + mainHand.dodge + offHand.dodge)
+                )
+
+                loadouts[partySize][tier].append(
+                    {
+                        "block": block,
+                        "blockRoll": blockRoll,
+                        "resist": resist,
+                        "resistRoll": resistRoll,
+                        "dodge": dodge_value,
+                        "dodgeBonus": armorObj.dodgeBonus,
+                        "immunities": (
+                            armorObj.immunities
+                            | mainHand.immunities
+                            | offHand.immunities
+                        ),
+                    }
+                )
+
+                maxRange = max(
+                    weaponRange.get(mainHand.name, 0),
+                    weaponRange.get(offHand.name, 0),
+                )
+                maxRangeBoss = max(
+                    weaponRangeBoss.get(mainHand.name, 0),
+                    weaponRangeBoss.get(offHand.name, 0),
+                )
+
+                blockArmorOnly = (
+                    sum(means[die] for die in armorObj.block) + armorObj.blockMod
+                )
+                resistArmorOnly = (
+                    sum(means[die] for die in armorObj.resist) + armorObj.resistMod
+                )
+
+                dodge_for_key = (
+                    (0,)
+                    if not canDodgeAll
+                    else tuple(armorObj.dodge + mainHand.dodge + offHand.dodge)
+                )
+                dodgeArmorOnly = (
+                    (0,)
+                    if not canDodgeAll
+                    else tuple(armorObj.dodge)
+                )
+
+                # For enemies with ambush
+                ambushKey = (
+                    block,
+                    resist,
+                    dodge_for_key,
+                    maxRange,
+                    blockArmorOnly,
+                    resistArmorOnly,
+                    dodgeArmorOnly,
+                )
+                ambushLookup = loadoutLookup[True][partySize][tier]
+                if ambushKey in ambushLookup:
+                    ambushLookup[ambushKey] += 1
+                else:
+                    ambushLookup[ambushKey] = 1
+                    unique_signature_count += 1
+
+                # Everybody else
+                normalKey = (
+                    block,
+                    resist,
+                    dodge_for_key,
+                    maxRange,
+                    maxRangeBoss,
+                )
+                normalLookup = loadoutLookup[False][partySize][tier]
+                if normalKey in normalLookup:
+                    normalLookup[normalKey] += 1
+                else:
+                    normalLookup[normalKey] = 1
+                    unique_signature_count += 1
+
+        # After we've built all loadouts for this partySize/tier, compute
+        # the dodge modifiers used by various enemies.
+        current_loadouts = loadouts[partySize][tier]
+
+        dodgeMod[partySize][tier] = {0: 1}
+        for difficulty in range(1, 7):
+            dodgeMod[partySize][tier][difficulty] = mean(
+                [
+                    1 if l["dodge"] == 0 else (1- (sum(
+                        1 for outcome in product(*l["dodge"])if sum(outcome) >= difficulty)
+                        / len(list(product(*l["dodge"])))
+                        )
+                    )
+                    for l in current_loadouts
+                ]
+            )
 
 # Winged Knight gets a bonus against blocks of 3 or higher.
-expectedBlock = {}
-expectedResist = {}
-for x in range(2, 14):
-    expectedBlock[x] = {
-        1: 1 - (sum([1 for l in loadouts[1] if l["block"] >= x]) / len(loadouts[1])),
-        2: 1 - (sum([1 for l in loadouts[2] if l["block"] >= x]) / len(loadouts[2])),
-        3: 1 - (sum([1 for l in loadouts[3] if l["block"] >= x]) / len(loadouts[3]))
-        }
-    expectedResist[x] = {
-        1: 1 - (sum([1 for l in loadouts[1] if l["resist"] >= x]) / len(loadouts[1])),
-        2: 1 - (sum([1 for l in loadouts[2] if l["resist"] >= x]) / len(loadouts[2])),
-        3: 1 - (sum([1 for l in loadouts[3] if l["resist"] >= x]) / len(loadouts[3]))
-        }
+expectedBlock = {partySize: {} for partySize in partySizes}
+expectedResist = {partySize: {} for partySize in partySizes}
+
+for partySize in partySizes:
+    for threshold in range(2, 14):
+        expectedBlock[partySize][threshold] = {}
+        expectedResist[partySize][threshold] = {}
+        for tier in tiers:
+            current_loadouts = loadouts[partySize][tier]
+            if not current_loadouts:
+                expectedBlock[partySize][threshold][tier] = 1
+                expectedResist[partySize][threshold][tier] = 1
+                continue
+
+            expectedBlock[partySize][threshold][tier] = 1 - (
+                sum(1 for l in current_loadouts if l["block"] >= threshold)
+                / len(current_loadouts)
+            )
+            expectedResist[partySize][threshold][tier] = 1 - (
+                sum(1 for l in current_loadouts if l["resist"] >= threshold)
+                / len(current_loadouts)
+            )

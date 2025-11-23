@@ -284,236 +284,237 @@ meanReachMod = 0.7714069147635578
 
 def process_strength(tier, ambush):
     try:
-        # Calculate enemy offense.
-        print(" ".join(list(set([enemy.name[:enemy.name.index(" - ") if " - " in enemy.name else enemy.name.index(" (") if " (" in enemy.name else len(enemy.name)] for enemy in enemies if enemy.ambush == ambush]))) + " offense tier " + str(tier))
-        for x, loadout in enumerate(loadoutLookup[ambush][tier]):
-            print(str((x/len(loadoutLookup[ambush][tier]))*100)[:6] + "%", end="\r")
-            for enemy in [enemy for enemy in enemies if enemy.ambush == ambush]:
-                if tier < 3 and enemy.modified:
-                    continue
-
-                heroRange = loadout[4] if "boss" in enemy.enemyType else loadout[3]
-                multiplier = loadoutLookup[ambush][tier][loadout]
-
-                totalAttacks = 0
-                damagingAttacks = 0
-                bleedDamage1 = 0
-                bleedDamage2 = 0
-                bleedDamage3 = 0
-                bleedDamage4 = 0
-                damageDone1 = []
-                damageDone2 = []
-                damageDone3 = []
-                damageDone4 = []
-                poison1 = 0.0
-                poison2 = 0.0
-                poison3 = 0.0
-                poison4 = 0.0
-                poisonAdded = False
-                poisonAdded2 = False
-                heroRangeMultiplier = 1
-                
-                # For each enemy attack, calculate the expected
-                # damage the enemy would do to this loadout.
-                # Everything gets multiplied by two decimals.
-                # One represents the reach concept - how likely
-                # the enemy is to be in range to attack at all.
-                # The second represents character dodge - how
-                # likely the attack is to be dodged.
-                for i in range(len(enemy.attacks)):
-                    if enemy.attacks[i] == 0:
+        for partySize in range(1, 5):
+            # Calculate enemy offense.
+            print(" ".join(list(set([enemy.name[:enemy.name.index(" - ") if " - " in enemy.name else enemy.name.index(" (") if " (" in enemy.name else len(enemy.name)] for enemy in enemies if enemy.ambush == ambush]))) + " offense tier " + str(tier))
+            for x, loadout in enumerate(loadoutLookup[ambush][partySize][tier]):
+                print(str((x/len(loadoutLookup[ambush][partySize][tier]))*100)[:6] + "%", end="\r")
+                for enemy in [enemy for enemy in enemies if enemy.ambush == ambush]:
+                    if tier < 3 and enemy.modified:
                         continue
-                    totalAttacks += multiplier
-                    move = sum(enemy.move[:i+1])
-                    attackRange = sum(enemy.attackRange[:i+1])
-                    reachLookup = max([0, min([4, move + attackRange - (1 if enemy.windup else 0)])])
-                    reach = reachMod[(
-                        "Executioner's Chariot" if "Executioner's Chariot" in enemy.name else
-                        "Old Iron King" if "Old Iron King" in enemy.name else
-                        "Cathedral Evangelist" if enemy.name == "Cathedral Evangelist" and i == 0 else
-                        enemy.enemyType)][reachLookup]
 
-                    if enemy.ambush:
-                        # Percent of the time this enemy would ambush (once each death)
-                        ambushRatio = enemy.deaths[tier] / enemy.attacksTaken[tier]
-                        # Dodge chance when it's not an ambush + dodge chance when it is an ambush
-                        # Block amount is the same
-                        dodge = (
-                            ((1 if loadout[2] == (0,) else (1 - (sum([1 for do in product(*loadout[2]) if sum(do) >= enemy.dodge]) / len(list(product(*loadout[2])))))) * (1 - ambushRatio))
-                            + ((1 if loadout[6] == (0,) else (1 - (sum([1 for do in product(*loadout[6]) if sum(do) >= enemy.dodge]) / len(list(product(*loadout[6])))))) * ambushRatio)
-                        )
-                        block = (
-                            (loadout[0] * (1 - ambushRatio))
-                            + (loadout[4] * ambushRatio)
-                        )
-                        resist = (
-                            (loadout[1] * (1 - ambushRatio))
-                            + (loadout[5] * ambushRatio)
-                        )
-                    else:
-                        dodge = 1 if loadout[2] == (0,) else (1 - (sum([1 for do in product(*loadout[2]) if sum(do) >= enemy.dodge]) / len(list(product(*loadout[2])))))
-                        block = loadout[0]
-                        resist = loadout[1]
+                    heroRange = loadout[4] if "boss" in enemy.enemyType else loadout[3]
+                    multiplier = loadoutLookup[ambush][partySize][tier][loadout]
 
-                    # This is the effect of Calamity, see below for more details.
-                    if "Black Dragon Kalameet" in enemy.name:
-                        dodge += 0.1528822055
+                    totalAttacks = 0
+                    damagingAttacks = 0
+                    bleedDamage1 = 0
+                    bleedDamage2 = 0
+                    bleedDamage3 = 0
+                    bleedDamage4 = 0
+                    damageDone1 = []
+                    damageDone2 = []
+                    damageDone3 = []
+                    damageDone4 = []
+                    poison1 = 0.0
+                    poison2 = 0.0
+                    poison3 = 0.0
+                    poison4 = 0.0
+                    poisonAdded = False
+                    poisonAdded2 = False
+                    heroRangeMultiplier = 1
+                    
+                    # For each enemy attack, calculate the expected
+                    # damage the enemy would do to this loadout.
+                    # Everything gets multiplied by two decimals.
+                    # One represents the reach concept - how likely
+                    # the enemy is to be in range to attack at all.
+                    # The second represents character dodge - how
+                    # likely the attack is to be dodged.
+                    for i in range(len(enemy.attacks)):
+                        if enemy.attacks[i] == 0:
+                            continue
+                        totalAttacks += multiplier
+                        move = sum(enemy.move[:i+1])
+                        attackRange = sum(enemy.attackRange[:i+1])
+                        reachLookup = max([0, min([4, move + attackRange - (1 if enemy.windup else 0)])])
+                        reach = reachMod[(
+                            "Executioner's Chariot" if "Executioner's Chariot" in enemy.name else
+                            "Old Iron King" if "Old Iron King" in enemy.name else
+                            "Cathedral Evangelist" if enemy.name == "Cathedral Evangelist" and i == 0 else
+                            enemy.enemyType)][reachLookup]
 
-                    if dodge > 1:
-                        dodge = 1
+                        if enemy.ambush:
+                            # Percent of the time this enemy would ambush (once each death)
+                            ambushRatio = enemy.deaths[tier] / enemy.attacksTaken[tier]
+                            # Dodge chance when it's not an ambush + dodge chance when it is an ambush
+                            # Block amount is the same
+                            dodge = (
+                                ((1 if loadout[2] == (0,) else (1 - (sum([1 for do in product(*loadout[2]) if sum(do) >= enemy.dodge]) / len(list(product(*loadout[2])))))) * (1 - ambushRatio))
+                                + ((1 if loadout[6] == (0,) else (1 - (sum([1 for do in product(*loadout[6]) if sum(do) >= enemy.dodge]) / len(list(product(*loadout[6])))))) * ambushRatio)
+                            )
+                            block = (
+                                (loadout[0] * (1 - ambushRatio))
+                                + (loadout[4] * ambushRatio)
+                            )
+                            resist = (
+                                (loadout[1] * (1 - ambushRatio))
+                                + (loadout[5] * ambushRatio)
+                            )
+                        else:
+                            dodge = 1 if loadout[2] == (0,) else (1 - (sum([1 for do in product(*loadout[2]) if sum(do) >= enemy.dodge]) / len(list(product(*loadout[2])))))
+                            block = loadout[0]
+                            resist = loadout[1]
 
-                    # This is the effect of Corrosion
-                    # Average chance of pulling Corrosive Ooze across the fight
-                    # Pre-heatup chance: (1/6) * (20/46)
-                    # Post-heatup chance: (2/7) * (26/46)
-                    if "Gaping Dragon" in enemy.name and enemy.attackType[i] == "physical":
-                        addedDamage = 0.2339544513
-                    # This is the effect of Calamity
-                    # Average chance of pulling Mark of Calamity across the fight
-                    # Pre-heatup chance: (1/6) * (16/38)
-                    # Post-heatup chance: (1/7) * (22/38)
-                    elif "Black Dragon Kalameet" in enemy.name:
-                        addedDamage = 0.1528822055
-                    # The horse still damages you if you completely block/resist it.
-                    elif "Executioner's Chariot" in enemy.name and enemy.attacks[i] > 0:
-                        addedDamage = min([1, (block if enemy.attackType[i] == "physical" else resist) / enemy.attacks[i]])
-                    else:
-                        addedDamage = 0
+                        # This is the effect of Calamity, see below for more details.
+                        if "Black Dragon Kalameet" in enemy.name:
+                            dodge += 0.1528822055
 
-                    if not poisonAdded:
-                        poison1 = (((2 if enemy.id else 1) if enemy.attackEffect and "poison" in enemy.attackEffect[i] else 0)
+                        if dodge > 1:
+                            dodge = 1
+
+                        # This is the effect of Corrosion
+                        # Average chance of pulling Corrosive Ooze across the fight
+                        # Pre-heatup chance: (1/6) * (20/46)
+                        # Post-heatup chance: (2/7) * (26/46)
+                        if "Gaping Dragon" in enemy.name and enemy.attackType[i] == "physical":
+                            addedDamage = 0.2339544513
+                        # This is the effect of Calamity
+                        # Average chance of pulling Mark of Calamity across the fight
+                        # Pre-heatup chance: (1/6) * (16/38)
+                        # Post-heatup chance: (1/7) * (22/38)
+                        elif "Black Dragon Kalameet" in enemy.name:
+                            addedDamage = 0.1528822055
+                        # The horse still damages you if you completely block/resist it.
+                        elif "Executioner's Chariot" in enemy.name and enemy.attacks[i] > 0:
+                            addedDamage = min([1, (block if enemy.attackType[i] == "physical" else resist) / enemy.attacks[i]])
+                        else:
+                            addedDamage = 0
+
+                        if not poisonAdded:
+                            poison1 = (((2 if enemy.id else 1) if enemy.attackEffect and "poison" in enemy.attackEffect[i] else 0)
+                                * reach
+                                * dodge)
+                            poison2 = (((2 if enemy.id else 1) if enemy.attackEffect and "poison" in enemy.attackEffect[i] else 0)
+                                * reach
+                                * dodge
+                                * (nodeAttackMod[2] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
+                                * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[2] if enemy.nodesAttacked[i] > 0 else 1))
+                            poison3 = (((2 if enemy.id else 1) if enemy.attackEffect and "poison" in enemy.attackEffect[i] else 0)
+                                * reach
+                                * dodge
+                                * (nodeAttackMod[3] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
+                                * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[3] if enemy.nodesAttacked[i] > 0 else 1))
+                            poison4 = (((2 if enemy.id else 1) if enemy.attackEffect and "poison" in enemy.attackEffect[i] else 0)
+                                * reach
+                                * dodge
+                                * (nodeAttackMod[4] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
+                                * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[4] if enemy.nodesAttacked[i] > 0 else 1))
+                            
+                            if poison1 > 0.0 or poison2 or poison3 > 0.0 or poison4 > 0.0:
+                                poisonAdded = True
+
+                        bleedDamage1 += multiplier * (((4 if enemy.id else 2) if enemy.attackEffect and "bleed" in enemy.attackEffect[i] else 0)
                             * reach
                             * dodge)
-                        poison2 = (((2 if enemy.id else 1) if enemy.attackEffect and "poison" in enemy.attackEffect[i] else 0)
+                        bleedDamage2 += multiplier * (((4 if enemy.id else 2) if enemy.attackEffect and "bleed" in enemy.attackEffect[i] else 0)
                             * reach
                             * dodge
                             * (nodeAttackMod[2] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
                             * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[2] if enemy.nodesAttacked[i] > 0 else 1))
-                        poison3 = (((2 if enemy.id else 1) if enemy.attackEffect and "poison" in enemy.attackEffect[i] else 0)
+                        bleedDamage3 += multiplier * (((4 if enemy.id else 2) if enemy.attackEffect and "bleed" in enemy.attackEffect[i] else 0)
                             * reach
                             * dodge
                             * (nodeAttackMod[3] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
                             * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[3] if enemy.nodesAttacked[i] > 0 else 1))
-                        poison4 = (((2 if enemy.id else 1) if enemy.attackEffect and "poison" in enemy.attackEffect[i] else 0)
+                        bleedDamage4 += multiplier * (((4 if enemy.id else 2) if enemy.attackEffect and "bleed" in enemy.attackEffect[i] else 0)
                             * reach
                             * dodge
                             * (nodeAttackMod[4] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
                             * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[4] if enemy.nodesAttacked[i] > 0 else 1))
                         
-                        if poison1 > 0.0 or poison2 or poison3 > 0.0 or poison4 > 0.0:
-                            poisonAdded = True
-
-                    bleedDamage1 += multiplier * (((4 if enemy.id else 2) if enemy.attackEffect and "bleed" in enemy.attackEffect[i] else 0)
-                        * reach
-                        * dodge)
-                    bleedDamage2 += multiplier * (((4 if enemy.id else 2) if enemy.attackEffect and "bleed" in enemy.attackEffect[i] else 0)
-                        * reach
-                        * dodge
-                        * (nodeAttackMod[2] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[2] if enemy.nodesAttacked[i] > 0 else 1))
-                    bleedDamage3 += multiplier * (((4 if enemy.id else 2) if enemy.attackEffect and "bleed" in enemy.attackEffect[i] else 0)
-                        * reach
-                        * dodge
-                        * (nodeAttackMod[3] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[3] if enemy.nodesAttacked[i] > 0 else 1))
-                    bleedDamage4 += multiplier * (((4 if enemy.id else 2) if enemy.attackEffect and "bleed" in enemy.attackEffect[i] else 0)
-                        * reach
-                        * dodge
-                        * (nodeAttackMod[4] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[4] if enemy.nodesAttacked[i] > 0 else 1))
-                    
-                    expectedDamage1 = ((max([0, enemy.attacks[i] - (block if enemy.attackType[i] == "physical" else resist) + addedDamage])
-                        * reach
-                        * dodge
-                        ) + poison1) * multiplier
-                    expectedDamage2 = ((max([0, enemy.attacks[i] - (block if enemy.attackType[i] == "physical" else resist) + addedDamage])
-                        * reach
-                        * dodge
-                        * (nodeAttackMod[2] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[2] if enemy.nodesAttacked[i] > 0 else 1)
-                        ) + poison2) * multiplier
-                    expectedDamage3 = ((max([0, enemy.attacks[i] - (block if enemy.attackType[i] == "physical" else resist) + addedDamage])
-                        * reach
-                        * dodge
-                        * (nodeAttackMod[3] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[3] if enemy.nodesAttacked[i] > 0 else 1)
-                        ) + poison3) * multiplier
-                    expectedDamage4 = ((max([0, enemy.attacks[i] - (block if enemy.attackType[i] == "physical" else resist) + addedDamage])
-                        * reach
-                        * dodge
-                        * (nodeAttackMod[4] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
-                        * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[4] if enemy.nodesAttacked[i] > 0 else 1)
-                        ) + poison4) * multiplier
-                    
-                    # Attacks that aren't dodged and aren't fully blocked/resisted and don't include poison (or poison has already been accounted for).
-                    m = 1
-                    if enemy.attacks[i] > 0 and "Executioner's Chariot" not in enemy.name and (poisonAdded2 or (len(enemy.attackEffect) - 1 >= i and "poison" not in enemy.attackEffect[i])):
-                        m = (expectedBlock if enemy.attackType[i] == "physical" else expectedResist)[int(max([0, enemy.attacks[i]]))][tier]
-
-                    # If the enemy/behavior could be avoided and still do damage with a weapon of appropriate range,
-                    # apply a modifier here.
-                    enoughRange = heroRange >= heroRangeNeeded.get(
-                            (enemy.name,
-                            enemy.attackType[i] == "physical" if enemy.name == "Cathedral Evangelist" else True), 99)
-                    heroRangeMultiplier = heroRangeMod.get(
-                        (enemy.name,
-                        enemy.attackType[i] == "physical" if enemy.name == "Cathedral Evangelist" else True,
-                        enoughRange), 1)
-                    
-                    # These are more specific rules governing avoiding damage.
-                    if enemy.name == "Marvelous Chester - Throwing Knife Flurry":
-                        heroRangeMultiplier = max([0, 3 - heroRange]) / 3
-                    elif enemy.name == "Marvelous Chester - Throwing Knife Volley":
-                        heroRangeMultiplier = max([0, 2 - heroRange]) / 2
-                    elif enemy.name == "Melinda the Butcher - Cleaving Strikes":
-                        if heroRange == 1:
-                            heroRangeMultiplier = 0.5
-                        elif heroRange > 1:
-                            heroRangeMultiplier = 0
-                        else:
-                            heroRangeMultiplier = 1
-                    elif enemy.name == "Oliver the Collector - Smelter Hammer Whirlwind":
-                        if heroRange == 0:
-                            heroRangeMultiplier = 0.666666667
-                        elif heroRange == 1:
-                            heroRangeMultiplier = 0.33
-                        else:
-                            heroRangeMultiplier = 0
-
-                    damagingAttacks += (dodge * m) * multiplier * heroRangeMultiplier
-                    
-                    if heroRangeMultiplier > 0 and (poison1 > 0.0 or poison2 or poison3 > 0.0 or poison4 > 0.0):
-                        poisonAdded2 = True
+                        expectedDamage1 = ((max([0, enemy.attacks[i] - (block if enemy.attackType[i] == "physical" else resist) + addedDamage])
+                            * reach
+                            * dodge
+                            ) + poison1) * multiplier
+                        expectedDamage2 = ((max([0, enemy.attacks[i] - (block if enemy.attackType[i] == "physical" else resist) + addedDamage])
+                            * reach
+                            * dodge
+                            * (nodeAttackMod[2] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
+                            * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[2] if enemy.nodesAttacked[i] > 0 else 1)
+                            ) + poison2) * multiplier
+                        expectedDamage3 = ((max([0, enemy.attacks[i] - (block if enemy.attackType[i] == "physical" else resist) + addedDamage])
+                            * reach
+                            * dodge
+                            * (nodeAttackMod[3] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
+                            * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[3] if enemy.nodesAttacked[i] > 0 else 1)
+                            ) + poison3) * multiplier
+                        expectedDamage4 = ((max([0, enemy.attacks[i] - (block if enemy.attackType[i] == "physical" else resist) + addedDamage])
+                            * reach
+                            * dodge
+                            * (nodeAttackMod[4] if enemy.nodeAttack[i] and enemy.nodesAttacked[i] == 0 else 1)
+                            * (arc_damage_mod(enemy.nodesAttacked[i], True if enemy.enemyType == "mega boss" else False, True if "Old Iron King" in enemy.name else False, True if "Executioner Chariot" in enemy.name else False)[4] if enemy.nodesAttacked[i] > 0 else 1)
+                            ) + poison4) * multiplier
                         
-                    damageDone1.append(expectedDamage1)
-                    damageDone2.append(expectedDamage2)
-                    damageDone3.append(expectedDamage3)
-                    damageDone4.append(expectedDamage4)
+                        # Attacks that aren't dodged and aren't fully blocked/resisted and don't include poison (or poison has already been accounted for).
+                        m = 1
+                        if enemy.attacks[i] > 0 and "Executioner's Chariot" not in enemy.name and (poisonAdded2 or (len(enemy.attackEffect) - 1 >= i and "poison" not in enemy.attackEffect[i])):
+                            m = (expectedBlock[partySize] if enemy.attackType[i] == "physical" else expectedResist[partySize])[int(max([0, enemy.attacks[i]]))][tier]
 
-                if enemy.id:
-                    # Need to cut these in half because all regular enemy attacks get doubled
-                    # to better reflect how they work over two turns.
-                    enemy.totalAttacks[tier] += totalAttacks / 2
-                    enemy.damagingAttacks[tier] += (damagingAttacks / 2) * heroRangeMultiplier
-                    enemy.damageDone1[tier] += (sum([d for d in damageDone1]) / 2) * heroRangeMultiplier
-                    enemy.damageDone2[tier] += (sum([d for d in damageDone2]) / 2) * heroRangeMultiplier
-                    enemy.damageDone3[tier] += (sum([d for d in damageDone3]) / 2) * heroRangeMultiplier
-                    enemy.damageDone4[tier] += (sum([d for d in damageDone4]) / 2) * heroRangeMultiplier
-                    enemy.bleedDamage1[tier] += (bleedDamage1 / 2) * heroRangeMultiplier
-                    enemy.bleedDamage2[tier] += (bleedDamage2 / 2) * heroRangeMultiplier
-                    enemy.bleedDamage3[tier] += (bleedDamage3 / 2) * heroRangeMultiplier
-                    enemy.bleedDamage4[tier] += (bleedDamage4 / 2) * heroRangeMultiplier
-                else:
-                    enemy.totalAttacks[tier] += totalAttacks
-                    enemy.damagingAttacks[tier] += damagingAttacks
-                    enemy.damageDone1[tier] += sum([d for d in damageDone1])
-                    enemy.damageDone2[tier] += sum([d for d in damageDone2])
-                    enemy.damageDone3[tier] += sum([d for d in damageDone3])
-                    enemy.damageDone4[tier] += sum([d for d in damageDone4])
-                    enemy.bleedDamage1[tier] += bleedDamage1
-                    enemy.bleedDamage2[tier] += bleedDamage2
-                    enemy.bleedDamage3[tier] += bleedDamage3
-                    enemy.bleedDamage4[tier] += bleedDamage4
+                        # If the enemy/behavior could be avoided and still do damage with a weapon of appropriate range,
+                        # apply a modifier here.
+                        enoughRange = heroRange >= heroRangeNeeded.get(
+                                (enemy.name,
+                                enemy.attackType[i] == "physical" if enemy.name == "Cathedral Evangelist" else True), 99)
+                        heroRangeMultiplier = heroRangeMod.get(
+                            (enemy.name,
+                            enemy.attackType[i] == "physical" if enemy.name == "Cathedral Evangelist" else True,
+                            enoughRange), 1)
+                        
+                        # These are more specific rules governing avoiding damage.
+                        if enemy.name == "Marvelous Chester - Throwing Knife Flurry":
+                            heroRangeMultiplier = max([0, 3 - heroRange]) / 3
+                        elif enemy.name == "Marvelous Chester - Throwing Knife Volley":
+                            heroRangeMultiplier = max([0, 2 - heroRange]) / 2
+                        elif enemy.name == "Melinda the Butcher - Cleaving Strikes":
+                            if heroRange == 1:
+                                heroRangeMultiplier = 0.5
+                            elif heroRange > 1:
+                                heroRangeMultiplier = 0
+                            else:
+                                heroRangeMultiplier = 1
+                        elif enemy.name == "Oliver the Collector - Smelter Hammer Whirlwind":
+                            if heroRange == 0:
+                                heroRangeMultiplier = 0.666666667
+                            elif heroRange == 1:
+                                heroRangeMultiplier = 0.33
+                            else:
+                                heroRangeMultiplier = 0
+
+                        damagingAttacks += (dodge * m) * multiplier * heroRangeMultiplier
+                        
+                        if heroRangeMultiplier > 0 and (poison1 > 0.0 or poison2 or poison3 > 0.0 or poison4 > 0.0):
+                            poisonAdded2 = True
+                            
+                        damageDone1.append(expectedDamage1)
+                        damageDone2.append(expectedDamage2)
+                        damageDone3.append(expectedDamage3)
+                        damageDone4.append(expectedDamage4)
+
+                    if enemy.id:
+                        # Need to cut these in half because all regular enemy attacks get doubled
+                        # to better reflect how they work over two turns.
+                        enemy.totalAttacks[tier] += totalAttacks / 2
+                        enemy.damagingAttacks[tier] += (damagingAttacks / 2) * heroRangeMultiplier
+                        enemy.damageDone1[tier] += (sum([d for d in damageDone1]) / 2) * heroRangeMultiplier
+                        enemy.damageDone2[tier] += (sum([d for d in damageDone2]) / 2) * heroRangeMultiplier
+                        enemy.damageDone3[tier] += (sum([d for d in damageDone3]) / 2) * heroRangeMultiplier
+                        enemy.damageDone4[tier] += (sum([d for d in damageDone4]) / 2) * heroRangeMultiplier
+                        enemy.bleedDamage1[tier] += (bleedDamage1 / 2) * heroRangeMultiplier
+                        enemy.bleedDamage2[tier] += (bleedDamage2 / 2) * heroRangeMultiplier
+                        enemy.bleedDamage3[tier] += (bleedDamage3 / 2) * heroRangeMultiplier
+                        enemy.bleedDamage4[tier] += (bleedDamage4 / 2) * heroRangeMultiplier
+                    else:
+                        enemy.totalAttacks[tier] += totalAttacks
+                        enemy.damagingAttacks[tier] += damagingAttacks
+                        enemy.damageDone1[tier] += sum([d for d in damageDone1])
+                        enemy.damageDone2[tier] += sum([d for d in damageDone2])
+                        enemy.damageDone3[tier] += sum([d for d in damageDone3])
+                        enemy.damageDone4[tier] += sum([d for d in damageDone4])
+                        enemy.bleedDamage1[tier] += bleedDamage1
+                        enemy.bleedDamage2[tier] += bleedDamage2
+                        enemy.bleedDamage3[tier] += bleedDamage3
+                        enemy.bleedDamage4[tier] += bleedDamage4
                 
         # (Damaging attacks / total attacks) * average enemy reach
         # This is the % that bleed will be procced.  The attack has

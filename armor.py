@@ -23,8 +23,6 @@ means = {
 
 class Armor:
     def __init__(self, name, block=[], resist=[], dodge=[], blockMod=0, resistMod=0, canDodge=True, dodgeBonus=None, immunities=set()) -> None:
-        if name not in itemTier:
-            return
         armor.append(self)
         armorByName[name] = self
         self.name = name
@@ -36,8 +34,8 @@ class Armor:
         self.canDodge = canDodge
         self.dodgeBonus = dodgeBonus
         self.immunities = immunities
-        self.tier = itemTier[name]
-        armorTiers[self.tier].append(self)
+        # self.tier = itemTier[name]
+        # armorTiers[self.tier].append(self)
 
 Armor(name="Adventurer's Armour", block=[u], resist=[b], dodge=[d])
 Armor(name="Adventurer's Armour (Legendary)", block=[u,u], resist=[o], dodge=[d])

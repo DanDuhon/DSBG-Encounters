@@ -23,8 +23,6 @@ means = {
 
 class HandItem:
     def __init__(self, name, block=[], resist=[], dodge=[], blockMod=0, resistMod=0, twoHanded=False, canUseWithTwoHanded=False, canDodge=True, immunities=set()) -> None:
-        if name not in itemTier:
-            return
         handItems.append(self)
         handItemsByName[name] = self
         self.name = name
@@ -37,8 +35,8 @@ class HandItem:
         self.canUseWithTwoHanded = canUseWithTwoHanded
         self.canDodge = canDodge
         self.immunities = immunities
-        self.tier = itemTier[name]
-        handItemTiers[self.tier].append(self)
+        # self.tier = itemTier[name]
+        # handItemTiers[self.tier].append(self)
 
 
 HandItem(name=None, canUseWithTwoHanded=True)
@@ -181,7 +179,7 @@ HandItem(name="Moonlight Greatsword", twoHanded=True, block=[b])
 HandItem(name="Morion Blade")
 HandItem(name="Morne's Great Hammer", twoHanded=True, block=[b, b], resist=[b, b])
 HandItem(name="Morning Star", resist=[b])
-HandItem(name="Murakamo", dodge=[d])
+HandItem(name="Murakumo", dodge=[d])
 HandItem(name="Notched Whip")
 HandItem(name="Obsidian Greatsword", twoHanded=True, block=[u], resist=[u])
 HandItem(name="Old Dragonslayer Spear")
@@ -250,6 +248,7 @@ HandItem(name="Sunset Shield", block=[b], resist=[u])
 HandItem(name="Talisman")
 HandItem(name="Target Shield", dodge=[d])
 HandItem(name="Thorolund Talisman", dodge=[d])
+HandItem(name="Throwing Knives")
 HandItem(name="Thrall Axe")
 HandItem(name="Titanite Catch Pole", block=[b])
 HandItem(name="Torch")
