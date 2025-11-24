@@ -30,14 +30,14 @@ pathAttack = mean(pathAttacks)
 newGamePlusMods = [
     "dodge1", "dodge2",
     "damage1", "damage2", "damage3", "damage4",
-    "armor resist1",
-    "armor1", "armor2",
-    "resist1", "resist2",
+    "armor resist1", "armor resist2",
+    #"armor1", "armor2",
+    #"resist1", "resist2",
     "health1", "health2", "health3", "health4",
     "damage health1", "damage health2",
-    "repeat",
-    "magic", "physical",
-    "effect1", "effect2"
+    #"repeat",
+    #"magic", "physical",
+    "effect1",# "effect2"
 ]
 
 effectMods = [
