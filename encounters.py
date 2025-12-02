@@ -156,8 +156,8 @@ def check_if_valid(encounter, level, combo, difficulty, rangedCount, toughnessSo
 try:
     # skip = True
     for ei, e in enumerate(enc):
-        if e not in {"The Last Bastion",}:
-            continue
+        # if e not in {"The Last Bastion",}:
+        #     continue
         #     skip = False
         # if skip:
         #     continue
@@ -346,6 +346,8 @@ try:
                         check_if_valid(e, level, s, difficulty, rangedCount, e in toughnessSortedEncounters)
                         # Don't put invaders in encounters that respawn enemies
                         and (e not in respawnEncounters or sum(1 for x in s if enemyIds[x].expansion == "Phantoms") == 0)
+                        # Has to be an enemy with dodge difficulty 2+
+                        and (e not in {"Cloak and Feathers",} or enemyIds[s[0]].dodge >= 2)
                         # No more than one of the two toughest enemies
                         and (e not in {"The First Bastion",} or (s.count(sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[0]) == 1 and s.count(sorted(s, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][characterCount]), reverse=True)[1]) == 1))
                         # No more than one of the two strongest enemies

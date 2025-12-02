@@ -11,7 +11,7 @@ enemies = {}
 enemyDiffs = {}
 enemyExport = {}
 behaviorExport = {}
-defenses = {"armor1", "armor2", "resist1", "resist2", "health1", "health2", "health3", "health4", "armor resist1", "damage health1", "damage health2"}
+defenses = {"armor1", "armor2", "resist1", "resist2", "health1", "health2", "health3", "health4", "armor resist1", "armor resist2", "damage health1", "damage health2"}
 
 behaviorCount = {
     "Armorer Dennis": 5,
@@ -87,7 +87,8 @@ modIdLookup = {
     "nodes3": 27,
     "nodes4": 28,
     "nodes5": 29,
-    "nodes6": 30
+    "nodes6": 30,
+    "armor resist2": 31,
 }
 
 try:
