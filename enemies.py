@@ -256,111 +256,111 @@ class Enemy:
         for i, m in enumerate(self.move):
             reach.append(min([4, max([0, m + self.attackRange[i]])]))
 
-        if not modified:
-            for combo in aoeNgpc if aoe else ngpc:
-                comboSet = frozenset(combo)
-                if (
-                    ("magic" in comboSet and "physical" not in attackType)
-                    or ("physical" in comboSet and "magic" not in attackType)
-                    or ("magic" in comboSet and not any([("physical", False) in set(zip(attackType, moveAttack))]))
-                    or (attackEffect and all([len(ae) + (1 if "effect1" in comboSet else 2 if "effect2" in comboSet else 0) > 2 for i, ae in enumerate(attackEffect) if attacks[i]]))
-                    or ({"damage health1", "damage health2", "armor resist1"} & comboSet and len(comboSet) < 4)
-                    or ("armor resist1" in comboSet and {"armor1", "armor2", "resist1", "resist2"} & comboSet)
-                    or ({"damage health1", "damage health2"} & comboSet and {"health1", "health2", "health3", "health4", "damage1", "damage2", "damage3", "damage4"} & comboSet)
-                    or ("dodge1" in comboSet and dodge == 4)
-                    or ("dodge2" in comboSet and dodge >= 3)
-                    or (aoe and "repeat" in comboSet)
-                    ):
-                    continue
+        # if not modified:
+        #     for combo in aoeNgpc if aoe else ngpc:
+        #         comboSet = frozenset(combo)
+        #         if (
+        #             ("magic" in comboSet and "physical" not in attackType)
+        #             or ("physical" in comboSet and "magic" not in attackType)
+        #             or ("magic" in comboSet and not any([("physical", False) in set(zip(attackType, moveAttack))]))
+        #             or (attackEffect and all([len(ae) + (1 if "effect1" in comboSet else 2 if "effect2" in comboSet else 0) > 2 for i, ae in enumerate(attackEffect) if attacks[i]]))
+        #             or ({"damage health1", "damage health2", "armor resist1"} & comboSet and len(comboSet) < 4)
+        #             or ("armor resist1" in comboSet and {"armor1", "armor2", "resist1", "resist2"} & comboSet)
+        #             or ({"damage health1", "damage health2"} & comboSet and {"health1", "health2", "health3", "health4", "damage1", "damage2", "damage3", "damage4"} & comboSet)
+        #             or ("dodge1" in comboSet and dodge == 4)
+        #             or ("dodge2" in comboSet and dodge >= 3)
+        #             or (aoe and "repeat" in comboSet)
+        #             ):
+        #             continue
 
-                healthBonus = (
-                    1 if health == 1 and {"health1", "damage health1"} & comboSet
-                    else 2 if health == 1 and {"health2", "damage health2"} & comboSet
-                    else 3 if health == 1 and {"health3", "damage health3"} & comboSet
-                    else 4 if health == 1 and {"health4", "damage health4"} & comboSet
-                    else 2 if health == 5 and {"health1", "damage health1"} & comboSet
-                    else 3 if health == 5 and {"health2", "damage health2"} & comboSet
-                    else 5 if health == 5 and {"health3", "damage health3"} & comboSet
-                    else 6 if health == 5 and {"health4", "damage health4"} & comboSet
-                    else 2 if health == 10 and {"health1", "damage health1"} & comboSet
-                    else 4 if health == 10 and {"health2", "damage health2"} & comboSet
-                    else 6 if health == 10 and {"health3", "damage health3"} & comboSet
-                    else 8 if health == 10 and {"health4", "damage health4"} & comboSet
-                    else ceil(health * 0.1) if {"health1", "damage health1"} & comboSet
-                    else ceil(health * 0.2) if {"health2", "damage health2"} & comboSet
-                    else ceil(health * 0.3) if {"health3", "damage health3"} & comboSet
-                    else ceil(health * 0.4) if {"health4", "damage health4"} & comboSet
-                    else 0)
+        #         healthBonus = (
+        #             1 if health == 1 and {"health1", "damage health1"} & comboSet
+        #             else 2 if health == 1 and {"health2", "damage health2"} & comboSet
+        #             else 3 if health == 1 and {"health3", "damage health3"} & comboSet
+        #             else 4 if health == 1 and {"health4", "damage health4"} & comboSet
+        #             else 2 if health == 5 and {"health1", "damage health1"} & comboSet
+        #             else 3 if health == 5 and {"health2", "damage health2"} & comboSet
+        #             else 5 if health == 5 and {"health3", "damage health3"} & comboSet
+        #             else 6 if health == 5 and {"health4", "damage health4"} & comboSet
+        #             else 2 if health == 10 and {"health1", "damage health1"} & comboSet
+        #             else 4 if health == 10 and {"health2", "damage health2"} & comboSet
+        #             else 6 if health == 10 and {"health3", "damage health3"} & comboSet
+        #             else 8 if health == 10 and {"health4", "damage health4"} & comboSet
+        #             else ceil(health * 0.1) if {"health1", "damage health1"} & comboSet
+        #             else ceil(health * 0.2) if {"health2", "damage health2"} & comboSet
+        #             else ceil(health * 0.3) if {"health3", "damage health3"} & comboSet
+        #             else ceil(health * 0.4) if {"health4", "damage health4"} & comboSet
+        #             else 0)
                 
-                if "Four Kings" in name:
-                    healthBonus = ceil(healthBonus / 2)
+        #         if "Four Kings" in name:
+        #             healthBonus = ceil(healthBonus / 2)
 
-                modAttackEffects = []
-                if {"effect1", "effect2"} & comboSet:
-                    if "effect2" in comboSet and any([ae for ae in attackEffect]):
-                        continue
+        #         modAttackEffects = []
+        #         if {"effect1", "effect2"} & comboSet:
+        #             if "effect2" in comboSet and any([ae for ae in attackEffect]):
+        #                 continue
 
-                    attacksForEffects = len(set(a for i, a in enumerate(iconForEffects) if attacks[i]))
+        #             attacksForEffects = len(set(a for i, a in enumerate(iconForEffects) if attacks[i]))
 
-                    for effectCombo in combinations_with_replacement(effectMods if "effect1" in comboSet else effectCombos, attacksForEffects):
-                        if set(effectCombo) & set([item for row in attackEffect for item in row]):
-                            continue
-                        modAttackEffects.append(tuple((e,) for e in effectCombo) if "effect1" in comboSet else effectCombo)
+        #             for effectCombo in combinations_with_replacement(effectMods if "effect1" in comboSet else effectCombos, attacksForEffects):
+        #                 if set(effectCombo) & set([item for row in attackEffect for item in row]):
+        #                     continue
+        #                 modAttackEffects.append(tuple((e,) for e in effectCombo) if "effect1" in comboSet else effectCombo)
                     
-                if modAttackEffects:
-                    for modAttackEffect in modAttackEffects:
-                        Enemy(
-                            name + " " + str(tuple([c for c in combo if "effect" not in c] + [[e for e in m] for m in modAttackEffect])),
-                            expansion,
-                            enemyType,
-                            numberOfModels,
-                            health=health + healthBonus,
-                            armor=armor + (1 if "armor1" in combo or "armor resist1" in combo else 2 if "armor2" in combo else 0),
-                            resist=resist + (1 if "resist1" in combo or "armor resist1" in combo else 2 if "resist2" in combo else 0),
-                            iconForEffects=iconForEffects,
-                            attacks=[attack + (0 if attack == 0 else 1 if {"damage1", "damage health1"} & comboSet else 2 if {"damage2", "damage health2"} & comboSet else 3 if "damage3" in combo else 4 if "damage4" in combo else 0) for attack in attacks],
-                            attackType=["magic" if "magic" in combo and not moveAttack[i] else "physical" if "physical" in combo or moveAttack[i] else at for i, at in enumerate(attackType)],
-                            dodge=dodge + (1 if "dodge1" in combo else 0) + (2 if "dodge2" in combo else 0),
-                            move=move,
-                            attackRange=attackRange,
-                            repeat=repeat + (1 if "repeat" in combo else 0),
-                            id=max([enemy.id for enemy in enemies]) + 1 if id else None,
-                            attackEffect=modAttackEffect,
-                            nodeAttack=nodeAttack,
-                            nodesAttacked=nodesAttacked if not aoe else [(bdkAoeAverage if "Black Dragon Kalameet" in name else oikAoeAverage if "Old Iron King" in name else ecAoeAverage if "Executioner's Chariot" in name else gdAoeAverage if "Guardian Dragon" in name else {})[1 if "nodes1" in comboSet else 2 if "nodes2" in comboSet else 3 if "nodes3" in comboSet else 4 if "nodes4" in comboSet else 5 if "nodes5" in comboSet else 6 if "nodes6" in comboSet else 0]],
-                            weakArcs=weakArcs,
-                            windup=windup,
-                            skipDefense=skipDefense,
-                            modified=True,
-                            comboSet=comboSet,
-                            aoe=aoe)
+        #         if modAttackEffects:
+        #             for modAttackEffect in modAttackEffects:
+        #                 Enemy(
+        #                     name + " " + str(tuple([c for c in combo if "effect" not in c] + [[e for e in m] for m in modAttackEffect])),
+        #                     expansion,
+        #                     enemyType,
+        #                     numberOfModels,
+        #                     health=health + healthBonus,
+        #                     armor=armor + (1 if "armor1" in combo or "armor resist1" in combo else 2 if "armor2" in combo else 0),
+        #                     resist=resist + (1 if "resist1" in combo or "armor resist1" in combo else 2 if "resist2" in combo else 0),
+        #                     iconForEffects=iconForEffects,
+        #                     attacks=[attack + (0 if attack == 0 else 1 if {"damage1", "damage health1"} & comboSet else 2 if {"damage2", "damage health2"} & comboSet else 3 if "damage3" in combo else 4 if "damage4" in combo else 0) for attack in attacks],
+        #                     attackType=["magic" if "magic" in combo and not moveAttack[i] else "physical" if "physical" in combo or moveAttack[i] else at for i, at in enumerate(attackType)],
+        #                     dodge=dodge + (1 if "dodge1" in combo else 0) + (2 if "dodge2" in combo else 0),
+        #                     move=move,
+        #                     attackRange=attackRange,
+        #                     repeat=repeat + (1 if "repeat" in combo else 0),
+        #                     id=max([enemy.id for enemy in enemies]) + 1 if id else None,
+        #                     attackEffect=modAttackEffect,
+        #                     nodeAttack=nodeAttack,
+        #                     nodesAttacked=nodesAttacked if not aoe else [(bdkAoeAverage if "Black Dragon Kalameet" in name else oikAoeAverage if "Old Iron King" in name else ecAoeAverage if "Executioner's Chariot" in name else gdAoeAverage if "Guardian Dragon" in name else {})[1 if "nodes1" in comboSet else 2 if "nodes2" in comboSet else 3 if "nodes3" in comboSet else 4 if "nodes4" in comboSet else 5 if "nodes5" in comboSet else 6 if "nodes6" in comboSet else 0]],
+        #                     weakArcs=weakArcs,
+        #                     windup=windup,
+        #                     skipDefense=skipDefense,
+        #                     modified=True,
+        #                     comboSet=comboSet,
+        #                     aoe=aoe)
 
-                else:
-                    Enemy(
-                        name + " " + str(combo),
-                        expansion,
-                        enemyType,
-                        numberOfModels,
-                        health=health + healthBonus,
-                        armor=armor + (1 if "armor1" in combo or "armor resist1" in combo else 2 if "armor2" in combo else 0),
-                        resist=resist + (1 if "resist1" in combo or "armor resist1" in combo else 2 if "resist2" in combo else 0),
-                        iconForEffects=iconForEffects,
-                        attacks=[attack + (0 if attack == 0 else 1 if {"damage1", "damage health1"} & comboSet else 2 if {"damage2", "damage health2"} & comboSet else 3 if "damage3" in combo else 4 if "damage4" in combo else 0) for attack in attacks],
-                        attackType=["magic" if "magic" in combo and not moveAttack[i] else "physical" if "physical" in combo or moveAttack[i] else at for i, at in enumerate(attackType)],
-                        dodge=dodge + (1 if "dodge1" in combo else 0) + (2 if "dodge2" in combo else 0),
-                        move=move,
-                        attackRange=attackRange,
-                        repeat=repeat + (1 if "repeat" in combo else 0),
-                        id=max([enemy.id for enemy in enemies]) + 1 if id else None,
-                        attackEffect=attackEffect,
-                        nodeAttack=nodeAttack,
-                        nodesAttacked=nodesAttacked if not aoe else [(bdkAoeAverage if "Black Dragon Kalameet" in name else oikAoeAverage if "Old Iron King" in name else ecAoeAverage if "Executioner's Chariot" in name else gdAoeAverage if "Guardian Dragon" in name else {})[1 if "nodes1" in comboSet else 2 if "nodes2" in comboSet else 3 if "nodes3" in comboSet else 4 if "nodes4" in comboSet else 5 if "nodes5" in comboSet else 6 if "nodes6" in comboSet else 0]],
-                        weakArcs=weakArcs,
-                        windup=windup,
-                        skipDefense=skipDefense,
-                        modified=True,
-                        comboSet=comboSet,
-                        aoe=aoe)
+        #         else:
+        #             Enemy(
+        #                 name + " " + str(combo),
+        #                 expansion,
+        #                 enemyType,
+        #                 numberOfModels,
+        #                 health=health + healthBonus,
+        #                 armor=armor + (1 if "armor1" in combo or "armor resist1" in combo else 2 if "armor2" in combo else 0),
+        #                 resist=resist + (1 if "resist1" in combo or "armor resist1" in combo else 2 if "resist2" in combo else 0),
+        #                 iconForEffects=iconForEffects,
+        #                 attacks=[attack + (0 if attack == 0 else 1 if {"damage1", "damage health1"} & comboSet else 2 if {"damage2", "damage health2"} & comboSet else 3 if "damage3" in combo else 4 if "damage4" in combo else 0) for attack in attacks],
+        #                 attackType=["magic" if "magic" in combo and not moveAttack[i] else "physical" if "physical" in combo or moveAttack[i] else at for i, at in enumerate(attackType)],
+        #                 dodge=dodge + (1 if "dodge1" in combo else 0) + (2 if "dodge2" in combo else 0),
+        #                 move=move,
+        #                 attackRange=attackRange,
+        #                 repeat=repeat + (1 if "repeat" in combo else 0),
+        #                 id=max([enemy.id for enemy in enemies]) + 1 if id else None,
+        #                 attackEffect=attackEffect,
+        #                 nodeAttack=nodeAttack,
+        #                 nodesAttacked=nodesAttacked if not aoe else [(bdkAoeAverage if "Black Dragon Kalameet" in name else oikAoeAverage if "Old Iron King" in name else ecAoeAverage if "Executioner's Chariot" in name else gdAoeAverage if "Guardian Dragon" in name else {})[1 if "nodes1" in comboSet else 2 if "nodes2" in comboSet else 3 if "nodes3" in comboSet else 4 if "nodes4" in comboSet else 5 if "nodes5" in comboSet else 6 if "nodes6" in comboSet else 0]],
+        #                 weakArcs=weakArcs,
+        #                 windup=windup,
+        #                 skipDefense=skipDefense,
+        #                 modified=True,
+        #                 comboSet=comboSet,
+        #                 aoe=aoe)
 
 
 # Regular enemies
@@ -410,20 +410,20 @@ Enemy(id=33, name="Stone Knight", expansion="Darkroot", enemyType="regular", num
 
 
 # Invaders
-# Enemy(id=35, name="Armorer Dennis", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 6700.8, "difficulty": {1: 190.28, 2: 196.9, 3: 203.53, 4: 211.69}}, 2: {"toughness": 12129.2, "difficulty": {1: 5.55, 2: 5.74, 3: 5.92, 4: 6.15}}, 3: {"toughness": 35073.2, "difficulty": {1: 1.32, 2: 1.36, 3: 1.41, 4: 1.46}}})
-# Enemy(id=36, name="Fencer Sharron", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 10097.29, "difficulty": {1: 479.64, 2: 492.23, 3: 504.82, 4: 520.31}}, 2: {"toughness": 14971, "difficulty": {1: 16.61, 2: 16.96, 3: 17.32, 4: 17.76}}, 3: {"toughness": 35240.57, "difficulty": {1: 5.38, 2: 5.49, 3: 5.6, 4: 5.73}}})
-# Enemy(id=37, name="Invader Brylex", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 5420, "difficulty": {1: 1043.65, 2: 1086.46, 3: 1129.27, 4: 1181.96}}, 2: {"toughness": 7324, "difficulty": {1: 40.8, 2: 42.41, 3: 44.03, 4: 46.02}}, 3: {"toughness": 25180, "difficulty": {1: 9.22, 2: 9.6, 3: 9.98, 4: 10.45}}})
-# Enemy(id=38, name="Kirk, Knight of Thorns", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 18312, "difficulty": {1: 184.41, 2: 190.97, 3: 197.53, 4: 205.61}}, 2: {"toughness": 26716, "difficulty": {1: 6.95, 2: 7.19, 3: 7.44, 4: 7.74}}, 3: {"toughness": 60520, "difficulty": {1: 2.4, 2: 2.48, 3: 2.57, 4: 2.67}}})
-# Enemy(id=39, name="Longfinger Kirk", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 5800, "difficulty": {1: 1508.5, 2: 1542.38, 3: 1576.25, 4: 1617.94}}, 2: {"toughness": 7596, "difficulty": {1: 67.39, 2: 68.84, 3: 70.28, 4: 72.06}}, 3: {"toughness": 27076, "difficulty": {1: 15.72, 2: 16.05, 3: 16.38, 4: 16.78}}})
-# Enemy(id=40, name="Maldron the Assassin", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 6700, "difficulty": {1: 798.72, 2: 818.4, 3: 838.08, 4: 862.3}}, 2: {"toughness": 8440, "difficulty": {1: 36.65, 2: 37.52, 3: 38.4, 4: 39.48}}, 3: {"toughness": 16820, "difficulty": {1: 13.94, 2: 14.28, 3: 14.63, 4: 15.05}}})
-# Enemy(id=41, name="Maneater Mildred", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 9495.2, "difficulty": {1: 421.86, 2: 454.31, 3: 486.76, 4: 526.69}}, 2: {"toughness": 15845.8, "difficulty": {1: 11.71, 2: 12.62, 3: 13.52, 4: 14.63}}, 3: {"toughness": 36596.4, "difficulty": {1: 3.38, 2: 3.64, 3: 3.9, 4: 4.22}}})
-# Enemy(id=42, name="Marvelous Chester", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 7436, "difficulty": {1: 1170.62, 2: 1176.68, 3: 1182.75, 4: 1190.21}}, 2: {"toughness": 12804, "difficulty": {1: 38.25, 2: 38.46, 3: 38.67, 4: 38.93}}, 3: {"toughness": 38280, "difficulty": {1: 10.2, 2: 10.26, 3: 10.32, 4: 10.39}}})
-# Enemy(id=43, name="Melinda the Butcher", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 16497.8, "difficulty": {1: 169.36, 2: 177.74, 3: 186.12, 4: 196.43}}, 2: {"toughness": 24700.2, "difficulty": {1: 5.38, 2: 5.64, 3: 5.89, 4: 6.21}}, 3: {"toughness": 49450.2, "difficulty": {1: 1.74, 2: 1.82, 3: 1.91, 4: 2.01}}})
-# Enemy(id=44, name="Oliver the Collector", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 16392.43, "difficulty": {1: 274.61, 2: 285.04, 3: 295.47, 4: 308.31}}, 2: {"toughness": 23513.57, "difficulty": {1: 8.31, 2: 8.6, 3: 8.89, 4: 9.24}}, 3: {"toughness": 47435, "difficulty": {1: 2.77, 2: 2.86, 3: 2.95, 4: 3.06}}})
-# Enemy(id=45, name="Paladin Leeroy", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 4803.6, "difficulty": {1: 981.82, 2: 1050.67, 3: 1119.51, 4: 1204.25}}, 2: {"toughness": 6059.4, "difficulty": {1: 33.78, 2: 36.03, 3: 38.28, 4: 41.05}}, 3: {"toughness": 13589.4, "difficulty": {1: 10.91, 2: 11.61, 3: 12.3, 4: 13.16}}})
-# Enemy(id=46, name="Xanthous King Jeremiah", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 19600, "difficulty": {1: 217.83, 2: 231.69, 3: 245.55, 4: 262.61}}, 2: {"toughness": 30800, "difficulty": {1: 8.06, 2: 8.56, 3: 9.07, 4: 9.7}}, 3: {"toughness": 71140, "difficulty": {1: 2.12, 2: 2.25, 3: 2.39, 4: 2.55}}})
-# Enemy(id=47, name="Hungry Mimic", expansion="Explorers", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 12072, "difficulty": {1: 269.07, 2: 278.58, 3: 288.09, 4: 299.8}}, 2: {"toughness": 17920, "difficulty": {1: 9.84, 2: 10.18, 3: 10.52, 4: 10.94}}, 3: {"toughness": 41488, "difficulty": {1: 3.34, 2: 3.46, 3: 3.57, 4: 3.72}}})
-# Enemy(id=48, name="Voracious Mimic", expansion="Explorers", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 4536, "difficulty": {1: 1018.51, 2: 1054.02, 3: 1089.53, 4: 1133.23}}, 2: {"toughness": 6244, "difficulty": {1: 41.34, 2: 42.75, 3: 44.17, 4: 45.91}}, 3: {"toughness": 21408, "difficulty": {1: 10.05, 2: 10.39, 3: 10.74, 4: 11.16}}})
+Enemy(id=35, name="Armorer Dennis", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 6700.8, "difficulty": {1: 190.28, 2: 196.9, 3: 203.53, 4: 211.69}}, 2: {"toughness": 12129.2, "difficulty": {1: 5.55, 2: 5.74, 3: 5.92, 4: 6.15}}, 3: {"toughness": 35073.2, "difficulty": {1: 1.32, 2: 1.36, 3: 1.41, 4: 1.46}}})
+Enemy(id=36, name="Fencer Sharron", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 10097.29, "difficulty": {1: 479.64, 2: 492.23, 3: 504.82, 4: 520.31}}, 2: {"toughness": 14971, "difficulty": {1: 16.61, 2: 16.96, 3: 17.32, 4: 17.76}}, 3: {"toughness": 35240.57, "difficulty": {1: 5.38, 2: 5.49, 3: 5.6, 4: 5.73}}})
+Enemy(id=37, name="Invader Brylex", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 5420, "difficulty": {1: 1043.65, 2: 1086.46, 3: 1129.27, 4: 1181.96}}, 2: {"toughness": 7324, "difficulty": {1: 40.8, 2: 42.41, 3: 44.03, 4: 46.02}}, 3: {"toughness": 25180, "difficulty": {1: 9.22, 2: 9.6, 3: 9.98, 4: 10.45}}})
+Enemy(id=38, name="Kirk, Knight of Thorns", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 18312, "difficulty": {1: 184.41, 2: 190.97, 3: 197.53, 4: 205.61}}, 2: {"toughness": 26716, "difficulty": {1: 6.95, 2: 7.19, 3: 7.44, 4: 7.74}}, 3: {"toughness": 60520, "difficulty": {1: 2.4, 2: 2.48, 3: 2.57, 4: 2.67}}})
+Enemy(id=39, name="Longfinger Kirk", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 5800, "difficulty": {1: 1508.5, 2: 1542.38, 3: 1576.25, 4: 1617.94}}, 2: {"toughness": 7596, "difficulty": {1: 67.39, 2: 68.84, 3: 70.28, 4: 72.06}}, 3: {"toughness": 27076, "difficulty": {1: 15.72, 2: 16.05, 3: 16.38, 4: 16.78}}})
+Enemy(id=40, name="Maldron the Assassin", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 6700, "difficulty": {1: 798.72, 2: 818.4, 3: 838.08, 4: 862.3}}, 2: {"toughness": 8440, "difficulty": {1: 36.65, 2: 37.52, 3: 38.4, 4: 39.48}}, 3: {"toughness": 16820, "difficulty": {1: 13.94, 2: 14.28, 3: 14.63, 4: 15.05}}})
+Enemy(id=41, name="Maneater Mildred", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 9495.2, "difficulty": {1: 421.86, 2: 454.31, 3: 486.76, 4: 526.69}}, 2: {"toughness": 15845.8, "difficulty": {1: 11.71, 2: 12.62, 3: 13.52, 4: 14.63}}, 3: {"toughness": 36596.4, "difficulty": {1: 3.38, 2: 3.64, 3: 3.9, 4: 4.22}}})
+Enemy(id=42, name="Marvelous Chester", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 7436, "difficulty": {1: 1170.62, 2: 1176.68, 3: 1182.75, 4: 1190.21}}, 2: {"toughness": 12804, "difficulty": {1: 38.25, 2: 38.46, 3: 38.67, 4: 38.93}}, 3: {"toughness": 38280, "difficulty": {1: 10.2, 2: 10.26, 3: 10.32, 4: 10.39}}})
+Enemy(id=43, name="Melinda the Butcher", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 16497.8, "difficulty": {1: 169.36, 2: 177.74, 3: 186.12, 4: 196.43}}, 2: {"toughness": 24700.2, "difficulty": {1: 5.38, 2: 5.64, 3: 5.89, 4: 6.21}}, 3: {"toughness": 49450.2, "difficulty": {1: 1.74, 2: 1.82, 3: 1.91, 4: 2.01}}})
+Enemy(id=44, name="Oliver the Collector", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 16392.43, "difficulty": {1: 274.61, 2: 285.04, 3: 295.47, 4: 308.31}}, 2: {"toughness": 23513.57, "difficulty": {1: 8.31, 2: 8.6, 3: 8.89, 4: 9.24}}, 3: {"toughness": 47435, "difficulty": {1: 2.77, 2: 2.86, 3: 2.95, 4: 3.06}}})
+Enemy(id=45, name="Paladin Leeroy", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 4803.6, "difficulty": {1: 981.82, 2: 1050.67, 3: 1119.51, 4: 1204.25}}, 2: {"toughness": 6059.4, "difficulty": {1: 33.78, 2: 36.03, 3: 38.28, 4: 41.05}}, 3: {"toughness": 13589.4, "difficulty": {1: 10.91, 2: 11.61, 3: 12.3, 4: 13.16}}})
+Enemy(id=46, name="Xanthous King Jeremiah", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 19600, "difficulty": {1: 217.83, 2: 231.69, 3: 245.55, 4: 262.61}}, 2: {"toughness": 30800, "difficulty": {1: 8.06, 2: 8.56, 3: 9.07, 4: 9.7}}, 3: {"toughness": 71140, "difficulty": {1: 2.12, 2: 2.25, 3: 2.39, 4: 2.55}}})
+Enemy(id=47, name="Hungry Mimic", expansion="Explorers", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 12072, "difficulty": {1: 269.07, 2: 278.58, 3: 288.09, 4: 299.8}}, 2: {"toughness": 17920, "difficulty": {1: 9.84, 2: 10.18, 3: 10.52, 4: 10.94}}, 3: {"toughness": 41488, "difficulty": {1: 3.34, 2: 3.46, 3: 3.57, 4: 3.72}}})
+Enemy(id=48, name="Voracious Mimic", expansion="Explorers", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], iconForEffects=[0], dodge=0, move=[0], attackRange=[0], difficultyTiers={1: {"toughness": 4536, "difficulty": {1: 1018.51, 2: 1054.02, 3: 1089.53, 4: 1133.23}}, 2: {"toughness": 6244, "difficulty": {1: 41.34, 2: 42.75, 3: 44.17, 4: 45.91}}, 3: {"toughness": 21408, "difficulty": {1: 10.05, 2: 10.39, 3: 10.74, 4: 11.16}}})
 
 # Enemy(name="Hungry Mimic - Raking Slash", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, iconForEffects=[0], attacks=[4], attackType=["physical"], nodeAttack=[True], dodge=1, move=[1], attackRange=[1])
 # Enemy(name="Hungry Mimic - Heavy Punch", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, iconForEffects=[0], attacks=[5], attackType=["physical"], dodge=2, move=[1], attackRange=[1])
