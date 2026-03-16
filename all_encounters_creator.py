@@ -1,44 +1,57 @@
-from json import dump
+from json import dump, load
 from os import path
-from statistics import mean
 
-from enemies import enemiesDict, enemyIds, enemies
+from enemies import enemiesDict, enemyIds
 
 
 baseFolder = path.dirname(__file__)
 
 sumEncounterDiff = False
 
+with open(path.join(baseFolder, "enemy_stats.json")) as vf:
+    vectors = load(vf)
+
+
+def get_stk(enemyId, level):
+    name = enemyIds[enemyId].name
+    return vectors[name][str(level)]["stk"]
+
+
+def get_dps(enemyId, level):
+    name = enemyIds[enemyId].name
+    return vectors[name][str(level)]["dps"]
+
+
+def get_volume(enemyId, level, hasBhm=False):
+    vol = get_stk(enemyId, level) * get_dps(enemyId, level)
+    # Apply Black Hollow Mage synergy internally for sorting logic
+    if hasBhm and "Skeleton" in enemyIds[enemyId].name:
+        # Effect of multiplying both stats by 1.5
+        vol *= 2.25
+    return vol
+
 
 def calculate_rank(l, level, sortByToughness=False):
-    diff = {}
-
-    # We're not treating level 4s different from level 3s in the difficulty tier.
     if level == 4:
         level = 3
+        
+    # Check for Black Hollow Mage
+    bhm = enemiesDict["Black Hollow Mage"].id
     
     if sortByToughness:
-        for d in range(1, 5):
-            a = {}
-            for i, num in enumerate(sorted(l, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][d]))):
-                if num not in a:
-                    a[num] = [sum([1 for e in sorted(l, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][d]))[:i] if enemyIds[e].difficultyTiers[level]["toughness"] >= enemyIds[num].difficultyTiers[level]["toughness"]])]
-                else:
-                    a[num].append(sum([1 for e in sorted(l, key=lambda x: (-enemyIds[x].difficultyTiers[level]["toughness"], enemyIds[x].difficultyTiers[level]["difficulty"][d]))[:i] if enemyIds[e].difficultyTiers[level]["toughness"] >= enemyIds[num].difficultyTiers[level]["toughness"]]))
-
-            diff[d] = [a[e][l[:i].count(e)] for i, e in enumerate(l)]
+        # Sort by Highest STK first, use Volume as tiebreaker
+        sortKey = lambda x: (-get_stk(x, level), get_volume(x, level, bhm in l))
     else:
-        for d in range(1, 5):
-            a = {}
-            for i, num in enumerate(sorted(l, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][d])):
-                if num not in a:
-                    a[num] = [sum([1 for e in sorted(l, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][d])[:i] if enemyIds[e].difficultyTiers[level]["difficulty"][d] <= enemyIds[num].difficultyTiers[level]["difficulty"][d]])]
-                else:
-                    a[num].append(sum([1 for e in sorted(l, key=lambda x: enemyIds[x].difficultyTiers[level]["difficulty"][d])[:i] if enemyIds[e].difficultyTiers[level]["difficulty"][d] <= enemyIds[num].difficultyTiers[level]["difficulty"][d]]))
+        # Sort standard by Lowest Volume first
+        sortKey = lambda x: get_volume(x, level, bhm in l)
+        
+    sortedL = sorted(l, key=sortKey)
+    
+    a = {}
+    for i, num in enumerate(sortedL):
+        a.setdefault(num, []).append(i)
 
-            diff[d] = [a[e][l[:i].count(e)] for i, e in enumerate(l)]
-
-    return diff
+    return [a[e][l[:i].count(e)] for i, e in enumerate(l)]
 
 
 abk = enemiesDict["Alonne Bow Knight"].id
@@ -279,7 +292,7 @@ encounters = {
     "Death's Precipice": {"enemies": [[sa,ss,ss],[gsa,gss],[gsa,gss,sb]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[]], "expansion": tomb},
     "Giant's Coffin": {"enemies": [[gss,gsa],[gss,gsa],[]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[gsa,gss],[]], "expansion": tomb},
     "Honour Guard": {"enemies": [[ss,sa,ss,ss,sa],[],[]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[]], "expansion": tomb},
-    "Lakeview Refuge": {"enemies": [[n,ss,ss],[sa,sa],[n,gsa,gss]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[sb]], "expansion": tomb},
+    "Lakeview Refuge": {"enemies": [[n,ss,ss],[sa,sa],[n,gsa,gss]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[ss],[sb]], "expansion": tomb},
     "Last Shred of Light": {"enemies": [[sb,ss,sa],[gsa],[]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[]], "expansion": tomb},
     "Skeleton Overlord": {"enemies": [[gss],[],[]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[ss,ss],[],[]], "expansion": tomb},
     "The Locked Grave": {"enemies": [[gsa,ss],[gss,n],[gsa,sa,sa]], "enemyExpansions": set([tomb]), "level": 3, "spawns": [[],[],[sb]], "expansion": tomb},
@@ -356,7 +369,11 @@ toughnessSortedEncounters = {
     "Cold Snap",
     "Dark Alleyway",
     "Deathly Freeze",
-    "No Safe Haven"
+    "No Safe Haven",
+    "The First Bastion",
+    "Corrupted Hovel",
+    "Skeleton Overlord",
+    "The Shine of Gold"
 }
 
 for encounter in encounters:
@@ -366,12 +383,12 @@ for encounter in encounters:
                         + encounters[encounter]["spawns"][1]
                         + encounters[encounter]["enemies"][2]
                         + encounters[encounter]["spawns"][2])
-    if any([enemyIds[enemy].expansion not in encounters[encounter]["enemyExpansions"] for enemy in encounterEnemies]):
-        pass
-    if encounters[encounter]["enemyExpansions"] - set([enemyIds[enemy].expansion for enemy in encounterEnemies]):
-        pass
-    if encounters[encounter]["level"] < 4 and encounters[encounter]["expansion"] not in set([e.expansion for e in enemies]):
-        pass
+    # if any([enemyIds[enemy].expansion not in encounters[encounter]["enemyExpansions"] for enemy in encounterEnemies]):
+    #     pass
+    # if encounters[encounter]["enemyExpansions"] - set([enemyIds[enemy].expansion for enemy in encounterEnemies]):
+    #     pass
+    # if encounters[encounter]["level"] < 4 and encounters[encounter]["expansion"] not in set([e.expansion for e in enemies]):
+    #     pass
     #print(encounter)
     
     allEncounters[encounter] = {
@@ -391,15 +408,11 @@ for encounter in encounters:
             if i > 1 and not encounters[encounter]["enemies"][i-1] and not encounters[encounter]["spawns"][i-1]:
                 allEncounters[encounter]["tiles"][str(i)] = {"enemies": [], "spawns": []}
 
-    # Lakeview Refuge spawns a number of Skeleton Soldiers equal to the number of characters.
-    if encounter == "Lakeview Refuge":
-        for i in range(1, 5):
-            encounterEnemies.extend([ss])
-            allEncounters[encounter]["difficultyOrder"][i] = calculate_rank(encounterEnemies, encounters[encounter]["level"])[i]
-
     diff = []
+    tierLevel = min(3, encounters[encounter]["level"])
+    
     for e in encounterEnemies:
-        diff.append(mean(enemyIds[e].difficultyTiers[min(3, encounters[encounter]["level"])]["difficulty"][x] for x in range(1, 5)))
+        diff.append(get_volume(e, tierLevel, bhm in encounterEnemies))
 
     if sumEncounterDiff:
         print(encounter + "_" + encounters[encounter]["expansion"] + "_" + str(encounters[encounter]["level"]) + "_" + str(sum(diff)))

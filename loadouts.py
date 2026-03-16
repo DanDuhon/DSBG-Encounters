@@ -216,7 +216,6 @@ for partySize in partySizes:
                 ]
             )
 
-# Winged Knight gets a bonus against blocks of 3 or higher.
 expectedBlock = {partySize: {} for partySize in partySizes}
 expectedResist = {partySize: {} for partySize in partySizes}
 

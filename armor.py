@@ -1,14 +1,8 @@
 from statistics import mean
-from item_tier import itemTier
 
 
 armor = []
 armorByName = {}
-armorTiers = {
-    1: [],
-    2: [],
-    3: []
-}
 
 b = (0, 1, 1, 1, 2, 2)
 u = (1, 1, 2, 2, 2, 3)
@@ -34,8 +28,6 @@ class Armor:
         self.canDodge = canDodge
         self.dodgeBonus = dodgeBonus
         self.immunities = immunities
-        # self.tier = itemTier[name]
-        # armorTiers[self.tier].append(self)
 
 Armor(name="Adventurer's Armour", block=[u], resist=[b], dodge=[d])
 Armor(name="Adventurer's Armour (Legendary)", block=[u,u], resist=[o], dodge=[d])

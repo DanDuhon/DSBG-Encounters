@@ -1,14 +1,8 @@
 from statistics import mean
-from item_tier import itemTier
 
 
 handItems = []
 handItemsByName = {}
-handItemTiers = {
-    1: [],
-    2: [],
-    3: []
-}
 
 b = (0, 1, 1, 1, 2, 2)
 u = (1, 1, 2, 2, 2, 3)
@@ -35,8 +29,6 @@ class HandItem:
         self.canUseWithTwoHanded = canUseWithTwoHanded
         self.canDodge = canDodge
         self.immunities = immunities
-        # self.tier = itemTier[name]
-        # handItemTiers[self.tier].append(self)
 
 
 HandItem(name=None, canUseWithTwoHanded=True)
