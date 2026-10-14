@@ -1,7 +1,7 @@
 import datetime
 from os import path
 from json import load, dump
-from itertools import combinations, islice, product, filterfalse
+from itertools import combinations, product, filterfalse
 from random import shuffle, sample
 from collections import defaultdict
 from glob import glob

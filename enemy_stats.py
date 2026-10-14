@@ -412,13 +412,20 @@ def main():
                     totalBlock = []
                     totalResist = []
                     totalDodge = []
+                    totalBlockArmor = []
+                    totalResistArmor = []
+                    totalDodgeArmor = []
                     weapons = []
-                    
                     for item in loadout:
                         totalBlock.extend(item.block)
                         totalResist.extend(item.resist)
                         totalDodge.extend(item.dodge)
-                        if item.name in handItemsByName: weapons.append(item)
+                        if item.name in armorByName:
+                            totalBlockArmor.extend(item.block)
+                            totalResistArmor.extend(item.resist)
+                            totalDodgeArmor.extend(item.dodge)
+                        if item.name in handItemsByName:
+                            weapons.append(item)
                             
                     allAttacks = []
                     for w in weapons:
@@ -435,9 +442,65 @@ def main():
                             "resistPmf": convert_to_pmf(totalResist),
                             "dodgeDice": count_dodge_dice(totalDodge)
                         },
+                        "armorDefense": {
+                            "blockPmf": convert_to_pmf(totalBlockArmor),
+                            "resistPmf": convert_to_pmf(totalResistArmor),
+                            "dodgeDice": count_dodge_dice(totalDodgeArmor)
+                        },
                         "attacks": allAttacks,
                         "maxRange": maxRange
                     })
+
+    print("Average Damage Output by Loadout per Tier")
+    for tier in [1, 2, 3]:
+        physTotals = []
+        magicTotals = []
+        for profile in tierProfiles[tier]:
+            physTotal = 0.0
+            magicTotal = 0.0
+            for a in profile["attacks"]:
+                ev = a.expectedDamage[0]
+                if a.magic:
+                    magicTotal += ev
+                else:
+                    physTotal += ev
+            physTotals.append(physTotal)
+            magicTotals.append(magicTotal)
+        avgPhys = sum(physTotals) / len(physTotals) if physTotals else 0.0
+        avgMagic = sum(magicTotals) / len(magicTotals) if magicTotals else 0.0
+        print(f"  Tier {tier}: Avg Physical = {avgPhys:.3f}, Avg Magic = {avgMagic:.3f}")
+
+    print("Average Defense by Loadout per Tier")
+    for tier in [1, 2, 3]:
+        dodgeTotals = []
+        blockTotals = []
+        resistTotals = []
+        for profile in tierProfiles[tier]:
+            dodgeTotals.append(profile["defense"]["dodgeDice"])
+            blockEv = sum(i * p for i, p in enumerate(profile["defense"]["blockPmf"]))
+            resistEv = sum(i * p for i, p in enumerate(profile["defense"]["resistPmf"]))
+            blockTotals.append(blockEv)
+            resistTotals.append(resistEv)
+        avgDodge = sum(dodgeTotals) / len(dodgeTotals) if dodgeTotals else 0.0
+        avgBlock = sum(blockTotals) / len(blockTotals) if blockTotals else 0.0
+        avgResist = sum(resistTotals) / len(resistTotals) if resistTotals else 0.0
+        print(f"  Tier {tier}: Avg Dodge = {avgDodge:.3f}, Avg Block = {avgBlock:.3f}, Avg Resist = {avgResist:.3f}")
+
+    print("Average Armor Defense by Tier")
+    for tier in [1, 2, 3]:
+        armorDodgeTotals = []
+        armorBlockTotals = []
+        armorResistTotals = []
+        for profile in tierProfiles[tier]:
+            armorDodgeTotals.append(profile["armorDefense"]["dodgeDice"])
+            armorBlockEv = sum(i * p for i, p in enumerate(profile["armorDefense"]["blockPmf"]))
+            armorResistEv = sum(i * p for i, p in enumerate(profile["armorDefense"]["resistPmf"]))
+            armorBlockTotals.append(armorBlockEv)
+            armorResistTotals.append(armorResistEv)
+        avgArmorDodge = sum(armorDodgeTotals) / len(armorDodgeTotals) if armorDodgeTotals else 0.0
+        avgArmorBlock = sum(armorBlockTotals) / len(armorBlockTotals) if armorBlockTotals else 0.0
+        avgArmorResist = sum(armorResistTotals) / len(armorResistTotals) if armorResistTotals else 0.0
+        print(f"  Tier {tier}: Avg Armor Dodge = {avgArmorDodge:.3f}, Avg Armor Block = {avgArmorBlock:.3f}, Avg Armor Resist = {avgArmorResist:.3f}")
 
     print("Bleed Synergy")
     

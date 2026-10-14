@@ -5,7 +5,7 @@ Alonne Sword Knight	2.838	2.78	2.208	2.004	1.436	1.793
 Black Hollow Mage	21.557	3.918	14.821	3.536	13.681	2.369
 Bonewheel Skeleton	1.917	9.779	1.782	7.893	1.181	5.85
 Crossbow Hollow	0.959	1.324	0.827	1.041	0.505	0.603
-Crow Demon	11.532	12.951	8.098	11.042	7.077	9.227
+Crow Demon	11.532	14.842	8.098	12.369	7.077	11.026
 Demonic Foliage	3.066	2.779	2.875	2.004	1.415	1.79
 Engorged Zombie	2.838	2.145	2.208	1.716	1.436	1.115
 Falchion Skeleton	1.283	2.813	1.055	2.109	0.723	1.835
@@ -33,17 +33,11 @@ Skeleton Soldier	3.226	4.076	3.12	3.235	1.589	2.464
 Snow Rat	0.675	2.167	0.514	1.696	0.509	1.493
 Stone Guardian	29.528	6.302	22.353	4.501	18.193	3.655
 Stone Knight	41.2	3.139	38.383	2.545	16.693	1.842
-Hungry Mimic	19.733	2.192	16.097	1.808	11.558	1.357
-Voracious Mimic	51.081	2.999	39.736	2.534	25.843	1.981
-Armorer Dennis	28.45	2.752	18.324	2.432	19.436	1.748
-Fencer Sharron	22.827	3.147	18.703	2.69	13.391	2.376
-Invader Brylex	42.568	3.049	33.113	2.357	21.536	1.916
-Kirk, Knight of Thorns	12.974	2.426	10.568	1.896	7.627	1.481
-Longfinger Kirk	58.063	4.997	48.017	4.243	30.354	3.433
-Maldron the Assassin	13.566	2.995	10.98	2.614	7.794	1.962
-Maneater Mildred	20.073	1.809	15.056	1.393	10.862	1.081
-Marvelous Chester	42.901	3.52	31.727	2.893	30.514	2.351
-Melinda the Butcher	11.82	1.827	9.866	1.363	8.021	1.0
-Oliver the Collector	15.495	2.319	13.392	1.811	8.147	1.327
-Paladin Leeroy	41.765	2.715	37.822	2.284	17.74	1.704
-Xanthous King Jeremiah	9.449	2.095	7.202	1.801	7.123	1.236
+Fire Witch	14.189	3.976	11.038	3.18	7.179	2.458
+Cathedral Evangelist	12.833	3.198	10.553	2.281	7.226	2.198
+Sewer Centipede	2.162	6.77	1.761	5.751	1.271	5.063
+Pontiff Knight	23.787	7.234	20.476	6.154	13.255	4.425
+Irithyllian Assassin Slave	1.618	4.875	1.347	3.969	0.955	3.32
+Irithyllian Sorcerer Slave	0.675	2.261	0.514	1.784	0.509	1.24
+Irithyllian Warrior Slave	3.921	3.094	3.419	2.292	1.97	1.536
+Irithyllian Beast-Hound	0.896	1.014	0.692	0.676	0.658	0.501

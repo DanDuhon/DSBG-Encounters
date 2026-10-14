@@ -44,7 +44,7 @@ class Enemy:
         self.resist = resist
         self.repeat = repeat
         self.skipDefense = skipDefense
-        self.leap = True if 4 in move else False
+        self.leap = True if 10 in move else False
         self.ambush = ambush
         self.frostbiteLeap = frostbiteLeap
         self.attacksTaken = {1: 0, 2: 0, 3: 0}
@@ -225,8 +225,8 @@ Enemy(id=33, name="Stone Knight", expansion="Darkroot", enemyType="regular", num
 
 # Enemy(id=49, name="Fire Witch", expansion="Irithyll of the Boreal Valley", enemyType="regular", numberOfModels=2, health=5, armor=2, resist=2, attacks=[0,5], attackType=["magic","magic"], dodge=1, move=[1,0], attackRange=[0,10], nodesAttacked=[0,pathAttack])
 # Enemy(id=50, name="Cathedral Evangelist", expansion="Irithyll of the Boreal Valley", enemyType="regular", numberOfModels=2, health=10, armor=1, resist=1, attacks=[2, 5,0], attackType=["magic", "physical","physical"], nodeAttack=[False, True, False], dodge=1, shaft=[1,None,None], move=[0,0,1], attackRange=[10,1,0], attackEffect=[{"bleed",},{"push",}, set()])
-# Enemy(id=51, name="Sewer Centipede", expansion="Irithyll of the Boreal Valley", enemyType="regular", numberOfModels=2, health=2, armor=1, resist=1, attacks=[0,5], attackType=["physical","physical"], dodge=2, move=[2,0], attackRange=[0,0], attackEffect=[set(), {"poison",}])
-# Enemy(id=52, name="Pontiff Knight", expansion="Irithyll of the Boreal Valley", enemyType="regular", numberOfModels=2, health=5, armor=2, resist=2, attacks=[0,4,5], attackType=["physical","physical","magic"], dodge=2, move=[2,0,0], attackRange=[0,0,1], nodeAttack=[False,True,False], attackEffect=[set(), {"push",},{"frostbite","push"}])
+# Enemy(id=51, name="Sewer Centipede", expansion="Irithyll of the Boreal Valley", enemyType="regular", numberOfModels=2, ambush=True, health=2, armor=1, resist=1, attacks=[0,5], attackType=["physical","physical"], dodge=2, move=[2,0], attackRange=[0,0], attackEffect=[set(), {"poison",}])
+# Enemy(id=52, name="Pontiff Knight", expansion="Irithyll of the Boreal Valley", enemyType="regular", numberOfModels=2, health=5, armor=2, resist=2, attacks=[0,4,4], attackType=["physical","physical","magic"], dodge=2, move=[2,0,0], attackRange=[0,0,1], nodeAttack=[False,False,False], attackEffect=[set(), {"push",},{"frostbite","push"}])
 # Enemy(id=53, name="Irithyllian Assassin Slave", expansion="Irithyll of the Boreal Valley", enemyType="regular", numberOfModels=2, health=1, armor=1, resist=1, attacks=[0,5,0], attackType=["physical", "physical", "physical"], dodge=2, move=[2, 0,-2], attackRange=[0,0,0], attackEffect=[set(),{"stagger",},set()], invisibility=True)
 # Enemy(id=54, name="Irithyllian Sorcerer Slave", expansion="Irithyll of the Boreal Valley", enemyType="regular", numberOfModels=2, health=1, armor=0, resist=1, attacks=[4,0], attackType=["magic","magic"], dodge=1, move=[0,-1], attackRange=[10,0], invisibility=True)
 # Enemy(id=55, name="Irithyllian Warrior Slave", expansion="Irithyll of the Boreal Valley", enemyType="regular", numberOfModels=3, health=3, armor=1, resist=0, attacks=[0,4,3], attackType=["physical","physical","magic"], attackEffect=[set(),{"push",},{"push",}], nodeAttack=[False,False,True], dodge=1, move=[1,0,0], attackRange=[0,0,0])
@@ -234,20 +234,20 @@ Enemy(id=33, name="Stone Knight", expansion="Darkroot", enemyType="regular", num
 
 
 # Invaders
-Enemy(id=35, name="Armorer Dennis", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
-Enemy(id=36, name="Fencer Sharron", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
-Enemy(id=37, name="Invader Brylex", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
-Enemy(id=38, name="Kirk, Knight of Thorns", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
-Enemy(id=39, name="Longfinger Kirk", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
-Enemy(id=40, name="Maldron the Assassin", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
-Enemy(id=41, name="Maneater Mildred", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
-Enemy(id=42, name="Marvelous Chester", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
-Enemy(id=43, name="Melinda the Butcher", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
-Enemy(id=44, name="Oliver the Collector", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
-Enemy(id=45, name="Paladin Leeroy", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
-Enemy(id=46, name="Xanthous King Jeremiah", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
-Enemy(id=47, name="Hungry Mimic", expansion="Explorers", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
-Enemy(id=48, name="Voracious Mimic", expansion="Explorers", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
+# Enemy(id=35, name="Armorer Dennis", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
+# Enemy(id=36, name="Fencer Sharron", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
+# Enemy(id=37, name="Invader Brylex", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
+# Enemy(id=38, name="Kirk, Knight of Thorns", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
+# Enemy(id=39, name="Longfinger Kirk", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
+# Enemy(id=40, name="Maldron the Assassin", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
+# Enemy(id=41, name="Maneater Mildred", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
+# Enemy(id=42, name="Marvelous Chester", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
+# Enemy(id=43, name="Melinda the Butcher", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
+# Enemy(id=44, name="Oliver the Collector", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
+# Enemy(id=45, name="Paladin Leeroy", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
+# Enemy(id=46, name="Xanthous King Jeremiah", expansion="Phantoms", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
+# Enemy(id=47, name="Hungry Mimic", expansion="Explorers", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
+# Enemy(id=48, name="Voracious Mimic", expansion="Explorers", enemyType="invader", numberOfModels=1, health=20, armor=0, resist=0, attacks=[0], attackType=["magic"], dodge=0, move=[0], attackRange=[0])
 
 # Enemy(name="Hungry Mimic - Raking Slash", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[0,4], attackType=["physical","physical"], attackEffect=[set(),{"push",}], nodeAttack=[False,True], dodge=1, move=[1,0], attackRange=[0,1])
 # Enemy(name="Hungry Mimic - Heavy Punch", expansion="Explorers", enemyType="invader", numberOfModels=1, health=18, armor=1, resist=1, attacks=[0,5], attackType=["physical","physical"], dodge=2, move=[1,0], attackRange=[0,1])
